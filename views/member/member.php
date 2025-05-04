@@ -5,10 +5,21 @@
     include '../../includes/header.php';
     include '../../models/adminModel/userModel.php';
 ?>
-  <style>
-    .step-content { display: none; }
-    .step-content.active { display: block; }
-  </style>
+<style>
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+}
+
+input.border-red-500,
+select.border-red-500,
+textarea.border-red-500 {
+    border-width: 2px;
+}
+</style>
 
 <div class="flex flex-col md:flex-row min-h-screen">
     <?php include '../../partials/sidebar.php'?>
@@ -45,7 +56,7 @@
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="First Name" class="border rounded p-2">
+                                    <input type="text" placeholder="First Name" class="border rounded p-2" required>
                                     <input type="text" placeholder="Last Name" class="border rounded p-2">
                                     <input type="text" placeholder="Middle Name" class="border rounded p-2">
                                     <input type="date" placeholder="Birthdate" class="border rounded p-2">
@@ -203,15 +214,17 @@
                 const stepTemplate = document.querySelector('#step-header-template');
                 let currentStep = 0;
 
+                // Render step headers
                 steps.forEach((label, idx) => {
                     const clone = stepTemplate.content.cloneNode(true);
                     clone.querySelector('.step-circle').textContent = idx + 1;
                     clone.querySelector('.step-label').textContent = label;
                     clone.querySelector('.step-circle').classList.add(idx === 0 ? 'bg-cyan-500' :
-                    'bg-cyan-300');
+                        'bg-cyan-300');
                     stepHeaderContainer.appendChild(clone);
                 });
 
+                // Update the UI for the current step
                 const updateStep = () => {
                     stepContents.forEach((el, i) => el.classList.toggle('active', i === currentStep));
                     const circles = document.querySelectorAll('.step-circle');
@@ -224,7 +237,32 @@
                         'Next';
                 };
 
+                // Next button logic with validation
                 document.getElementById('nextBtn').addEventListener('click', () => {
+                    // Validate required fields before going to next step
+                    const currentInputs = stepContents[currentStep].querySelectorAll(
+                        'input[required], select[required], textarea[required]');
+                    let allFilled = true;
+                    currentInputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            allFilled = false;
+                            input.classList.add('border-red-500');
+                        } else {
+                            input.classList.remove('border-red-500');
+                        }
+                    });
+
+                    if (!allFilled) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Incomplete Step',
+                            text: 'Please fill in all required fields before proceeding.',
+                            confirmButtonColor: '#06b6d4'
+                        });
+                        return;
+                    }
+
+                    // Proceed to next step or submit form
                     if (currentStep < steps.length - 1) {
                         currentStep++;
                         updateStep();
@@ -233,6 +271,7 @@
                     }
                 });
 
+                // Previous button
                 document.getElementById('prevBtn').addEventListener('click', () => {
                     if (currentStep > 0) {
                         currentStep--;
@@ -240,6 +279,7 @@
                     }
                 });
 
+                // Initial load
                 updateStep();
                 </script>
             </div>
