@@ -56,23 +56,23 @@ textarea.border-red-500 {
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="First Name" class="border rounded p-2" required>
-                                    <input type="text" placeholder="Last Name" class="border rounded p-2">
-                                    <input type="text" placeholder="Middle Name" class="border rounded p-2">
-                                    <input type="date" placeholder="Birthdate" class="border rounded p-2">
-                                    <input type="text" placeholder="Birthplace" class="border rounded p-2">
-                                    <select class="border rounded p-2">
+                                    <input type="text" placeholder="First Name" name="firstname" class="border rounded p-2" required>
+                                    <input type="text" placeholder="Last Name" name="lastname" class="border rounded p-2">
+                                    <input type="text" placeholder="Middle Name" name="middlename" class="border rounded p-2">
+                                    <input type="date" placeholder="Birthdate" name="birthdate" class="border rounded p-2">
+                                    <input type="text" placeholder="Birthplace" name="birthplace" class="border rounded p-2">
+                                    <select class="border rounded p-2" name="gender">
                                         <option>Gender</option>
-                                        <option>Male</option>
-                                        <option>Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
-                                    <select class="border rounded p-2">
-                                        <option>Marital Status</option>
-                                        <option>Single</option>
-                                        <option>Married</option>
+                                    <select class="border rounded p-2" name="marital_status">
+                                        <option disabled>Marital Status</option>
+                                        <option value="Single">Single</option>
+                                        <option value="Married">Married</option>
                                     </select>
-                                    <input type="text" placeholder="TIN/SSS" class="border rounded p-2">
-                                    <input type="text" placeholder="Nationality" class="border rounded p-2">
+                                    <input type="text" placeholder="TIN/SSS" name="tin_sss" class="border rounded p-2">
+                                    <input type="text" placeholder="Nationality" class="border rounded p-2" name="nationality">
                                 </div>
                             </div>
 
