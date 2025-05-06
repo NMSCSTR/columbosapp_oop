@@ -2,8 +2,10 @@
     require_once '../../middleware/auth.php';
     authorize(['admin', 'member']);
     include '../../includes/config.php';
+    include '../../includes/db.php';
     include '../../includes/header.php';
     include '../../models/adminModel/userModel.php';
+    include '../../models/adminModel/fraternalBenefitsModel.php';
 ?>
 <style>
 .step-content {
@@ -57,13 +59,14 @@ textarea.border-red-500 {
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
                                     <input type="text" placeholder="First Name" name="firstname"
-                                        class="border rounded p-2" required>
+                                        class="border rounded p-2">
                                     <input type="text" placeholder="Last Name" name="lastname"
                                         class="border rounded p-2">
                                     <input type="text" placeholder="Middle Name" name="middlename"
                                         class="border rounded p-2">
                                     <input type="date" placeholder="Birthdate" name="birthdate"
                                         class="border rounded p-2">
+                                    <input type="number" placeholder="Age" name="age" class="border rounded p-2">
                                     <input type="text" placeholder="Birthplace" name="birthplace"
                                         class="border rounded p-2">
                                     <select class="border rounded p-2" name="gender">
@@ -100,6 +103,8 @@ textarea.border-red-500 {
                                 <div class="grid grid-cols-2 gap-4">
                                     <input type="text" placeholder="Employer Name" class="border rounded p-2">
                                     <input type="text" placeholder="Employer Address" class="border rounded p-2">
+                                    <input type="text" placeholder="Employer Email Address" class="border rounded p-2">
+                                    <input type="text" placeholder="Employer Mobile Number" class="border rounded p-2">
                                     <input type="text" placeholder="Occupation" class="border rounded p-2">
                                     <input type="number" placeholder="Monthly Income" class="border rounded p-2">
                                 </div>
@@ -111,10 +116,29 @@ textarea.border-red-500 {
                                 <div class="grid grid-cols-2 gap-4">
                                     <select class="border rounded p-2">
                                         <option>Select Plan</option>
-                                        <option>Plan A</option>
-                                        <option>Plan B</option>
+                                        <?php 
+                                            $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
+                                            $fraternalBenefits = $fraternalBenefitsModel->getAllFraternalBenefits();
+
+                                            if ($fraternalBenefits) {
+                                                foreach ($fraternalBenefits as $benefit) { ?>
+                                        <option value="<?php echo $benefit['id'] ?>"><?php echo $benefit['name']?>
+                                        </option>
+                                        <?php
+                                                }
+                                            }
+                                        ?>
                                     </select>
-                                    <input type="text" placeholder="Mode of Payment" class="border rounded p-2">
+                                    <select class="border rounded p-2">
+                                        <option selected disabled>Mode of payment</option>
+                                        <option name="monthly">Monthly</option>
+                                        <option name="semi-annually">Semi-Annually</option>
+                                        <option name="quarterly">Quarterly</option>
+                                    </select>
+                                    <select class="border rounded p-2">
+                                        <option selected disabled>Currency</option>
+                                        <option name="PHP">PHP</option>
+                                    </select>
                                     <input type="number" placeholder="Payment Amount" class="border rounded p-2">
                                 </div>
                             </div>
@@ -124,7 +148,7 @@ textarea.border-red-500 {
                                 <h2 class="text-lg font-bold mb-4">Step 5: Beneficiaries</h2>
                                 <div class="grid grid-cols-2 gap-4">
                                     <input type="text" placeholder="Beneficiary Name" class="border rounded p-2">
-                                    <input type="text" placeholder="Relationship" class="border rounded p-2">
+                                    <input type="text" placeholder="Relationship to Proposed Assured" class="border rounded p-2">
                                     <input type="number" placeholder="Percentage (%)" class="border rounded p-2">
                                 </div>
                             </div>
