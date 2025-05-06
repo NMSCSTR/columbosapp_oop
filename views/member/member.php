@@ -5,6 +5,7 @@
     include '../../includes/db.php';
     include '../../includes/header.php';
     include '../../models/adminModel/userModel.php';
+    include '../../models/adminModel/councilModel.php';
     include '../../models/adminModel/fraternalBenefitsModel.php';
 ?>
 <style>
@@ -30,7 +31,7 @@ textarea.border-red-500 {
         <div class="p-4 sm:ml-64">
 
             <h3 class="text-3xl text-center font-extrabold dark:text-white mb-8">Application form for
-                <?php echo $_SESSION['firstname'] .' '. $_SESSION['lastname'] ?></h3>
+                <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['lastname'] ?></h3>
 
             <div class="p-4 rounded-lg dark:border-gray-700">
                 <!-- Responsive grid layout -->
@@ -51,13 +52,15 @@ textarea.border-red-500 {
                     </div>
 
                     <!-- Form -->
-                    <form id="multiStepForm" class="p-6 space-y-6">
+                    <form id="multiStepForm" method="POST"
+                        action="<?php echo BASE_URL ?>controllers/member/addMemberApplicant.php" class="p-6 space-y-6">
                         <!-- Step Content Containers -->
                         <div id="stepContents">
                             <!-- Step 1 -->
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" value="<?= $_SESSION['user_id'] ?>">
                                     <input type="text" placeholder="First Name" name="firstname"
                                         class="border rounded p-2">
                                     <input type="text" placeholder="Last Name" name="lastname"
@@ -116,16 +119,16 @@ textarea.border-red-500 {
                                 <div class="grid grid-cols-2 gap-4">
                                     <select class="border rounded p-2">
                                         <option>Select Plan</option>
-                                        <?php 
+                                        <?php
                                             $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
-                                            $fraternalBenefits = $fraternalBenefitsModel->getAllFraternalBenefits();
+                                            $fraternalBenefits      = $fraternalBenefitsModel->getAllFraternalBenefits();
 
                                             if ($fraternalBenefits) {
-                                                foreach ($fraternalBenefits as $benefit) { ?>
-                                        <option value="<?php echo $benefit['id'] ?>"><?php echo $benefit['name']?>
+                                            foreach ($fraternalBenefits as $benefit) {?>
+                                        <option value="<?php echo $benefit['id'] ?>"><?php echo $benefit['name'] ?>
                                         </option>
                                         <?php
-                                                }
+                                            }
                                             }
                                         ?>
                                     </select>
@@ -139,6 +142,20 @@ textarea.border-red-500 {
                                         <option selected disabled>Currency</option>
                                         <option name="PHP">PHP</option>
                                     </select>
+                                    <select class="border rounded p-2">
+                                        <option selected disabled>Select Council</option>
+                                        <?php $councilModel = new CouncilModel($conn);
+                                            $councils       = $councilModel->getAllCouncil();
+                                            if ($councils) {
+                                            foreach ($councils as $council) {?>
+                                        <option value="<?php echo $council['council_id'] ?>">
+                                            <?php echo $council['council_name'] ?>
+                                        </option>
+                                        <?php
+                                                    }
+                                                    }
+                                                ?>
+                                    </select>
                                     <input type="number" placeholder="Payment Amount" class="border rounded p-2">
                                 </div>
                             </div>
@@ -148,7 +165,8 @@ textarea.border-red-500 {
                                 <h2 class="text-lg font-bold mb-4">Step 5: Beneficiaries</h2>
                                 <div class="grid grid-cols-2 gap-4">
                                     <input type="text" placeholder="Beneficiary Name" class="border rounded p-2">
-                                    <input type="text" placeholder="Relationship to Proposed Assured" class="border rounded p-2">
+                                    <input type="text" placeholder="Relationship to Proposed Assured"
+                                        class="border rounded p-2">
                                     <input type="number" placeholder="Percentage (%)" class="border rounded p-2">
                                 </div>
                             </div>
@@ -187,50 +205,97 @@ textarea.border-red-500 {
                             <!-- Step 9 -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 9: Health Questions</h2>
-                                <!-- <p>If you answered YES to any of the following questions, please provide details to space provided below.</p> -->
+                                <p>If you answered YES to any of the following questions, please provide details to
+                                    space provided below.</p>
                                 <div class="grid grid-cols-1 gap-4">
-                                    <label>Do you drive a motorcycle? If yes, please state how often and for what
-                                        purpose.? <select class="border rounded p-2">
+                                    <label>1. Do you drive a motorcycle? If yes, please state how often and for what
+                                        purpose.? <select class="border rounded py-3 px-4">
                                             <option>No </option>
                                             <option>Yes </option>
                                         </select></label>
-                                    <label>Are you engaged in auto/motorboat racing, sky/scuba diving or other hazardous
-                                        avocations? <select class="border rounded p-2">
+                                    <label>2. Are you engaged in auto/motorboat racing, sky/scuba diving or other
+                                        hazardous
+                                        avocations? <select class="border rounded py-3 px-4">
                                             <option>No </option>
                                             <option>Yes </option>
                                         </select></label>
-                                    <label>Do you intend to ride an aircraft other than as a passenger in a commercial
-                                        passenger airline?<select class="border rounded p-2">
+                                    <label>3. Do you intend to ride an aircraft other than as a passenger in a
+                                        commercial
+                                        passenger airline?<select class="border rounded py-3 px-4">
                                             <option>No </option>
                                             <option>Yes </option>
                                         </select></label>
-                                    <label>Are you now or do you intend to be enlisted with the military, naval, or air
+                                    <label>4. Are you now or do you intend to be enlisted with the military, naval, or
+                                        air
                                         force service other than as a reserve?
                                         <select class="border rounded py-3 px-4">
                                             <option>No </option>
                                             <option>Yes </option>
                                         </select></label>
-                                    <label>Do you have any pending application for life insurance or accident insurance?
-                                        <select class="border rounded p-2">
+                                    <label>5. Do you have any pending application for life insurance or accident
+                                        insurance?
+                                        <select class="border rounded py-3 px-4">
                                             <option>No </option>
                                             <option>Yes </option>
                                         </select></label>
-                                    <label>Have you made an application for the life insurance, or for reinstatement
+                                    <label>6. Have you made an application for the life insurance, or for reinstatement
                                         policy with other insurance company/ies which was declined, postponed, cancelled
                                         or modified in terms of the plan, amount or rate? <select
-                                            class="border rounded p-2">
+                                            class="border rounded py-3 px-4">
                                             <option>No </option>
                                             <option>Yes </option>
                                         </select></label>
                                     <!-- <label>Any disabilities? <input type="text" placeholder="If yes, specify"
                                             class="border rounded p-2 w-full"></label> -->
-                                    <label for="message"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Please give
-                                        details to the YES answers you indicated</label>
+                                    <p>Please give
+                                        details to the YES answers you indicated on item 1-6</p>
                                     <textarea id="message" rows="4"
                                         class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         placeholder="Please give details here..."></textarea>
 
+                                    <label>7. Have any of your parents/siblings, died/suffered from heart disease,
+                                        stroke, high blood pressure, diabetes or cancer? <select
+                                            class="border rounded py-3 px-4">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <label>8.Are you an incumbent elected official, local or national or planning,
+                                        contemplating to hold any elective position?<select
+                                            class="border rounded py-3 px-4">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <label>9.Have you lost/gained weight during the past 12 months? How many
+                                        pounds/kilos? Why?<select class="border rounded py-3 px-4">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <label>10. A .Have you, for physical reason, ever been discharged from employment,
+                                        active military or naval service?<select class="border rounded py-3 px-4">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <label>B.Have you applied for or received disability benefits or pension from any
+                                        source?<select class="border rounded py-3 px-4">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <label>11.Have you used alcoholic beverages in excess, taken habit forming drugs or
+                                        sought advice or treatment for alcoholism, drugs or other forms of
+                                        addiction?<select class="border rounded py-3 px-4">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <label>12. Are you engaged in any hazardous avocation like car/motorcycle racing or
+                                        scuba diving? How often?<select class="border rounded py-3 px-4">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <p>Please give
+                                        details to the YES answers you indicated</p>
+                                    <textarea id="message" rows="4"
+                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Please give details here..."></textarea>
                                 </div>
                             </div>
 

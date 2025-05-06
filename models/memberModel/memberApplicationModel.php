@@ -1,5 +1,5 @@
 <?php
-class ApplicationModel
+class MemberApplicationModel
 {
     private $conn;
 
@@ -47,46 +47,20 @@ class ApplicationModel
        
     }
 
-    // This method calculates the future value based on the payment mode
-    public function calculatePlanBaseOnPaymentMode($P, $r, $t, $paymentMode)
+    public function calculatePlanBaseOnPaymentMode()
     {
-        switch ($paymentMode) {
-            case 'monthly':
-                $n = 12;  
-                break;
-            case 'quarterly':
-                $n = 4;  
-                break;
-            case 'semiannual':
-                $n = 2;  
-                break;
-            case 'annual':
-                $n = 1;  
-                break;
-            default:
-                return "Invalid Payment Mode"; 
-        }
 
-        // Future Value formula: FV = P * [(1 + r/n)^(nt) - 1] / (r/n)
-        $FV = $P * ((pow((1 + $r/$n), $n * $t) - 1) / ($r/$n));
-
-        return round($FV, 2);
     }
 
-    public function calculateOfEachMemberAllocation($P, $allocationPercent)
+    public function calculateOfEachMemberAllocation()
     {
         
-        return $P * ($allocationPercent / 100); 
     }
 
     
-    public function calculateAllTotalMemberAllocation($members, $P, $allocationPercent)
+    public function calculateAllTotalMemberAllocation()
     {
-        $totalAllocation = 0;
-        foreach ($members as $member) {
-            $totalAllocation += $this->calculateOfEachMemberAllocation($P, $allocationPercent);
-        }
-        return $totalAllocation;
+      
     }
 
     public function updateAApplication()
