@@ -46,3 +46,18 @@ Years to maturity: The period until the plan matures (e.g., the point at which t
 
 Contribution amount: The amount paid by the policyholder periodically.
 
+    public function calculatePlanBaseOnPaymentMode()
+    {
+
+    }
+
+    public function calculateOfEachMemberAllocation()
+    {
+        
+    }
+
+    
+    public function calculateAllTotalMemberAllocation()
+    {
+      
+    }

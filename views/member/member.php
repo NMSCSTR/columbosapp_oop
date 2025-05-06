@@ -4,9 +4,13 @@
     include '../../includes/config.php';
     include '../../includes/db.php';
     include '../../includes/header.php';
-    include '../../models/adminModel/userModel.php';
+    include '../../models/usersModel.php';
     include '../../models/adminModel/councilModel.php';
     include '../../models/adminModel/fraternalBenefitsModel.php';
+
+    $userModel = new UserModel($conn);
+    $user      = $userModel->getUserById($_SESSION['user_id']);
+    // var_dump($user);
 ?>
 <style>
 .step-content {
@@ -61,11 +65,13 @@ textarea.border-red-500 {
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="hidden" name="id" value="<?= $_SESSION['user_id'] ?>">
-                                    <input type="text" placeholder="First Name" name="firstname"
-                                        class="border rounded p-2">
-                                    <input type="text" placeholder="Last Name" name="lastname"
-                                        class="border rounded p-2">
+                                    <input type="hidden" name="id" value="<?php echo $_SESSION['user_id']?>">
+                                    <input type="text" placeholder="First Name"
+                                        value="<?php echo htmlspecialchars($user['firstname']); ?>" name="firstname"
+                                        class="border rounded p-2" readonly>
+                                    <input type="text" placeholder="Last Name"
+                                        value="<?php echo htmlspecialchars($user['lastname']); ?>" name="lastname"
+                                        class="border rounded p-2" readonly>
                                     <input type="text" placeholder="Middle Name" name="middlename"
                                         class="border rounded p-2">
                                     <input type="date" placeholder="Birthdate" name="birthdate"
@@ -93,11 +99,15 @@ textarea.border-red-500 {
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 2: Contact Details</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="Street" class="border rounded p-2">
-                                    <input type="text" placeholder="Barangay" class="border rounded p-2">
-                                    <input type="text" placeholder="City/Province" class="border rounded p-2">
-                                    <input type="text" placeholder="Mobile Number" class="border rounded p-2">
-                                    <input type="email" placeholder="Email Address" class="border rounded p-2">
+                                    <input type="text" placeholder="Street" name="street" class="border rounded p-2">
+                                    <input type="text" placeholder="Barangay" name="barangay"
+                                        class="border rounded p-2">
+                                    <input type="text" placeholder="City/Province" name="city_province"
+                                        class="border rounded p-2">
+                                    <input type="text" placeholder="Mobile Number" name="mobile_number"
+                                        class="border rounded p-2">
+                                    <input type="email" placeholder="Email Address" name="email_address"
+                                        class="border rounded p-2">
                                 </div>
                             </div>
 
@@ -105,12 +115,28 @@ textarea.border-red-500 {
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 3: Employment Details</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="Employer Name" class="border rounded p-2">
-                                    <input type="text" placeholder="Employer Address" class="border rounded p-2">
-                                    <input type="text" placeholder="Employer Email Address" class="border rounded p-2">
-                                    <input type="text" placeholder="Employer Mobile Number" class="border rounded p-2">
-                                    <input type="text" placeholder="Occupation" class="border rounded p-2">
-                                    <input type="number" placeholder="Monthly Income" class="border rounded p-2">
+                                    <input type="text" placeholder="Occupation" name="occupation"
+                                        class="border rounded p-2">
+                                    <select class="border rounded p-2" name="employment_status">
+                                        <option selected>Employment Status</option>
+                                        <option value="employed">Employed</option>
+                                        <option value="self_employed">Self Employed</option>
+                                    </select>
+                                    <input type="text"
+                                        placeholder="Specific duties (e.g.Develops software applications.)"
+                                        name="duties" class="border rounded p-2">
+                                    <input type="text" placeholder="Employer (e.g. TechCorp Inc.)" name="employer"
+                                        class="border rounded p-2">
+                                    <input type="text" placeholder="Work (e.g. IT Department.)" name="work"
+                                        class="border rounded p-2">
+                                    <input type="text" placeholder="Nature of business (e.g.Information Technology)"
+                                        name="nature_business" class="border rounded p-2">
+                                    <input type="text" placeholder="Employer Email Address"
+                                        name="employer_email_address" class="border rounded p-2">
+                                    <input type="text" placeholder="Employer Mobile Number"
+                                        name="employer_mobile_number" class="border rounded p-2">
+                                    <input type="number" placeholder="Monthly Income" name=monthly_income"
+                                        class="border rounded p-2">
                                 </div>
                             </div>
 
@@ -118,7 +144,7 @@ textarea.border-red-500 {
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 4: Plan Information</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <select class="border rounded p-2">
+                                    <select class="border rounded p-2" name="fraternal_benefits_id">
                                         <option>Select Plan</option>
                                         <?php
                                             $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
@@ -133,44 +159,56 @@ textarea.border-red-500 {
                                             }
                                         ?>
                                     </select>
-                                    <select class="border rounded p-2">
+                                    <select class="border rounded p-2" name="payment_mode">
                                         <option selected disabled>Mode of payment</option>
                                         <option name="monthly">Monthly</option>
                                         <option name="semi-annually">Semi-Annually</option>
                                         <option name="quarterly">Quarterly</option>
                                     </select>
-                                    <select class="border rounded p-2">
+                                    <select class="border rounded p-2" name="currency">
                                         <option selected disabled>Currency</option>
                                         <option name="PHP">PHP</option>
                                     </select>
-                                    <select class="border rounded p-2">
+                                    <select class="border rounded p-2" name="council_id">
                                         <option selected disabled>Select Council</option>
                                         <?php $councilModel = new CouncilModel($conn);
-                                            $councils       = $councilModel->getAllCouncil();
+                                            $councils                                                   = $councilModel->getAllCouncil();
                                             if ($councils) {
                                             foreach ($councils as $council) {?>
                                         <option value="<?php echo $council['council_id'] ?>">
                                             <?php echo $council['council_name'] ?>
                                         </option>
                                         <?php
-                                                    }
-                                                    }
-                                                ?>
+                                            }
+                                            }
+                                        ?>
                                     </select>
-                                    <input type="number" placeholder="Payment Amount" class="border rounded p-2">
+                                    <input type="number" placeholder="Payment Amount" name="contribution_amount"
+                                        class="border rounded p-2">
                                 </div>
                             </div>
 
-                            <!-- Step 5 -->
-                            <div class="step-content">
-                                <h2 class="text-lg font-bold mb-4">Step 5: Beneficiaries</h2>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="Beneficiary Name" class="border rounded p-2">
-                                    <input type="text" placeholder="Relationship to Proposed Assured"
-                                        class="border rounded p-2">
-                                    <input type="number" placeholder="Percentage (%)" class="border rounded p-2">
-                                </div>
-                            </div>
+<!-- Step 5 -->
+<div class="step-content">
+    <h2 class="text-lg font-bold mb-4">Step 5: Beneficiaries</h2>
+
+    <!-- Beneficiaries Container -->
+    <div id="beneficiaries-container" class="space-y-6">
+        <!-- First Beneficiary Group -->
+        <div class="beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded bg-gray-50">
+            <input type="text" name="benefit_type[]" placeholder="Type of Benefit" class="border rounded p-2 w-full" required>
+            <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full" required>
+            <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full" required>
+            <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full" required>
+            <input type="number" name="benefit_percentage[]" placeholder="Percentage (%)" class="border rounded p-2 w-full" required>
+        </div>
+    </div>
+
+    <!-- Add Beneficiary Button -->
+    <button type="button" onclick="addBeneficiary()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
+        + Add Another Beneficiary
+    </button>
+</div>
 
                             <!-- Step 6 -->
                             <div class="step-content">
@@ -333,84 +371,103 @@ textarea.border-red-500 {
                 </div>
 
                 <script>
-                const steps = [
-                    "Personal Info", "Contact", "Employment", "Plan", "Beneficiaries",
-                    "Family", "Medical", "Physician", "Health", "Signature", "Confirm"
-                ];
+                    const steps = [
+                        "Personal Info", "Contact", "Employment", "Plan", "Beneficiaries",
+                        "Family", "Medical", "Physician", "Health", "Signature", "Confirm"
+                    ];
 
-                const stepContents = document.querySelectorAll('.step-content');
-                const stepHeaderContainer = document.querySelector('.grid');
-                const stepTemplate = document.querySelector('#step-header-template');
-                let currentStep = 0;
+                    const stepContents = document.querySelectorAll('.step-content');
+                    const stepHeaderContainer = document.querySelector('.grid');
+                    const stepTemplate = document.querySelector('#step-header-template');
+                    let currentStep = 0;
 
-                // Render step headers
-                steps.forEach((label, idx) => {
-                    const clone = stepTemplate.content.cloneNode(true);
-                    clone.querySelector('.step-circle').textContent = idx + 1;
-                    clone.querySelector('.step-label').textContent = label;
-                    clone.querySelector('.step-circle').classList.add(idx === 0 ? 'bg-cyan-500' :
-                        'bg-cyan-300');
-                    stepHeaderContainer.appendChild(clone);
-                });
-
-                // Update the UI for the current step
-                const updateStep = () => {
-                    stepContents.forEach((el, i) => el.classList.toggle('active', i === currentStep));
-                    const circles = document.querySelectorAll('.step-circle');
-                    circles.forEach((circle, i) => {
-                        circle.classList.remove('bg-cyan-500', 'bg-cyan-300');
-                        circle.classList.add(i === currentStep ? 'bg-cyan-500' : 'bg-cyan-300');
+                    // Render step headers
+                    steps.forEach((label, idx) => {
+                        const clone = stepTemplate.content.cloneNode(true);
+                        clone.querySelector('.step-circle').textContent = idx + 1;
+                        clone.querySelector('.step-label').textContent = label;
+                        clone.querySelector('.step-circle').classList.add(idx === 0 ? 'bg-cyan-500' :
+                            'bg-cyan-300');
+                        stepHeaderContainer.appendChild(clone);
                     });
-                    document.getElementById('prevBtn').disabled = currentStep === 0;
-                    document.getElementById('nextBtn').textContent = currentStep === steps.length - 1 ? 'Finish' :
-                        'Next';
-                };
 
-                // Next button logic with validation
-                document.getElementById('nextBtn').addEventListener('click', () => {
-                    // Validate required fields before going to next step
-                    const currentInputs = stepContents[currentStep].querySelectorAll(
-                        'input[required], select[required], textarea[required]');
-                    let allFilled = true;
-                    currentInputs.forEach(input => {
-                        if (!input.value.trim()) {
-                            allFilled = false;
-                            input.classList.add('border-red-500');
+                    // Update the UI for the current step
+                    const updateStep = () => {
+                        stepContents.forEach((el, i) => el.classList.toggle('active', i === currentStep));
+                        const circles = document.querySelectorAll('.step-circle');
+                        circles.forEach((circle, i) => {
+                            circle.classList.remove('bg-cyan-500', 'bg-cyan-300');
+                            circle.classList.add(i === currentStep ? 'bg-cyan-500' : 'bg-cyan-300');
+                        });
+                        document.getElementById('prevBtn').disabled = currentStep === 0;
+                        document.getElementById('nextBtn').textContent = currentStep === steps.length - 1 ? 'Finish' :
+                            'Next';
+                    };
+
+                    // Next button logic with validation
+                    document.getElementById('nextBtn').addEventListener('click', () => {
+                        // Validate required fields before going to next step
+                        const currentInputs = stepContents[currentStep].querySelectorAll(
+                            'input[required], select[required], textarea[required]');
+                        let allFilled = true;
+                        currentInputs.forEach(input => {
+                            if (!input.value.trim()) {
+                                allFilled = false;
+                                input.classList.add('border-red-500');
+                            } else {
+                                input.classList.remove('border-red-500');
+                            }
+                        });
+
+                        if (!allFilled) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Incomplete Step',
+                                text: 'Please fill in all required fields before proceeding.',
+                                confirmButtonColor: '#06b6d4'
+                            });
+                            return;
+                        }
+
+                        // Proceed to next step or submit form
+                        if (currentStep < steps.length - 1) {
+                            currentStep++;
+                            updateStep();
                         } else {
-                            input.classList.remove('border-red-500');
+                            document.getElementById('multiStepForm').submit();
                         }
                     });
 
-                    if (!allFilled) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Incomplete Step',
-                            text: 'Please fill in all required fields before proceeding.',
-                            confirmButtonColor: '#06b6d4'
-                        });
-                        return;
-                    }
-
-                    // Proceed to next step or submit form
-                    if (currentStep < steps.length - 1) {
-                        currentStep++;
-                        updateStep();
-                    } else {
-                        document.getElementById('multiStepForm').submit();
-                    }
-                });
-
-                // Previous button
-                document.getElementById('prevBtn').addEventListener('click', () => {
-                    if (currentStep > 0) {
-                        currentStep--;
-                        updateStep();
-                    }
-                });
+                    // Previous button
+                    document.getElementById('prevBtn').addEventListener('click', () => {
+                        if (currentStep > 0) {
+                            currentStep--;
+                            updateStep();
+                        }
+                    });
 
 
-                updateStep();
+                    updateStep();
                 </script>
+
+<!-- JavaScript for Dynamic Fields -->
+<script>
+function addBeneficiary() {
+    const container = document.getElementById('beneficiaries-container');
+    const group = document.createElement('div');
+    group.className = "beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded bg-gray-50";
+
+    group.innerHTML = `
+        <input type="text" name="benefit_type[]" placeholder="Type of Benefit" class="border rounded p-2 w-full" required>
+        <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full" required>
+        <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full" required>
+        <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full" required>
+        <input type="number" name="benefit_percentage[]" placeholder="Percentage (%)" class="border rounded p-2 w-full" required>
+    `;
+
+    container.appendChild(group);
+}
+</script>
             </div>
     </main>
 </div>

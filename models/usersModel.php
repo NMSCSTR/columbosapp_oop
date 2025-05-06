@@ -20,6 +20,18 @@ class UserModel
 
         return null;
     }
+    public function getUserById($id)
+    {
+        $id  = mysqli_real_escape_string($this->conn, $id);
+        $sql    = "SELECT * FROM users WHERE id = '$id' LIMIT 1";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            return mysqli_fetch_assoc($result);
+        }
+
+        return null;
+    }
 
     public function createUser($firstname, $lastname, $kcfapicode, $email, $phone_number, $password, $confirmPassword, $role)
     {
