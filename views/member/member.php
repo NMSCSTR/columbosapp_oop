@@ -53,14 +53,15 @@ textarea.border-red-500 {
 
                     <!-- Form -->
                     <form id="multiStepForm" method="POST"
-                        action="<?php echo BASE_URL ?>controllers/member/addMemberApplicant.php" class="p-6 space-y-6">
+                        action="<?php echo BASE_URL ?>controllers/member/addMemberApplicant.php"
+                        enctype="multipart/form-data" class="p-6 space-y-6">
                         <!-- Step Content Containers -->
                         <div id="stepContents">
                             <!-- Step 1 -->
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" value="<?= $_SESSION['user_id'] ?>">
+                                    <input type="hidden" name="id" value="<?= $_SESSION['user_id'] ?>">
                                     <input type="text" placeholder="First Name" name="firstname"
                                         class="border rounded p-2">
                                     <input type="text" placeholder="Last Name" name="lastname"
