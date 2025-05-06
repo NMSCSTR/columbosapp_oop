@@ -56,11 +56,16 @@ textarea.border-red-500 {
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="First Name" name="firstname" class="border rounded p-2" required>
-                                    <input type="text" placeholder="Last Name" name="lastname" class="border rounded p-2">
-                                    <input type="text" placeholder="Middle Name" name="middlename" class="border rounded p-2">
-                                    <input type="date" placeholder="Birthdate" name="birthdate" class="border rounded p-2">
-                                    <input type="text" placeholder="Birthplace" name="birthplace" class="border rounded p-2">
+                                    <input type="text" placeholder="First Name" name="firstname"
+                                        class="border rounded p-2" required>
+                                    <input type="text" placeholder="Last Name" name="lastname"
+                                        class="border rounded p-2">
+                                    <input type="text" placeholder="Middle Name" name="middlename"
+                                        class="border rounded p-2">
+                                    <input type="date" placeholder="Birthdate" name="birthdate"
+                                        class="border rounded p-2">
+                                    <input type="text" placeholder="Birthplace" name="birthplace"
+                                        class="border rounded p-2">
                                     <select class="border rounded p-2" name="gender">
                                         <option>Gender</option>
                                         <option value="Male">Male</option>
@@ -72,7 +77,8 @@ textarea.border-red-500 {
                                         <option value="Married">Married</option>
                                     </select>
                                     <input type="text" placeholder="TIN/SSS" name="tin_sss" class="border rounded p-2">
-                                    <input type="text" placeholder="Nationality" class="border rounded p-2" name="nationality">
+                                    <input type="text" placeholder="Nationality" class="border rounded p-2"
+                                        name="nationality">
                                 </div>
                             </div>
 
@@ -157,17 +163,50 @@ textarea.border-red-500 {
                             <!-- Step 9 -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 9: Health Questions</h2>
+                                <!-- <p>If you answered YES to any of the following questions, please provide details to space provided below.</p> -->
                                 <div class="grid grid-cols-1 gap-4">
-                                    <label>Do you smoke? <select class="border rounded p-2">
-                                            <option>No</option>
-                                            <option>Yes</option>
+                                    <label>Do you drive a motorcycle? If yes, please state how often and for what
+                                        purpose.? <select class="border rounded p-2">
+                                            <option>No </option>
+                                            <option>Yes </option>
                                         </select></label>
-                                    <label>Do you drink alcohol? <select class="border rounded p-2">
-                                            <option>No</option>
-                                            <option>Yes</option>
+                                    <label>Are you engaged in auto/motorboat racing, sky/scuba diving or other hazardous
+                                        avocations? <select class="border rounded p-2">
+                                            <option>No </option>
+                                            <option>Yes </option>
                                         </select></label>
-                                    <label>Any disabilities? <input type="text" placeholder="If yes, specify"
-                                            class="border rounded p-2 w-full"></label>
+                                    <label>Do you intend to ride an aircraft other than as a passenger in a commercial
+                                        passenger airline?<select class="border rounded p-2">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <label>Are you now or do you intend to be enlisted with the military, naval, or air
+                                        force service other than as a reserve?
+                                        <select class="border rounded py-3 px-4">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <label>Do you have any pending application for life insurance or accident insurance?
+                                        <select class="border rounded p-2">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <label>Have you made an application for the life insurance, or for reinstatement
+                                        policy with other insurance company/ies which was declined, postponed, cancelled
+                                        or modified in terms of the plan, amount or rate? <select
+                                            class="border rounded p-2">
+                                            <option>No </option>
+                                            <option>Yes </option>
+                                        </select></label>
+                                    <!-- <label>Any disabilities? <input type="text" placeholder="If yes, specify"
+                                            class="border rounded p-2 w-full"></label> -->
+                                    <label for="message"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Please give
+                                        details to the YES answers you indicated</label>
+                                    <textarea id="message" rows="4"
+                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Please give details here..."></textarea>
+
                                 </div>
                             </div>
 
@@ -279,7 +318,7 @@ textarea.border-red-500 {
                     }
                 });
 
-                // Initial load
+
                 updateStep();
                 </script>
             </div>
