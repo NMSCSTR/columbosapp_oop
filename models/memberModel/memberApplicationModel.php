@@ -13,10 +13,10 @@ class MemberApplicationModel
         return mysqli_real_escape_string($this->conn, $value);
     }
 
-    public function insertApplicant($user_id, $frateral_counselor_id, $firstname, $lastname, $middlename, $age, $birthdate, $birthplace, $gender, $marital_status, $tin_sss, $nationality)
+    public function insertApplicant($user_id, $fraternal_counselor_id, $firstname, $lastname, $middlename, $age, $birthdate, $birthplace, $gender, $marital_status, $tin_sss, $nationality)
     {
         $user_id               = mysqli_real_escape_string($this->conn, $user_id);
-        $frateral_counselor_id = mysqli_real_escape_string($this->conn, $frateral_counselor_id);
+        $fraternal_counselor_id = mysqli_real_escape_string($this->conn, $fraternal_counselor_id);
         $firstname             = mysqli_real_escape_string($this->conn, $firstname);
         $lastname              = mysqli_real_escape_string($this->conn, $lastname);
         $middlename            = mysqli_real_escape_string($this->conn, $middlename);
@@ -32,15 +32,15 @@ class MemberApplicationModel
 
         $sql = "
             INSERT INTO applicants
-            (user_id, frateral_counselor_id,lastname, firstname, middlename, age, birthdate, birthplace, gender, marital_status, tin_sss, nationality, status, application_status)
+            (user_id, fraternal_counselor_id,lastname, firstname, middlename, age, birthdate, birthplace, gender, marital_status, tin_sss, nationality, status, application_status)
             VALUES
-            ('$user_id', '$frateral_counselor_id', '$lastname', '$firstname','$middlename', '$age', '$birthdate', '$birthplace', '$gender', '$marital_status', '$tin_sss', '$nationality', '$status', '$application_Status')
+            ('$user_id', '$fraternal_counselor_id', '$lastname', '$firstname','$middlename', '$age', '$birthdate', '$birthplace', '$gender', '$marital_status', '$tin_sss', '$nationality', '$status', '$application_Status')
         ";
 
         if (mysqli_query($this->conn, $sql)) {
-            return true;
+            return $this->conn->insert_id;
         } else {
-            return "Error: " . mysqli_error($this->conn);
+            throw new Exception("Failed to insert applicant: " . $this->conn->error);
         }
     }
 
@@ -269,17 +269,17 @@ class MemberApplicationModel
         }
     }
 
-    public function insertPhysicianDetails($applicant_id, $user_id, $physician_name, $contact_number, $clinic_address)
+    public function insertPhysicianDetails($applicant_id, $user_id, $physician_name, $contact_number, $physician_address)
     {
 
         $applicant_id   = mysqli_real_escape_string($this->conn, $applicant_id);
         $user_id        = mysqli_real_escape_string($this->conn, $user_id);
         $physician_name = mysqli_real_escape_string($this->conn, $physician_name);
         $contact_number = mysqli_real_escape_string($this->conn, $contact_number);
-        $clinic_address = mysqli_real_escape_string($this->conn, $clinic_address);
+        $physician_address = mysqli_real_escape_string($this->conn, $physician_address);
 
-        $sql = "INSERT INTO `physician` (`applicant_id`, `user_id`, `physician_name`, `contact_number`, `clinic_address`)
-            VALUES ('$applicant_id', '$user_id', '$physician_name', '$contact_number', '$clinic_address')";
+        $sql = "INSERT INTO `physician` (`applicant_id`, `user_id`, `physician_name`, `contact_number`, `physician_address`)
+            VALUES ('$applicant_id', '$user_id', '$physician_name', '$contact_number', '$physician_address')";
 
         if (mysqli_query($this->conn, $sql)) {
             return true;

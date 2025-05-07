@@ -7,7 +7,7 @@ include '../../models/memberModel/memberApplicationModel.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $user_id               = intval($_POST['user_id']);
-    $frateral_counselor_id = intval($_POST['frateral_counselor_id']);
+    $fraternal_counselor_id = intval($_POST['fraternal_counselor_id'] ?? 0);
     $firstname             = htmlspecialchars(trim($_POST['firstname']));
     $lastname              = htmlspecialchars(trim($_POST['lastname']));
     $middlename            = htmlspecialchars(trim($_POST['middlename']));
@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // insertApplicantContactDetailsController
     // Contact Details
-    $applicant_id  = $applicant_id;
     $street        = htmlspecialchars(trim($_POST['street'] ?? ''));
     $barangay      = htmlspecialchars(trim($_POST['barangay'] ?? ''));
     $city_province = htmlspecialchars(trim($_POST['city_province'] ?? ''));
@@ -101,8 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_FILES['signature_file']) && $_FILES['signature_file']['error'] === UPLOAD_ERR_OK) {
         $allowed_types = ['image/png', 'image/jpeg'];
-        $file_type = $_FILES['signature_file']['type'];
-        if (!in_array($file_type, $allowed_types)) {
+        $file_type     = $_FILES['signature_file']['type'];
+        if (! in_array($file_type, $allowed_types)) {
             $_SESSION['error'] = "Invalid signature file type.";
             header("Location: " . BASE_URL . "views/member/member.php");
             exit();
@@ -117,7 +116,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $model  = new MemberApplicationModel($conn);
-    $result = $model->insertApplicant($user_id, $frateral_counselor_id, $lastname, $firstname, $middlename, $birthdate, $birthplace, $age, $gender, $marital_status, $tin_sss, $nationality);
+    $applicant_id = $model->insertApplicant(
+        $user_id, $fraternal_counselor_id, $lastname, $firstname, $middlename,
+        $birthdate, $birthplace, $age, $gender, $marital_status, $tin_sss, $nationality
+    );
 
     $result1 = $model->insertApplicantContactDetails($applicant_id, $user_id, $street, $barangay, $city_province, $mobile_number, $email_address);
 
@@ -167,8 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $result10 = $model->insertPersonalAndMembershipDetails($applicant_id, $user_id, $height, $weight, $signature_tmp, $signature_name, $pregnant_question, $council_id, $first_degree_date, $present_degree, $good_standing);
 
-    
-    if (! $result1 || ! $result2 || ! $result4 || ! $result5 ||! $result6 ||! $result7 ||! $result8 ||! $result9 || ! $result10) {
+    if (! $applicant_id || ! $result2 || ! $result4 || ! $result5 || ! $result6 || ! $result7 || ! $result8 || ! $result9 || ! $result10) {
         $_SESSION['error'] = "There was an error saving the application. Please try again.";
         header("Location: " . BASE_URL . "views/member/member.php");
         exit();
