@@ -46,18 +46,112 @@ Years to maturity: The period until the plan matures (e.g., the point at which t
 
 Contribution amount: The amount paid by the policyholder periodically.
 
-    public function calculatePlanBaseOnPaymentMode()
-    {
 
-    }
+<!-- INSURANCE -->
+Example Flow:
+Applicant Enters Information:
 
-    public function calculateOfEachMemberAllocation()
-    {
-        
-    }
+An individual applies for insurance by filling out the details in the applicants table.
 
-    
-    public function calculateAllTotalMemberAllocation()
-    {
-      
-    }
+Choose a Plan:
+
+They choose an insurance plan from the available options in the plans table. For instance, they may choose a plan with a specific face value, contribution amount, and protection years.
+
+Assign Beneficiaries:
+
+The applicant may list one or more beneficiaries (e.g., spouse, children) in the beneficiaries table. These are the people who will receive the benefits if the applicant passes away or faces an insurable event.
+
+Payment and Coverage:
+
+The applicant pays premiums based on the plan details (as stored in the plans table).
+
+If something happens to the applicant, the insurance company will process the claim, and the beneficiaries will receive the coverage amount (based on the face value of the plan).
+
+Summary:
+The applicants table holds personal info.
+
+The plans table holds details about the insurance plans they select, such as coverage amount and duration.
+
+The beneficiaries table holds the individuals who will receive the insurance benefits.
+
+<!-- INSURANCE CALCULATION -->
+Data Breakdown for Plan:
+Plan Code: BP100
+
+Face Value (Coverage): ₱100,000.00 (This is the amount the insurance will pay to the beneficiaries when the policy matures or is claimed.)
+
+Years of Contribution: 5 years (The applicant must contribute to the plan for 5 years.)
+
+Years of Protection: 10 years (The insurance coverage is active for 10 years.)
+
+Years to Maturity: 15 years (The policy will mature in 15 years, which is when the full coverage might be paid out.)
+
+Payment Mode: Monthly (The applicant will pay premiums monthly.)
+
+Contribution Amount: ₱1,000.00 per month (This is the premium the applicant will pay each month.)
+
+Currency: PHP (Philippine Peso)
+
+How it Works:
+Monthly Premium:
+The applicant pays ₱1,000.00 per month.
+
+Total Contribution Over Years:
+Since the plan requires the applicant to contribute for 5 years, we can calculate the total contributions over that period:
+
+Total Contribution
+=
+Monthly Contribution
+×
+Months per Year
+×
+Years of Contribution
+Total Contribution=Monthly Contribution×Months per Year×Years of Contribution
+Total Contribution
+=
+1
+,
+000
+ 
+PHP
+×
+12
+×
+5
+=
+60
+,
+000
+ 
+PHP
+Total Contribution=1,000PHP×12×5=60,000PHP
+So, the total premium paid over 5 years is ₱60,000.00.
+
+Face Value / Coverage:
+The applicant will have a face value of ₱100,000.00. This is the amount the insurance company will pay out to the beneficiaries, typically upon the applicant’s death or after the protection period, depending on the specific terms of the policy.
+
+Policy Duration:
+
+The policy lasts for 15 years in total, but the applicant only pays premiums for 5 years.
+
+The applicant is covered for 10 years (the years of protection) and the policy matures after 15 years.
+
+In this case, the applicant pays the total premiums (₱60,000.00) over 5 years, but after the 5 years of contributions, they remain protected for an additional 5 years without any further payments.
+
+Example Calculation of Insurance Cost vs. Coverage:
+Total Contributions: ₱60,000.00 (paid over 5 years)
+
+Coverage/Face Value: ₱100,000.00
+
+The applicant essentially gets ₱100,000.00 in coverage for ₱60,000.00 worth of premiums, which is a great return on investment, as the applicant pays for just 5 years of protection but is covered for a total of 15 years.
+
+This type of plan might be attractive because the cost of premiums is spread out over a relatively short period, and the coverage lasts much longer.
+
+Simple Summary of the Calculation:
+Monthly premium: ₱1,000.00
+
+Total paid over 5 years: ₱60,000.00
+
+Coverage after 15 years: ₱100,000.00
+
+So, the applicant pays ₱60,000.00 in total, but the policyholder’s beneficiaries or the applicant themselves (if they survive the policy term) would receive ₱100,000.00 as the face value when the policy matures or the claim occurs.

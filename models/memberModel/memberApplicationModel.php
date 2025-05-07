@@ -233,6 +233,66 @@ class MemberApplicationModel
             return "Error: " . mysqli_error($this->conn);
         }
     }
+    public function insertFamilyHealth(
+        $applicant_id,
+        $user_id,
+        $father_living_age,
+        $father_health,
+        $mother_living_age,
+        $mother_health,
+        $siblings_living_age,
+        $siblings_health,
+        $children_living_age,
+        $children_health,
+        $father_death_age,
+        $father_cause,
+        $mother_death_age,
+        $mother_cause,
+        $siblings_death_age,
+        $siblings_cause,
+        $children_death_age,
+        $children_cause
+    ) {
+
+        $applicant_id        = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id             = mysqli_real_escape_string($this->conn, $user_id);
+        $father_living_age   = mysqli_real_escape_string($this->conn, $father_living_age);
+        $father_health       = mysqli_real_escape_string($this->conn, $father_health);
+        $mother_living_age   = mysqli_real_escape_string($this->conn, $mother_living_age);
+        $mother_health       = mysqli_real_escape_string($this->conn, $mother_health);
+        $siblings_living_age = mysqli_real_escape_string($this->conn, $siblings_living_age);
+        $siblings_health     = mysqli_real_escape_string($this->conn, $siblings_health);
+        $children_living_age = mysqli_real_escape_string($this->conn, $children_living_age);
+        $children_health     = mysqli_real_escape_string($this->conn, $children_health);
+        $father_death_age    = mysqli_real_escape_string($this->conn, $father_death_age);
+        $father_cause        = mysqli_real_escape_string($this->conn, $father_cause);
+        $mother_death_age    = mysqli_real_escape_string($this->conn, $mother_death_age);
+        $mother_cause        = mysqli_real_escape_string($this->conn, $mother_cause);
+        $siblings_death_age  = mysqli_real_escape_string($this->conn, $siblings_death_age);
+        $siblings_cause      = mysqli_real_escape_string($this->conn, $siblings_cause);
+        $children_death_age  = mysqli_real_escape_string($this->conn, $children_death_age);
+        $children_cause      = mysqli_real_escape_string($this->conn, $children_cause);
+    
+ 
+        $sql = "INSERT INTO family_health (
+                    applicant_id, user_id, father_living_age, father_health, mother_living_age, mother_health,
+                    siblings_living_age, siblings_health, children_living_age, children_health,
+                    father_death_age, father_cause, mother_death_age, mother_cause,
+                    siblings_death_age, siblings_cause, children_death_age, children_cause
+                ) VALUES (
+                    '$applicant_id', '$user_id', '$father_living_age', '$father_health', '$mother_living_age', '$mother_health',
+                    '$siblings_living_age', '$siblings_health', '$children_living_age', '$children_health',
+                    '$father_death_age', '$father_cause', '$mother_death_age', '$mother_cause',
+                    '$siblings_death_age', '$siblings_cause', '$children_death_age', '$children_cause'
+                )";
+    
+        if (mysqli_query($this->conn, $sql)) {
+            return true;
+        } else {
+            return "Error: " . mysqli_error($this->conn);
+        }
+    }
+    
 
     public function insertPhysicianDetails($applicant_id, $user_id, $physician_name, $contact_number, $clinic_address)
     {

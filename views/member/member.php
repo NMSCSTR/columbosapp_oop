@@ -259,11 +259,62 @@ textarea.border-red-500 {
 
                             <!-- Step 7 -->
                             <div class="step-content">
-                                <h2 class="text-lg font-bold mb-4">Step 7: Medical History</h2>
+                                <h2 class="text-lg font-bold mb-4">Step 7: A. Medical History</h2>
                                 <div class="grid grid-cols-2 gap-4">
                                     <textarea placeholder="Past Illnesses or Hospitalizations"
                                         class="border rounded p-2"></textarea>
                                     <textarea placeholder="Current Medications" class="border rounded p-2"></textarea>
+                                </div>
+                                <h2 class="text-lg font-bold mb-4 mt-4">B. Family Health History</h2>
+                                <div class="grid grid-cols-2 gap-4">
+
+                                    <!-- Father Living -->
+                                    <input type="number" name="father_living_age" placeholder="Father's Living Age"
+                                        class="border rounded p-2">
+                                    <input type="text" name="father_health" placeholder="Father's Health Condition"
+                                        class="border rounded p-2">
+
+                                    <!-- Mother Living -->
+                                    <input type="number" name="mother_living_age" placeholder="Mother's Living Age"
+                                        class="border rounded p-2">
+                                    <input type="text" name="mother_health" placeholder="Mother's Health Condition"
+                                        class="border rounded p-2">
+
+                                    <!-- Siblings Living -->
+                                    <input type="number" name="siblings_living_age"
+                                        placeholder="Average Age of Living Siblings" class="border rounded p-2">
+                                    <textarea name="siblings_health" rows="2" placeholder="Siblings' Health Conditions"
+                                        class="border rounded p-2"></textarea>
+
+                                    <!-- Children Living -->
+                                    <input type="number" name="children_living_age"
+                                        placeholder="Average Age of Living Children" class="border rounded p-2">
+                                    <textarea name="children_health" rows="2" placeholder="Children's Health Conditions"
+                                        class="border rounded p-2"></textarea>
+
+                                    <!-- Father Death -->
+                                    <input type="number" name="father_death_age" placeholder="Father's Age at Death"
+                                        class="border rounded p-2">
+                                    <input type="text" name="father_cause" placeholder="Father's Cause of Death"
+                                        class="border rounded p-2">
+
+                                    <!-- Mother Death -->
+                                    <input type="number" name="mother_death_age" placeholder="Mother's Age at Death"
+                                        class="border rounded p-2">
+                                    <input type="text" name="mother_cause" placeholder="Mother's Cause of Death"
+                                        class="border rounded p-2">
+
+                                    <!-- Siblings Death -->
+                                    <input type="number" name="siblings_death_age"
+                                        placeholder="Average Age of Deceased Siblings" class="border rounded p-2">
+                                    <textarea name="siblings_cause" rows="2" placeholder="Cause(s) of Siblings' Death"
+                                        class="border rounded p-2"></textarea>
+
+                                    <!-- Children Death -->
+                                    <input type="number" name="children_death_age"
+                                        placeholder="Average Age of Deceased Children" class="border rounded p-2">
+                                    <textarea name="children_cause" rows="2" placeholder="Cause(s) of Children's Death"
+                                        class="border rounded p-2"></textarea>
                                 </div>
                             </div>
 
@@ -482,13 +533,12 @@ textarea.border-red-500 {
                                     <!-- First Degree Date -->
                                     <label>
                                         First Degree Date:
-                                        <input type="date" name="first_degree_date" class="border rounded p-2 w-full"
-                                            >
+                                        <input type="date" name="first_degree_date" class="border rounded p-2 w-full">
                                     </label>
 
                                     <!-- Present Degree -->
                                     <input type="text" name="present_degree" placeholder="Present Degree"
-                                        class="border rounded p-2" >
+                                        class="border rounded p-2">
 
                                     <!-- Good Standing -->
                                     <select name="good_standing" class="border rounded p-2">
