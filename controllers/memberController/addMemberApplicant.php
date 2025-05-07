@@ -5,37 +5,39 @@ include '../../includes/config.php';
 include '../../models/memberModel/memberApplicationModel.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id               = $_POST['user_id'];
-    $frateral_counselor_id = $_POST['frateral_counselor_id'];
-    $firstname             = $_POST['firstname'];
-    $lastname              = $_POST['lastname'];
-    $middlename            = $_POST['middlename'];
+
+    $user_id               = intval($_POST['user_id']);
+    $frateral_counselor_id = intval($_POST['frateral_counselor_id']);
+    $firstname             = htmlspecialchars(trim($_POST['firstname']));
+    $lastname              = htmlspecialchars(trim($_POST['lastname']));
+    $middlename            = htmlspecialchars(trim($_POST['middlename']));
     $birthdate             = $_POST['birthdate'];
-    $birthplace            = $_POST['birthplace'];
-    $age                   = $_POST['age'];
-    $gender                = $_POST['gender'];
-    $marital_status        = $_POST['marital_status'];
-    $tin_sss               = $_POST['tin_sss'];
-    $nationality           = $_POST['nationality'];
+    $birthplace            = htmlspecialchars(trim($_POST['birthplace']));
+    $age                   = intval($_POST['age']);
+    $gender                = htmlspecialchars(trim($_POST['gender']));
+    $marital_status        = htmlspecialchars(trim($_POST['marital_status']));
+    $tin_sss               = htmlspecialchars(trim($_POST['tin_sss']));
+    $nationality           = htmlspecialchars(trim($_POST['nationality']));
 
     // insertApplicantContactDetailsController
-    $applicant_id  = $_POST['applicant_id'] ?? null;
-    $street        = $_POST['street'] ?? '';
-    $barangay      = $_POST['barangay'] ?? '';
-    $city_province = $_POST['city_province'] ?? '';
-    $mobile_number = $_POST['mobile_number'] ?? '';
-    $email_address = $_POST['email_address'] ?? '';
+    // Contact Details
+    $applicant_id  = $applicant_id;
+    $street        = htmlspecialchars(trim($_POST['street'] ?? ''));
+    $barangay      = htmlspecialchars(trim($_POST['barangay'] ?? ''));
+    $city_province = htmlspecialchars(trim($_POST['city_province'] ?? ''));
+    $mobile_number = htmlspecialchars(trim($_POST['mobile_number'] ?? ''));
+    $email_address = htmlspecialchars(trim($_POST['email_address'] ?? ''));
 
     // insertEmploymentDetailsController
-    $occupation             = $_POST['occupation'] ?? '';
-    $employment_status      = $_POST['employment_status'] ?? '';
-    $duties                 = $_POST['duties'] ?? '';
-    $employer               = $_POST['employer'] ?? '';
-    $work                   = $_POST['work'] ?? '';
-    $nature_business        = $_POST['nature_business'] ?? '';
-    $employer_mobile_number = $_POST['employer_mobile_number'] ?? '';
-    $employer_email_address = $_POST['employer_email_address'] ?? '';
-    $monthly_income         = $_POST['monthly_income'] ?? '';
+    $occupation             = htmlspecialchars(trim($_POST['occupation'] ?? ''));
+    $employment_status      = htmlspecialchars(trim($_POST['employment_status'] ?? ''));
+    $duties                 = htmlspecialchars(trim($_POST['duties'] ?? ''));
+    $employer               = htmlspecialchars(trim($_POST['employer'] ?? ''));
+    $work                   = htmlspecialchars(trim($_POST['work'] ?? ''));
+    $nature_business        = htmlspecialchars(trim($_POST['nature_business'] ?? ''));
+    $employer_mobile_number = htmlspecialchars(trim($_POST['employer_mobile_number'] ?? ''));
+    $employer_email_address = htmlspecialchars(trim($_POST['employer_email_address'] ?? ''));
+    $monthly_income         = htmlspecialchars(trim($_POST['monthly_income'] ?? ''));
 
     // insertPlanInformationController
     $fraternal_benefits_id = $_POST['fraternal_benefits_id'] ?? '';
@@ -51,43 +53,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $benefit_relationships = $_POST['benefit_relationship'] ?? [];
 
     // insertFamilyBackgroundController
-    $father_lastname   = $_POST['father_lastname'] ?? '';
-    $father_firstname  = $_POST['father_firstname'] ?? '';
-    $father_mi         = $_POST['father_mi'] ?? '';
-    $mother_lastname   = $_POST['mother_lastname'] ?? '';
-    $mother_firstname  = $_POST['mother_firstname'] ?? '';
-    $mother_mi         = $_POST['mother_mi'] ?? '';
-    $siblings_living   = $_POST['siblings_living'] ?? 0;
-    $siblings_deceased = $_POST['siblings_deceased'] ?? 0;
-    $children_living   = $_POST['children_living'] ?? 0;
-    $children_deceased = $_POST['children_deceased'] ?? 0;
+    $father_lastname   = htmlspecialchars(trim($_POST['father_lastname'] ?? ''));
+    $father_firstname  = htmlspecialchars(trim($_POST['father_firstname'] ?? ''));
+    $father_mi         = htmlspecialchars(trim($_POST['father_mi'] ?? ''));
+    $mother_lastname   = htmlspecialchars(trim($_POST['mother_lastname'] ?? ''));
+    $mother_firstname  = htmlspecialchars(trim($_POST['mother_firstname'] ?? ''));
+    $mother_mi         = htmlspecialchars(trim($_POST['mother_mi'] ?? ''));
+    $siblings_living   = intval($_POST['siblings_living'] ?? 0);
+    $siblings_deceased = intval($_POST['siblings_deceased'] ?? 0);
+    $children_living   = intval($_POST['children_living'] ?? 0);
+    $children_deceased = intval($_POST['children_deceased'] ?? 0);
 
     // insertMedicalHistoryController
-    $past_illness       = $_POST['past_illness'] ?? '';
-    $current_medication = $_POST['current_medication'] ?? '';
+    $past_illness       = htmlspecialchars(trim($_POST['past_illness'] ?? ''));
+    $current_medication = htmlspecialchars(trim($_POST['current_medication'] ?? ''));
 
     // insertFamilyHealthController
-    $father_living_age   = $_POST['father_living_age'] ?? '';
-    $father_health       = $_POST['father_health'] ?? '';
-    $mother_living_age   = $_POST['mother_living_age'] ?? '';
-    $mother_health       = $_POST['mother_health'] ?? '';
-    $siblings_living_age = $_POST['siblings_living_age'] ?? '';
-    $siblings_health     = $_POST['siblings_health'] ?? '';
-    $children_living_age = $_POST['children_living_age'] ?? '';
-    $children_health     = $_POST['children_health'] ?? '';
-    $father_death_age    = $_POST['father_death_age'] ?? '';
-    $father_cause        = $_POST['father_cause'] ?? '';
-    $mother_death_age    = $_POST['mother_death_age'] ?? '';
-    $mother_cause        = $_POST['mother_cause'] ?? '';
-    $siblings_death_age  = $_POST['siblings_death_age'] ?? '';
-    $siblings_cause      = $_POST['siblings_cause'] ?? '';
-    $children_death_age  = $_POST['children_death_age'] ?? '';
-    $children_cause      = $_POST['children_cause'] ?? '';
+    $father_living_age   = htmlspecialchars(trim($_POST['father_living_age'] ?? ''));
+    $father_health       = htmlspecialchars(trim($_POST['father_health'] ?? ''));
+    $mother_living_age   = htmlspecialchars(trim($_POST['mother_living_age'] ?? ''));
+    $mother_health       = htmlspecialchars(trim($_POST['mother_health'] ?? ''));
+    $siblings_living_age = htmlspecialchars(trim($_POST['siblings_living_age'] ?? ''));
+    $siblings_health     = htmlspecialchars(trim($_POST['siblings_health'] ?? ''));
+    $children_living_age = htmlspecialchars(trim($_POST['children_living_age'] ?? ''));
+    $children_health     = htmlspecialchars(trim($_POST['children_health'] ?? ''));
+    $father_death_age    = htmlspecialchars(trim($_POST['father_death_age'] ?? ''));
+    $father_cause        = htmlspecialchars(trim($_POST['father_cause'] ?? ''));
+    $mother_death_age    = htmlspecialchars(trim($_POST['mother_death_age'] ?? ''));
+    $mother_cause        = htmlspecialchars(trim($_POST['mother_cause'] ?? ''));
+    $siblings_death_age  = htmlspecialchars(trim($_POST['siblings_death_age'] ?? ''));
+    $siblings_cause      = htmlspecialchars(trim($_POST['siblings_cause'] ?? ''));
+    $children_death_age  = htmlspecialchars(trim($_POST['children_death_age'] ?? ''));
+    $children_cause      = htmlspecialchars(trim($_POST['children_cause'] ?? ''));
 
     // insertPhysicianDetailsController
-    $physician_name = $_POST['physician_name'] ?? '';
-    $contact_number = $_POST['contact_number'] ?? '';
-    $clinic_address = $_POST['clinic_address'] ?? '';
+    $physician_name = htmlspecialchars(trim($_POST['physician_name'] ?? ''));
+    $contact_number = htmlspecialchars(trim($_POST['contact_number'] ?? ''));
+    $clinic_address = htmlspecialchars(trim($_POST['clinic_address'] ?? ''));
 
     // insertPersonalAndMembershipDetailsController
     $height            = $_POST['height'] ?? '';
@@ -97,23 +99,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $present_degree    = $_POST['present_degree'] ?? '';
     $good_standing     = $_POST['good_standing'] ?? '';
 
+    if (isset($_FILES['signature_file']) && $_FILES['signature_file']['error'] === UPLOAD_ERR_OK) {
+        $allowed_types = ['image/png', 'image/jpeg'];
+        $file_type = $_FILES['signature_file']['type'];
+        if (!in_array($file_type, $allowed_types)) {
+            $_SESSION['error'] = "Invalid signature file type.";
+            header("Location: " . BASE_URL . "views/member/member.php");
+            exit();
+        }
+
+        $signature_tmp  = $_FILES['signature_file']['tmp_name'];
+        $signature_name = basename($_FILES['signature_file']['name']);
+    } else {
+        $_SESSION['error'] = "Signature upload failed.";
+        header("Location: " . BASE_URL . "views/member/member.php");
+        exit();
+    }
+
     $model  = new MemberApplicationModel($conn);
-    $result = $model->insertApplicant($user_id,$frateral_counselor_id,$lastname,$firstname,$middlename,$birthdate,$birthplace,$age,$gender,$marital_status,$tin_sss,$nationality);
+    $result = $model->insertApplicant($user_id, $frateral_counselor_id, $lastname, $firstname, $middlename, $birthdate, $birthplace, $age, $gender, $marital_status, $tin_sss, $nationality);
 
-    $result1 = $model->insertApplicantContactDetails($applicant_id,$user_id,$street,$barangay,$city_province,$mobile_number,$email_address);
+    $result1 = $model->insertApplicantContactDetails($applicant_id, $user_id, $street, $barangay, $city_province, $mobile_number, $email_address);
 
-    $result2 = $model->insertEmploymentDetails( $applicant_id, $user_id, $occupation, $employment_status, $duties, $employer, $work, $nature_business, $employer_mobile_number, $employer_email_address, $monthly_income);
-    $result3 = $model->insertPlanInformation( $applicant_id, $user_id, $fraternal_benefits_id, $council_id, $payment_mode, $contribution_amount, $currency);
+    $result2 = $model->insertEmploymentDetails($applicant_id, $user_id, $occupation, $employment_status, $duties, $employer, $work, $nature_business, $employer_mobile_number, $employer_email_address, $monthly_income);
+    $result3 = $model->insertPlanInformation($applicant_id, $user_id, $fraternal_benefits_id, $council_id, $payment_mode, $contribution_amount, $currency);
 
-    $result4 = $model->addBeneficiaries( $applicant_id, $user_id, $benefit_types, $benefit_names, $benefit_birthdates,$benefit_relationships);
+    $result4 = $model->addBeneficiaries($applicant_id, $user_id, $benefit_types, $benefit_names, $benefit_birthdates, $benefit_relationships);
 
-    $result5 = $model->insertFamilyBackground( $applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_decease);
+    $result5 = $model->insertFamilyBackground($applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_deceased);
 
-    $result6 = $model->insertMedicalHistory( $applicant_id, $user_id, $past_illness, $current_medication);
+    $result6 = $model->insertMedicalHistory($applicant_id, $user_id, $past_illness, $current_medication);
 
-    $result7 = $model->insertFamilyHealth( $applicant_id, $user_id, $father_living_age, $father_health, $mother_living_age, $mother_health, $siblings_living_age, $siblings_health, $children_living_age, $children_health, $father_death_age, $father_cause, $mother_death_age, $mother_cause, $siblings_death_age, $siblings_cause, $children_death_age, $children_cause);
+    $result7 = $model->insertFamilyHealth($applicant_id, $user_id, $father_living_age, $father_health, $mother_living_age, $mother_health, $siblings_living_age, $siblings_health, $children_living_age, $children_health, $father_death_age, $father_cause, $mother_death_age, $mother_cause, $siblings_death_age, $siblings_cause, $children_death_age, $children_cause);
 
-    $result8 = $model->insertPhysicianDetails( $applicant_id, $user_id, $physician_name, $contact_number, $clinic_address);
+    $result8 = $model->insertPhysicianDetails($applicant_id, $user_id, $physician_name, $contact_number, $clinic_address);
 
     // insertHealthQuestionsController
     $responses = [];
@@ -142,10 +161,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $signature_name = basename($_FILES['signature_file']['name']);
     } else {
         $_SESSION['error'] = "Signature upload failed.";
-        header("Location: personal_membership_form.php");
+        header("Location: " . BASE_URL . "views/member/member.php");
         exit();
     }
 
-    $result10 = $model->insertPersonalAndMembershipDetails( $applicant_id, $user_id, $height, $weight, $signature_tmp, $signature_name, $pregnant_question, $council_id, $first_degree_date, $present_degree, $good_standing);
+    $result10 = $model->insertPersonalAndMembershipDetails($applicant_id, $user_id, $height, $weight, $signature_tmp, $signature_name, $pregnant_question, $council_id, $first_degree_date, $present_degree, $good_standing);
+
+    
+    if (! $result1 || ! $result2 || ! $result4 || ! $result5 ||! $result6 ||! $result7 ||! $result8 ||! $result9 || ! $result10) {
+        $_SESSION['error'] = "There was an error saving the application. Please try again.";
+        header("Location: " . BASE_URL . "views/member/member.php");
+        exit();
+    } else {
+        $_SESSION['success'] = "Application submitted successfully.";
+        header("Location: " . BASE_URL . "views/member/member.php");
+        exit();
+    }
+} else {
+    $_SESSION['error'] = "Invalid request.";
+    header("Location: " . BASE_URL . "views/member/member.php");
+    exit();
 
 }
