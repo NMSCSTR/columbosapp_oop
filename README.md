@@ -155,3 +155,83 @@ Total paid over 5 years: ₱60,000.00
 Coverage after 15 years: ₱100,000.00
 
 So, the applicant pays ₱60,000.00 in total, but the policyholder’s beneficiaries or the applicant themselves (if they survive the policy term) would receive ₱100,000.00 as the face value when the policy matures or the claim occurs.
+
+
+<!-- Member Applicant Controller -->
+1. applicant Data Insertion:
+In your controller, you're using the insertApplicant method, which passes values like user_id, fraternal_counselor_id, firstname, lastname, middlename, birthdate, age, gender, marital_status, tin_sss, and nationality.
+
+Your database schema for the applicants table includes these columns:
+
+user_id, fraternal_counselor_id, firstname, lastname, middlename, birthdate, gender, marital_status, tin_sss, and nationality — these match the fields you're inserting. However, you also have applicant_id in the table, but you're passing it as null in the controller, which may be automatically set (as applicant_id should be an auto-increment field). Ensure that applicant_id is indeed set as AUTO_INCREMENT in your schema.
+
+2. applicant_contact_info Data Insertion:
+The controller has the insertApplicantContactDetails method, which inserts values such as street, barangay, city_province, mobile_number, and email_address.
+
+These fields correspond to the contact_info table:
+
+Columns applicant_id, user_id, street, barangay, city_province, mobile_number, and email_address — these match the fields you're inserting. This part seems fine.
+
+3. employment Data Insertion:
+The controller has the insertEmploymentDetails method, which inserts fields like occupation, employment_status, duties, employer, work, nature_business, employer_mobile_number, employer_email_address, and monthly_income.
+
+These fields map to the employment table:
+
+Columns like applicant_id, user_id, occupation, employment_status, duties, employer, work, nature_business, employer_mobile_number, employer_email_address, and monthly_income — this matches your schema, so no issues here.
+
+4. plans Data Insertion:
+The insertPlanInformation method in the controller inserts fraternal_benefits_id, council_id, payment_mode, contribution_amount, and currency.
+
+These fields align with the plans table schema:
+
+The plans table has columns like fraternal_benefits_id, council_id, payment_mode, contribution_amount, and currency — this is correct. Just ensure that plan_id is set as AUTO_INCREMENT in your schema, as it’s not passed in the controller.
+
+5. beneficiaries Data Insertion:
+The addBeneficiaries method in the controller inserts arrays of benefit_type, benefit_name, benefit_birthdate, and benefit_relationship.
+
+These fields align with the beneficiaries table schema:
+
+Columns like applicant_id, user_id, benefit_type, benefit_name, benefit_birthdate, and benefit_relationship match, but ensure that you correctly handle multiple beneficiaries (since you're inserting arrays).
+
+6. family_background Data Insertion:
+The controller inserts family details like father_lastname, father_firstname, father_mi, mother_lastname, mother_firstname, mother_mi, siblings_living, siblings_deceased, children_living, and children_deceased.
+
+These fields match the family_background table:
+
+The family_background table has columns like applicant_id, user_id, father_lastname, father_firstname, father_mi, mother_lastname, mother_firstname, mother_mi, siblings_living, siblings_deceased, children_living, and children_deceased. This is consistent with your schema.
+
+7. medical_history Data Insertion:
+The controller has the insertMedicalHistory method, which inserts fields like past_illness and current_medication.
+
+These fields match the medical_history table:
+
+The medical_history table has columns like applicant_id, user_id, past_illness, and current_medication, so this part seems fine.
+
+8. family_health Data Insertion:
+The controller inserts fields like father_living_age, father_health, mother_living_age, mother_health, siblings_living_age, siblings_health, children_living_age, children_health, father_death_age, father_cause, mother_death_age, mother_cause, siblings_death_age, siblings_cause, children_death_age, and children_cause.
+
+These fields map to the family_health table:
+
+The family_health table has columns like applicant_id, user_id, father_living_age, father_health, mother_living_age, mother_health, siblings_living_age, siblings_health, children_living_age, children_health, father_death_age, father_cause, mother_death_age, mother_cause, siblings_death_age, siblings_cause, children_death_age, and children_cause. This matches your schema.
+
+9. physician Data Insertion:
+The controller inserts physician_name, contact_number, and clinic_address.
+
+These fields align with the physician table:
+
+The physician table has columns like applicant_id, user_id, physician_name, contact_number, and clinic_address, which match the controller's code.
+
+10. health_questions Data Insertion:
+The controller gathers responses for health questions and then calls the insertHealthQuestions method.
+
+This involves the columns applicant_id, user_id, and responses (which is an associative array containing the answers for questions).
+
+Ensure that the table health_questions can handle these responses properly. Your schema appears to expect a question_id for each response, which isn't explicitly mentioned in the controller but can be derived from the questions (q1 to q12).
+
+11. personal_and_membership_details Data Insertion:
+The controller inserts fields such as height, weight, pregnant_question, council_id, first_degree_date, present_degree, good_standing, and signature_file.
+
+These fields align with the personal_details and membership tables:
+
+The personal_details table has applicant_id, height, weight, and so on, while the membership table has the council_id, first_degree_date, present_degree, and good_standing. Just make sure that signature_file is handled correctly and uploaded to the server before insertion.
+

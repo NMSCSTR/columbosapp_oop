@@ -204,7 +204,7 @@ class MemberApplicationModel
             return "Error: " . mysqli_error($this->conn);
         }
     }
-    
+
     public function insertFamilyHealth(
         $applicant_id,
         $user_id,
@@ -331,6 +331,7 @@ class MemberApplicationModel
         $first_degree_date  = mysqli_real_escape_string($this->conn, $first_degree_date);
         $present_degree     = mysqli_real_escape_string($this->conn, $present_degree);
         $good_standing      = mysqli_real_escape_string($this->conn, $good_standing);
+    
     
         
         $upload_dir = "../../uploads/signatures/";

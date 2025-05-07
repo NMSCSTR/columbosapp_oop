@@ -90,10 +90,10 @@ textarea.border-red-500 {
                                         <?php 
                                         if ($fraternalCounselor) {
                                             foreach ($fraternalCounselor as $fc) { ?>
-                                                <option value="<?php echo htmlspecialchars($fc['id']); ?>">
-                                                    <?php echo htmlspecialchars($fc['firstname'] . ' ' . $fc['lastname']); ?>
-                                                </option>
-                                            <?php }
+                                        <option value="<?php echo htmlspecialchars($fc['id']); ?>">
+                                            <?php echo htmlspecialchars($fc['firstname'] . ' ' . $fc['lastname']); ?>
+                                        </option>
+                                        <?php }
                                         }
                                         ?>
                                     </select>
@@ -685,20 +685,32 @@ textarea.border-red-500 {
                 <script>
                 function addBeneficiary() {
                     const container = document.getElementById('beneficiaries-container');
+                    const groups = container.querySelectorAll('.beneficiary-group');
+
+                    // Limit the number of beneficiaries to 5
+                    if (groups.length >= 5) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Limit Reached',
+                            text: 'You can only add up to 5 beneficiaries.',
+                            confirmButtonColor: '#06b6d4'
+                        });
+                        return;
+                    }
+
                     const group = document.createElement('div');
-                    group.className =
-                        "beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded";
+                    group.className = "beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded";
 
                     group.innerHTML = `
-                                <select class="border rounded p-2" name="benefit_type[]">
-                                    <option selected disabled>Type of Benefit</option>
-                                    <option value="Revocable">Revocable</option>
-                                    <option value="Irrevocable">Irrevocable</option>
-                                </select>
-                                <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full">
-                                <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full" >
-                                <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full">
-                            `;
+        <select class="border rounded p-2" name="benefit_type[]">
+            <option selected disabled>Type of Benefit</option>
+            <option value="Revocable">Revocable</option>
+            <option value="Irrevocable">Irrevocable</option>
+        </select>
+        <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full">
+        <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full">
+        <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full">
+    `;
 
                     container.appendChild(group);
                 }
