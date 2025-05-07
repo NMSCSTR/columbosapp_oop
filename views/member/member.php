@@ -524,6 +524,23 @@ textarea.border-red-500 {
                                         Upload Signature:
                                         <input type="file" name="signature_file" accept="image/*"
                                             class="mt-2 border p-2 w-full" required>
+                                        <img id="signaturePreview" class="mt-2 max-h-32" />
+                                        <script>
+                                        document.querySelector('input[name="signature_file"]').addEventListener(
+                                            'change',
+                                            function(e) {
+                                                const file = e.target.files[0];
+                                                if (file) {
+                                                    const reader = new FileReader();
+                                                    reader.onload = function(event) {
+                                                        document.getElementById('signaturePreview').src = event
+                                                            .target.result;
+                                                    }
+                                                    reader.readAsDataURL(file);
+                                                }
+                                            });
+                                        </script>
+
                                     </label>
                                 </div>
 
@@ -652,6 +669,24 @@ textarea.border-red-500 {
                     } else {
                         document.getElementById('multiStepForm').submit();
                     }
+
+                    document.querySelector('form').addEventListener('submit', function(e) {
+                        e.preventDefault(); // Prevent default form submission
+                        Swal.fire({
+                            title: 'Confirm Submission',
+                            text: 'Are you sure all your details are correct?',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, submit it!',
+                            cancelButtonText: 'Review Again',
+                            confirmButtonColor: '#06b6d4'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                e.target.submit(); // Submit the form after confirmation
+                            }
+                        });
+                    });
+
                 });
 
                 // Previous button

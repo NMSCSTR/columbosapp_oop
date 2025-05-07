@@ -8,7 +8,12 @@ class MemberApplicationModel
         $this->conn = $dbConnection;
     }
 
-    public function insertApplicant($user_id, $frateral_counselor_id, $firstname, $lastname, $middlename,  $age, $birthdate, $gender, $marital_status, $tin_sss, $nationality)
+    private function escape($value)
+    {
+        return mysqli_real_escape_string($this->conn, $value);
+    }
+
+    public function insertApplicant($user_id, $frateral_counselor_id, $firstname, $lastname, $middlename, $age, $birthdate, $birthplace, $gender, $marital_status, $tin_sss, $nationality)
     {
         $user_id               = mysqli_real_escape_string($this->conn, $user_id);
         $frateral_counselor_id = mysqli_real_escape_string($this->conn, $frateral_counselor_id);
@@ -16,6 +21,7 @@ class MemberApplicationModel
         $lastname              = mysqli_real_escape_string($this->conn, $lastname);
         $middlename            = mysqli_real_escape_string($this->conn, $middlename);
         $birthdate             = mysqli_real_escape_string($this->conn, $birthdate);
+        $birthplace            = mysqli_real_escape_string($this->conn, $birthplace);
         $age                   = mysqli_real_escape_string($this->conn, $age);
         $gender                = mysqli_real_escape_string($this->conn, $gender);
         $marital_status        = mysqli_real_escape_string($this->conn, $marital_status);
@@ -26,9 +32,9 @@ class MemberApplicationModel
 
         $sql = "
             INSERT INTO applicants
-            (user_id, frateral_counselor_id, firstname, lastname, middlename, age, birthdate, birthplace, gender, marital_status, tin_sss, nationality, status, application_status)
+            (user_id, frateral_counselor_id,lastname, firstname, middlename, age, birthdate, birthplace, gender, marital_status, tin_sss, nationality, status, application_status)
             VALUES
-            ('$user_id', '$frateral_counselor_id', '$firstname', '$lastname', '$middlename', '$birthdate', '$age', '$gender', '$marital_status', '$tin_sss', '$nationality', '$status', '$application_Status')
+            ('$user_id', '$frateral_counselor_id', '$lastname', '$firstname','$middlename', '$age', '$birthdate', '$birthplace', '$gender', '$marital_status', '$tin_sss', '$nationality', '$status', '$application_Status')
         ";
 
         if (mysqli_query($this->conn, $sql)) {
@@ -41,7 +47,7 @@ class MemberApplicationModel
     public function insertApplicantContactDetails($applicant_id, $user_id, $street, $barangay, $city_province, $mobile_number, $email_address)
     {
         $applicant_id  = mysqli_real_escape_string($this->conn, $applicant_id);
-        $user_id               = mysqli_real_escape_string($this->conn, $user_id);
+        $user_id       = mysqli_real_escape_string($this->conn, $user_id);
         $street        = mysqli_real_escape_string($this->conn, $street);
         $barangay      = mysqli_real_escape_string($this->conn, $barangay);
         $city_province = mysqli_real_escape_string($this->conn, $city_province);
@@ -112,15 +118,15 @@ class MemberApplicationModel
     {
         $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
         $user_id      = mysqli_real_escape_string($this->conn, $user_id);
-    
+
         $count = count($benefit_names);
-    
+
         for ($i = 0; $i < $count; $i++) {
             $benefit_type         = mysqli_real_escape_string($this->conn, $benefit_types[$i] ?? '');
             $benefit_name         = mysqli_real_escape_string($this->conn, $benefit_names[$i] ?? '');
             $benefit_birthdate    = mysqli_real_escape_string($this->conn, $benefit_birthdates[$i] ?? '');
             $benefit_relationship = mysqli_real_escape_string($this->conn, $benefit_relationships[$i] ?? '');
-    
+
             $sql = "INSERT INTO beneficiaries (
                         applicant_id,
                         user_id,
@@ -135,33 +141,32 @@ class MemberApplicationModel
                         '$benefit_name',
                         '$benefit_birthdate',
                         '$benefit_relationship'
-                        
+
                     )";
-    
-            if (!mysqli_query($this->conn, $sql)) {
+
+            if (! mysqli_query($this->conn, $sql)) {
                 return "Error inserting beneficiary $i: " . mysqli_error($this->conn);
             }
         }
-    
+
         return true;
     }
-    
 
     public function insertFamilyBackground($applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_deceased)
     {
 
-        $applicant_id      = mysqli_real_escape_string($this->conn, $applicant_id ?? '');
-        $user_id           = mysqli_real_escape_string($this->conn, $user_id ?? '');
-        $father_lastname   = mysqli_real_escape_string($this->conn, $father_lastname ?? '');
-        $father_firstname  = mysqli_real_escape_string($this->conn, $father_firstname ?? '');
-        $father_mi         = mysqli_real_escape_string($this->conn, $father_mi ?? '');
-        $mother_lastname   = mysqli_real_escape_string($this->conn, $mother_lastname ?? '');
-        $mother_firstname  = mysqli_real_escape_string($this->conn, $mother_firstname ?? '');
-        $mother_mi         = mysqli_real_escape_string($this->conn, $mother_mi ?? '');
-        $siblings_living   = mysqli_real_escape_string($this->conn, $siblings_living ?? 0);
-        $siblings_deceased = mysqli_real_escape_string($this->conn, $siblings_deceased ?? 0);
-        $children_living   = mysqli_real_escape_string($this->conn, $children_living ?? 0);
-        $children_deceased = mysqli_real_escape_string($this->conn, $children_deceased ?? 0);
+        $applicant_id      = $this->escape($applicant_id ?? '');
+        $user_id           = $this->escape($user_id ?? '');
+        $father_lastname   = $this->escape($father_lastname ?? '');
+        $father_firstname  = $this->escape($father_firstname ?? '');
+        $father_mi         = $this->escape($father_mi ?? '');
+        $mother_lastname   = $this->escape($mother_lastname ?? '');
+        $mother_firstname  = $this->escape($mother_firstname ?? '');
+        $mother_mi         = $this->escape($mother_mi ?? '');
+        $siblings_living   = $this->escape($siblings_living ?? 0);
+        $siblings_deceased = $this->escape($siblings_deceased ?? 0);
+        $children_living   = $this->escape($children_living ?? 0);
+        $children_deceased = $this->escape($children_deceased ?? 0);
 
         $sql = "INSERT INTO family_background (
                 applicant_id, user_id, father_lastname, father_firstname, father_mi,
@@ -244,8 +249,7 @@ class MemberApplicationModel
         $siblings_cause      = mysqli_real_escape_string($this->conn, $siblings_cause);
         $children_death_age  = mysqli_real_escape_string($this->conn, $children_death_age);
         $children_cause      = mysqli_real_escape_string($this->conn, $children_cause);
-    
- 
+
         $sql = "INSERT INTO family_health (
                     applicant_id, user_id, father_living_age, father_health, mother_living_age, mother_health,
                     siblings_living_age, siblings_health, children_living_age, children_health,
@@ -257,14 +261,13 @@ class MemberApplicationModel
                     '$father_death_age', '$father_cause', '$mother_death_age', '$mother_cause',
                     '$siblings_death_age', '$siblings_cause', '$children_death_age', '$children_cause'
                 )";
-    
+
         if (mysqli_query($this->conn, $sql)) {
             return true;
         } else {
             return "Error: " . mysqli_error($this->conn);
         }
     }
-    
 
     public function insertPhysicianDetails($applicant_id, $user_id, $physician_name, $contact_number, $clinic_address)
     {
@@ -322,47 +325,41 @@ class MemberApplicationModel
         $good_standing
     ) {
 
-        $applicant_id       = mysqli_real_escape_string($this->conn, $applicant_id);
-        $user_id            = mysqli_real_escape_string($this->conn, $user_id);
-        $height             = mysqli_real_escape_string($this->conn, $height);
-        $weight             = mysqli_real_escape_string($this->conn, $weight);
-        $pregnant_question  = mysqli_real_escape_string($this->conn, $pregnant_question);
-        $council_id         = mysqli_real_escape_string($this->conn, $council_id);
-        $first_degree_date  = mysqli_real_escape_string($this->conn, $first_degree_date);
-        $present_degree     = mysqli_real_escape_string($this->conn, $present_degree);
-        $good_standing      = mysqli_real_escape_string($this->conn, $good_standing);
-    
-    
-        
-        $upload_dir = "../../uploads/signatures/";
+        $applicant_id      = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id           = mysqli_real_escape_string($this->conn, $user_id);
+        $height            = mysqli_real_escape_string($this->conn, $height);
+        $weight            = mysqli_real_escape_string($this->conn, $weight);
+        $pregnant_question = mysqli_real_escape_string($this->conn, $pregnant_question);
+        $council_id        = mysqli_real_escape_string($this->conn, $council_id);
+        $first_degree_date = mysqli_real_escape_string($this->conn, $first_degree_date);
+        $present_degree    = mysqli_real_escape_string($this->conn, $present_degree);
+        $good_standing     = mysqli_real_escape_string($this->conn, $good_standing);
+
+        $upload_dir     = "../../uploads/signatures/";
         $signature_path = $upload_dir . basename($signature_file_name);
-    
-        if (!move_uploaded_file($signature_file_tmp, $signature_path)) {
+
+        if (! move_uploaded_file($signature_file_tmp, $signature_path)) {
             return "Error uploading signature file.";
         }
-    
-        
+
         $sql1 = "INSERT INTO personal_details (
                     applicant_id, user_id, height, weight, signature_file, pregnant_question
                 ) VALUES (
                     '$applicant_id', '$user_id', '$height', '$weight', '$signature_path', '$pregnant_question'
-                )"; 
-    
+                )";
 
         $sql2 = "INSERT INTO membership (
                     applicant_id, user_id, council_id, first_degree_date, present_degree, good_standing
                 ) VALUES (
                     '$applicant_id', '$user_id', '$council_id', '$first_degree_date', '$present_degree', '$good_standing'
                 )";
-    
- 
+
         if (mysqli_query($this->conn, $sql1) && mysqli_query($this->conn, $sql2)) {
             return true;
         } else {
             return "Error: " . mysqli_error($this->conn);
         }
     }
-
 
     public function deleteApplication($id)
     {

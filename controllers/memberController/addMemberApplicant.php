@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lastname              = $_POST['lastname'];
     $middlename            = $_POST['middlename'];
     $birthdate             = $_POST['birthdate'];
+    $birthplace             = $_POST['birthplace'];
     $age                   = $_POST['age'];
     $gender                = $_POST['gender'];
     $marital_status        = $_POST['marital_status'];
@@ -21,10 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $model->insertApplicant(
         $user_id,
         $frateral_counselor_id,
-        $firstname,
         $lastname,
+        $firstname,
         $middlename,
         $birthdate,
+        $birthplace,
         $age,
         $gender,
         $marital_status,
@@ -41,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email_address = $_POST['email_address'] ?? '';
 
     if ($applicant_id) {
-        $result = $this->model->insertApplicantContactDetails(
+        $result = $model->insertApplicantContactDetails(
             $applicant_id,
             $user_id,
             $street,
@@ -64,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $monthly_income         = $_POST['monthly_income'] ?? '';
 
     if ($applicant_id && $user_id) {
-        $result = $this->model->insertEmploymentDetails(
+        $result = $model->insertEmploymentDetails(
             $applicant_id,
             $user_id,
             $occupation,
@@ -88,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $currency              = $_POST['currency'] ?? '';
 
     if ($applicant_id && $user_id) {
-        $result = $this->model->insertPlanInformation(
+        $result = $model->insertPlanInformation(
             $applicant_id,
             $user_id,
             $fraternal_benefits_id,
@@ -107,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $benefit_relationships = $_POST['benefit_relationship'] ?? [];
 
     if ($applicant_id && $user_id) {
-        $result = $this->model->addBeneficiaries(
+        $result = $model->addBeneficiaries(
             $applicant_id,
             $user_id,
             $benefit_types,
@@ -129,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $children_living   = $_POST['children_living'] ?? 0;
     $children_deceased = $_POST['children_deceased'] ?? 0;
 
-    $result = $this->$model->insertFamilyBackground(
+    $result =$model->insertFamilyBackground(
         $applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi,
         $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased,
         $children_living, $children_deceased
@@ -139,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $past_illness       = $_POST['past_illness'] ?? '';
     $current_medication = $_POST['current_medication'] ?? '';
 
-    $result = $this->$model->insertMedicalHistory(
+    $result = $model->insertMedicalHistory(
         $applicant_id,
         $user_id,
         $past_illness,
@@ -164,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $children_death_age  = $_POST['children_death_age'] ?? '';
     $children_cause      = $_POST['children_cause'] ?? '';
 
-    $result = $this->$model->insertFamilyHealth(
+    $result = $model->insertFamilyHealth(
         $applicant_id,
         $user_id,
         $father_living_age,
@@ -190,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contact_number = $_POST['contact_number'] ?? '';
     $clinic_address = $_POST['clinic_address'] ?? '';
 
-    $result = $this->model->insertPhysicianDetails(
+    $result = $model->insertPhysicianDetails(
         $applicant_id,
         $user_id,
         $physician_name,
@@ -218,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'details'  => $_POST["{$question_code}_details"] ?? '',
         ];
     }
-    $result = $this->model->insertHealthQuestions($applicant_id, $user_id, $responses);
+    $result = $model->insertHealthQuestions($applicant_id, $user_id, $responses);
 
     // insertPersonalAndMembershipDetailsController
     $height            = $_POST['height'] ?? '';
@@ -239,7 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    $result = $this->model->insertPersonalAndMembershipDetails(
+    $result = $model->insertPersonalAndMembershipDetails(
         $applicant_id,
         $user_id,
         $height,
