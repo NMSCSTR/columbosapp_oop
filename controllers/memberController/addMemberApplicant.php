@@ -198,6 +198,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $clinic_address
     );
 
-    
+    // insertHealthQuestionsController
+    $responses = [];
+    for ($i = 1; $i <= 12; $i++) {
+        $question_code = "q" . $i;
+        if ($i === 10) {
+            foreach (['a', 'b'] as $suffix) {
+                $code             = "q10$suffix";
+                $responses[$code] = [
+                    'response' => $_POST["{$code}_response"] ?? 'No',
+                    'details'  => $_POST["{$code}_details"] ?? '',
+                ];
+            }
+            continue;
+        }
+
+        $responses[$question_code] = [
+            'response' => $_POST["{$question_code}_response"] ?? 'No',
+            'details'  => $_POST["{$question_code}_details"] ?? '',
+        ];
+    }
+    $result = $this->model->insertHealthQuestions($applicant_id, $user_id, $responses);
+
+    // insertPersonalAndMembershipDetailsController
+    $height            = $_POST['height'] ?? '';
+    $weight            = $_POST['weight'] ?? '';
+    $pregnant_question = $_POST['pregnant_question'] ?? '';
+    $council_id        = $_POST['council_id'] ?? '';
+    $first_degree_date = $_POST['first_degree_date'] ?? '';
+    $present_degree    = $_POST['present_degree'] ?? '';
+    $good_standing     = $_POST['good_standing'] ?? '';
+
+
+    if (isset($_FILES['signature_file']) && $_FILES['signature_file']['error'] === UPLOAD_ERR_OK) {
+        $signature_tmp  = $_FILES['signature_file']['tmp_name'];
+        $signature_name = basename($_FILES['signature_file']['name']);
+    } else {
+        $_SESSION['error'] = "Signature upload failed.";
+        header("Location: personal_membership_form.php");
+        exit();
+    }
+
+    $result = $this->model->insertPersonalAndMembershipDetails(
+        $applicant_id,
+        $user_id,
+        $height,
+        $weight,
+        $signature_tmp,
+        $signature_name,
+        $pregnant_question,
+        $council_id,
+        $first_degree_date,
+        $present_degree,
+        $good_standing
+    );
+
 
 }
