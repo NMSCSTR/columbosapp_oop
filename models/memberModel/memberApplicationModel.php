@@ -313,7 +313,7 @@ class MemberApplicationModel
                     applicant_id, user_id, height, weight, signature_file, pregnant_question
                 ) VALUES (
                     '$applicant_id', '$user_id', '$height', '$weight', '$signature_path', '$pregnant_question'
-                )";
+                )"; 
     
 
         $sql2 = "INSERT INTO membership (
@@ -329,13 +329,7 @@ class MemberApplicationModel
             return "Error: " . mysqli_error($this->conn);
         }
     }
-    
 
-
-
-    public function updateAApplication()
-    {
-    }
 
     public function deleteApplication($id)
     {

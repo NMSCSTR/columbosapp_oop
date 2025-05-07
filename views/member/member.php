@@ -447,7 +447,7 @@ textarea.border-red-500 {
                                         class="border rounded p-2" required>
 
                                     <!-- Pregnancy Question -->
-                                    <select name="pregnant_question" class="border rounded p-2" required>
+                                    <select name="pregnant_question" class="border rounded p-2">
                                         <option value="" disabled selected>Are you currently pregnant?</option>
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
@@ -457,7 +457,7 @@ textarea.border-red-500 {
                                     <label class="block col-span-2">
                                         Upload Signature:
                                         <input type="file" name="signature_file" accept="image/*"
-                                            class="mt-2 border p-2 w-full" required>
+                                            class="mt-2 border p-2 w-full">
                                     </label>
                                 </div>
 
@@ -483,15 +483,15 @@ textarea.border-red-500 {
                                     <label>
                                         First Degree Date:
                                         <input type="date" name="first_degree_date" class="border rounded p-2 w-full"
-                                            required>
+                                            >
                                     </label>
 
                                     <!-- Present Degree -->
                                     <input type="text" name="present_degree" placeholder="Present Degree"
-                                        class="border rounded p-2" required>
+                                        class="border rounded p-2" >
 
                                     <!-- Good Standing -->
-                                    <select name="good_standing" class="border rounded p-2" required>
+                                    <select name="good_standing" class="border rounded p-2">
                                         <option value="" disabled selected>Good Standing?</option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
