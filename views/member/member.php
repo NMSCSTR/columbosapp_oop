@@ -225,43 +225,35 @@ textarea.border-red-500 {
                             <!-- Step 6: Family Background -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 6: Family Background</h2>
-                                <form method="POST" action="your_backend_script.php">
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <!-- Father Information -->
-                                        <input type="text" name="father_lastname" placeholder="Father's Last Name"
-                                            class="border rounded p-2">
-                                        <input type="text" name="father_firstname" placeholder="Father's First Name"
-                                            class="border rounded p-2">
-                                        <input type="text" name="father_mi" placeholder="Father's Middle Initial"
-                                            class="border rounded p-2">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- Father Information -->
+                                    <input type="text" name="father_lastname" placeholder="Father's Last Name"
+                                        class="border rounded p-2">
+                                    <input type="text" name="father_firstname" placeholder="Father's First Name"
+                                        class="border rounded p-2">
+                                    <input type="text" name="father_mi" placeholder="Father's Middle Initial"
+                                        class="border rounded p-2">
 
-                                        <!-- Mother Information -->
-                                        <input type="text" name="mother_lastname" placeholder="Mother's Last Name"
-                                            class="border rounded p-2">
-                                        <input type="text" name="mother_firstname" placeholder="Mother's First Name"
-                                            class="border rounded p-2">
-                                        <input type="text" name="mother_mi" placeholder="Mother's Middle Initial"
-                                            class="border rounded p-2">
+                                    <!-- Mother Information -->
+                                    <input type="text" name="mother_lastname" placeholder="Mother's Last Name"
+                                        class="border rounded p-2">
+                                    <input type="text" name="mother_firstname" placeholder="Mother's First Name"
+                                        class="border rounded p-2">
+                                    <input type="text" name="mother_mi" placeholder="Mother's Middle Initial"
+                                        class="border rounded p-2">
 
-                                        <!-- Siblings Information -->
-                                        <input type="number" name="siblings_living"
-                                            placeholder="Number of Living Siblings" class="border rounded p-2">
-                                        <input type="number" name="siblings_deceased"
-                                            placeholder="Number of Deceased Siblings" class="border rounded p-2">
+                                    <!-- Siblings Information -->
+                                    <input type="number" name="siblings_living" placeholder="Number of Living Siblings"
+                                        class="border rounded p-2">
+                                    <input type="number" name="siblings_deceased"
+                                        placeholder="Number of Deceased Siblings" class="border rounded p-2">
 
-                                        <!-- Children Information -->
-                                        <input type="number" name="children_living"
-                                            placeholder="Number of Living Children" class="border rounded p-2">
-                                        <input type="number" name="children_deceased"
-                                            placeholder="Number of Deceased Children" class="border rounded p-2">
-                                    </div>
-
-                                    <!-- Submit Button -->
-                                    <button type="submit"
-                                        class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
-                                        Submit Family Background
-                                    </button>
-                                </form>
+                                    <!-- Children Information -->
+                                    <input type="number" name="children_living" placeholder="Number of Living Children"
+                                        class="border rounded p-2">
+                                    <input type="number" name="children_deceased"
+                                        placeholder="Number of Deceased Children" class="border rounded p-2">
+                                </div>
                             </div>
 
 
@@ -279,9 +271,12 @@ textarea.border-red-500 {
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 8: Physician Details</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="Physician Name" class="border rounded p-2">
-                                    <input type="text" placeholder="Contact Number" class="border rounded p-2">
-                                    <input type="text" placeholder="Clinic Address" class="border rounded p-2">
+                                    <input type="text" placeholder="Physician Name" name="physician_name"
+                                        class="border rounded p-2">
+                                    <input type="text" placeholder="Contact Number" name="contact_number"
+                                        class="border rounded p-2">
+                                    <input type="text" placeholder="Clinic Address" name="clinic_address"
+                                        class="border rounded p-2">
                                 </div>
                             </div>
 
@@ -291,107 +286,219 @@ textarea.border-red-500 {
                                 <p>If you answered YES to any of the following questions, please provide details to
                                     space provided below.</p>
                                 <div class="grid grid-cols-1 gap-4">
+                                    <!-- Question 1 -->
                                     <label>1. Do you drive a motorcycle? If yes, please state how often and for what
-                                        purpose.? <select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
-                                    <label>2. Are you engaged in auto/motorboat racing, sky/scuba diving or other
-                                        hazardous
-                                        avocations? <select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
+                                        purpose.
+                                        <select name="q1_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q1_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 2 -->
+                                    <label>2. Are you engaged in auto/motorboat racing, sky/scuba diving, or other
+                                        hazardous activities?
+                                        <select name="q2_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q2_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 3 -->
                                     <label>3. Do you intend to ride an aircraft other than as a passenger in a
-                                        commercial
-                                        passenger airline?<select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
+                                        commercial passenger airline?
+                                        <select name="q3_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q3_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 4 -->
                                     <label>4. Are you now or do you intend to be enlisted with the military, naval, or
-                                        air
-                                        force service other than as a reserve?
-                                        <select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
+                                        air force service other than as a reserve?
+                                        <select name="q4_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q4_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 5 -->
                                     <label>5. Do you have any pending application for life insurance or accident
                                         insurance?
-                                        <select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
-                                    <label>6. Have you made an application for the life insurance, or for reinstatement
-                                        policy with other insurance company/ies which was declined, postponed, cancelled
-                                        or modified in terms of the plan, amount or rate? <select
-                                            class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
-                                    <!-- <label>Any disabilities? <input type="text" placeholder="If yes, specify"
-                                            class="border rounded p-2 w-full"></label> -->
-                                    <p>Please give
-                                        details to the YES answers you indicated on item 1-6</p>
-                                    <textarea id="message" rows="4"
-                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Please give details here..."></textarea>
+                                        <select name="q5_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q5_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
 
-                                    <label>7. Have any of your parents/siblings, died/suffered from heart disease,
-                                        stroke, high blood pressure, diabetes or cancer? <select
-                                            class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
-                                    <label>8.Are you an incumbent elected official, local or national or planning,
-                                        contemplating to hold any elective position?<select
-                                            class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
-                                    <label>9.Have you lost/gained weight during the past 12 months? How many
-                                        pounds/kilos? Why?<select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
-                                    <label>10. A .Have you, for physical reason, ever been discharged from employment,
-                                        active military or naval service?<select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
-                                    <label>B.Have you applied for or received disability benefits or pension from any
-                                        source?<select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
-                                    <label>11.Have you used alcoholic beverages in excess, taken habit forming drugs or
-                                        sought advice or treatment for alcoholism, drugs or other forms of
-                                        addiction?<select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
+                                    <!-- Question 6 -->
+                                    <label>6. Have you made an application for life insurance or for reinstatement of a
+                                        policy with other insurance company/ies which was declined, postponed,
+                                        cancelled, or modified in terms of the plan, amount, or rate?
+                                        <select name="q6_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q6_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 7 -->
+                                    <label>7. Have any of your parents/siblings died or suffered from heart disease,
+                                        stroke, high blood pressure, diabetes, or cancer?
+                                        <select name="q7_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q7_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 8 -->
+                                    <label>8. Are you an incumbent elected official, local or national, or planning or
+                                        contemplating to hold any elective position?
+                                        <select name="q8_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q8_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 9 -->
+                                    <label>9. Have you lost/gained weight during the past 12 months? How many
+                                        pounds/kilos? Why?
+                                        <select name="q9_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q9_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 10A -->
+                                    <label>10A. Have you, for physical reason, ever been discharged from employment,
+                                        active military or naval service?
+                                        <select name="q10a_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q10a_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 10B -->
+                                    <label>10B. Have you applied for or received disability benefits or pension from any
+                                        source?
+                                        <select name="q10b_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q10b_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 11 -->
+                                    <label>11. Have you used alcoholic beverages in excess, taken habit-forming drugs,
+                                        or sought advice or treatment for alcoholism, drugs, or other forms of
+                                        addiction?
+                                        <select name="q11_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q11_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
+                                    <!-- Question 12 -->
                                     <label>12. Are you engaged in any hazardous avocation like car/motorcycle racing or
-                                        scuba diving? How often?<select class="border rounded py-3 px-4">
-                                            <option>No </option>
-                                            <option>Yes </option>
-                                        </select></label>
-                                    <p>Please give
-                                        details to the YES answers you indicated</p>
-                                    <textarea id="message" rows="4"
-                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Please give details here..."></textarea>
+                                        scuba diving? How often?
+                                        <select name="q12_response" class="border rounded py-3 px-4">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </label>
+                                    <textarea name="q12_details" placeholder="Details (if Yes)"
+                                        class="border rounded p-2 w-full"></textarea>
+
                                 </div>
                             </div>
 
-                            <!-- Step 10 -->
+                            <!-- Step 10: Personal and Membership Details -->
                             <div class="step-content">
-                                <h2 class="text-lg font-bold mb-4">Step 10: Personal Signature</h2>
-                                <div class="grid grid-cols-1 gap-4">
-                                    <label class="block">
+                                <h2 class="text-lg font-bold mb-4">Step 10: Personal and Membership Information</h2>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- Height -->
+                                    <input type="text" name="height" placeholder="Height (cm/in)"
+                                        class="border rounded p-2" required>
+
+                                    <!-- Weight -->
+                                    <input type="text" name="weight" placeholder="Weight (kg/lbs)"
+                                        class="border rounded p-2" required>
+
+                                    <!-- Pregnancy Question -->
+                                    <select name="pregnant_question" class="border rounded p-2" required>
+                                        <option value="" disabled selected>Are you currently pregnant?</option>
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+
+                                    <!-- Upload Signature -->
+                                    <label class="block col-span-2">
                                         Upload Signature:
-                                        <input type="file" accept="image/*" class="mt-2 border p-2 w-full">
+                                        <input type="file" name="signature_file" accept="image/*"
+                                            class="mt-2 border p-2 w-full" required>
                                     </label>
                                 </div>
+
+                                <h3 class="text-md font-semibold mt-6 mb-2">Membership Details</h3>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- Council ID -->
+                                    <select class="border rounded" name="council_id">
+                                        <option selected disabled>Select Council</option>
+                                        <?php $councilModel = new CouncilModel($conn);
+                                        $councils                                                   = $councilModel->getAllCouncil();
+                                        if ($councils) {
+                                            foreach ($councils as $council) { ?>
+                                        <option value="<?php echo $council['council_id'] ?>">
+                                            <?php echo $council['council_name'] ?>
+                                        </option>
+                                        <?php
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+
+                                    <!-- First Degree Date -->
+                                    <label>
+                                        First Degree Date:
+                                        <input type="date" name="first_degree_date" class="border rounded p-2 w-full"
+                                            required>
+                                    </label>
+
+                                    <!-- Present Degree -->
+                                    <input type="text" name="present_degree" placeholder="Present Degree"
+                                        class="border rounded p-2" required>
+
+                                    <!-- Good Standing -->
+                                    <select name="good_standing" class="border rounded p-2" required>
+                                        <option value="" disabled selected>Good Standing?</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
                             </div>
+
 
                             <!-- Step 11 -->
                             <div class="step-content">
