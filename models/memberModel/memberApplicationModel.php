@@ -40,7 +40,7 @@ class MemberApplicationModel
         return $response;
     }
 
-    public function insertApplicant($user_id, $frateral_counselor_id, $firstname, $lastname, $middlename, $birthdate, $age, $gender, $marital_status, $tin_sss, $nationality)
+    public function insertApplicant($user_id, $frateral_counselor_id, $firstname, $lastname, $middlename,  $age, $birthdate, $gender, $marital_status, $tin_sss, $nationality)
     {
         $user_id               = mysqli_real_escape_string($this->conn, $user_id);
         $frateral_counselor_id = mysqli_real_escape_string($this->conn, $frateral_counselor_id);
@@ -197,7 +197,7 @@ class MemberApplicationModel
                 mother_lastname, mother_firstname, mother_mi,
                 siblings_living, siblings_deceased, children_living, children_deceased
             ) VALUES (
-                '$applicant_id','$user_id, '$father_lastname', '$father_firstname', '$father_mi',
+                '$applicant_id','$user_id', '$father_lastname', '$father_firstname', '$father_mi',
                 '$mother_lastname', '$mother_firstname', '$mother_mi',
                 '$siblings_living', '$siblings_deceased', '$children_living', '$children_deceased'
             )";

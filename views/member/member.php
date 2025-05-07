@@ -135,7 +135,7 @@ textarea.border-red-500 {
                                         name="employer_email_address" class="border rounded p-2">
                                     <input type="text" placeholder="Employer Mobile Number"
                                         name="employer_mobile_number" class="border rounded p-2">
-                                    <input type="number" placeholder="Monthly Income" name=monthly_income"
+                                    <input type="number" placeholder="Monthly Income" name="monthly_income"
                                         class="border rounded p-2">
                                 </div>
                             </div>
@@ -161,9 +161,9 @@ textarea.border-red-500 {
                                     </select>
                                     <select class="border rounded p-2" name="payment_mode">
                                         <option selected disabled>Mode of payment</option>
-                                        <option name="monthly">Monthly</option>
-                                        <option name="semi-annually">Semi-Annually</option>
-                                        <option name="quarterly">Quarterly</option>
+                                        <option value="monthly">Monthly</option>
+                                        <option value="semi-annually">Semi-Annually</option>
+                                        <option value="quarterly">Quarterly</option>
                                     </select>
                                     <select class="border rounded p-2" name="currency">
                                         <option selected disabled>Currency</option>
@@ -188,7 +188,7 @@ textarea.border-red-500 {
                                 </div>
                             </div>
 
-                            <!-- Step 5 -->
+                            <!-- Step 5. -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 5: Beneficiaries</h2>
 
@@ -201,8 +201,8 @@ textarea.border-red-500 {
                                             class="border rounded p-2 w-full" required> -->
                                         <select class="border rounded p-2" name="benefit_type[]">
                                             <option selected disabled>Type of Benefit</option>
-                                            <option name="Revocable">Revocable</option>
-                                            <option name="Irrevocable">Irrevocable</option>
+                                            <option value="Revocable">Revocable</option>
+                                            <option value="Irrevocable">Irrevocable</option>
                                         </select>
                                         <input type="text" name="benefit_name[]" placeholder="Beneficiary Name"
                                             class="border rounded p-2 w-full">
@@ -261,9 +261,10 @@ textarea.border-red-500 {
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 7: A. Medical History</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <textarea placeholder="Past Illnesses or Hospitalizations"
+                                    <textarea placeholder="Past Illnesses or Hospitalizations" name="past_illness"
                                         class="border rounded p-2"></textarea>
-                                    <textarea placeholder="Current Medications" class="border rounded p-2"></textarea>
+                                    <textarea placeholder="Current Medications" name="current_medication"
+                                        class="border rounded p-2"></textarea>
                                 </div>
                                 <h2 class="text-lg font-bold mb-4 mt-4">B. Family Health History</h2>
                                 <div class="grid grid-cols-2 gap-4">
@@ -508,7 +509,7 @@ textarea.border-red-500 {
                                     <label class="block col-span-2">
                                         Upload Signature:
                                         <input type="file" name="signature_file" accept="image/*"
-                                            class="mt-2 border p-2 w-full">
+                                            class="mt-2 border p-2 w-full" required>
                                     </label>
                                 </div>
 
@@ -651,6 +652,21 @@ textarea.border-red-500 {
                 updateStep();
                 </script>
 
+                <script>
+                document.querySelectorAll('select[name$="_response"]').forEach(select => {
+                    select.addEventListener('change', function() {
+                        const detailsField = document.querySelector(
+                            `[name="${this.name.replace('_response', '_details')}"]`);
+                        if (this.value === "Yes") {
+                            detailsField.disabled = false;
+                        } else {
+                            detailsField.disabled = true;
+                            detailsField.value = ''; // Clear details when "No" is selected
+                        }
+                    });
+                });
+                </script>
+
                 <!-- JavaScript for Dynamic Fields -->
                 <script>
                 function addBeneficiary() {
@@ -662,8 +678,8 @@ textarea.border-red-500 {
                     group.innerHTML = `
                                 <select class="border rounded p-2" name="benefit_type[]">
                                     <option selected disabled>Type of Benefit</option>
-                                    <option name="Revocable">Revocable</option>
-                                    <option name="Irrevocable">Irrevocable</option>
+                                    <option value="Revocable">Revocable</option>
+                                    <option value="Irrevocable">Irrevocable</option>
                                 </select>
                                 <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full">
                                 <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full" >
