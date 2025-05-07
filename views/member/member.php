@@ -1,16 +1,16 @@
 <?php
-    require_once '../../middleware/auth.php';
-    authorize(['admin', 'member']);
-    include '../../includes/config.php';
-    include '../../includes/db.php';
-    include '../../includes/header.php';
-    include '../../models/usersModel.php';
-    include '../../models/adminModel/councilModel.php';
-    include '../../models/adminModel/fraternalBenefitsModel.php';
+require_once '../../middleware/auth.php';
+authorize(['admin', 'member']);
+include '../../includes/config.php';
+include '../../includes/db.php';
+include '../../includes/header.php';
+include '../../models/usersModel.php';
+include '../../models/adminModel/councilModel.php';
+include '../../models/adminModel/fraternalBenefitsModel.php';
 
-    $userModel = new UserModel($conn);
-    $user      = $userModel->getUserById($_SESSION['user_id']);
-    // var_dump($user);
+$userModel = new UserModel($conn);
+$user      = $userModel->getUserById($_SESSION['user_id']);
+// var_dump($user);
 ?>
 <style>
 .step-content {
@@ -29,7 +29,7 @@ textarea.border-red-500 {
 </style>
 
 <div class="flex flex-col md:flex-row min-h-screen">
-    <?php include '../../partials/sidebar.php'?>
+    <?php include '../../partials/sidebar.php' ?>
     <!-- Main Content -->
     <main class="flex-1">
         <div class="p-4 sm:ml-64">
@@ -65,7 +65,7 @@ textarea.border-red-500 {
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="hidden" name="id" value="<?php echo $_SESSION['user_id']?>">
+                                    <input type="hidden" name="id" value="<?php echo $_SESSION['user_id'] ?>">
                                     <input type="text" placeholder="First Name"
                                         value="<?php echo htmlspecialchars($user['firstname']); ?>" name="firstname"
                                         class="border rounded p-2" readonly>
@@ -147,16 +147,16 @@ textarea.border-red-500 {
                                     <select class="border rounded p-2" name="fraternal_benefits_id">
                                         <option>Select Plan</option>
                                         <?php
-                                            $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
-                                            $fraternalBenefits      = $fraternalBenefitsModel->getAllFraternalBenefits();
+                                        $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
+                                        $fraternalBenefits      = $fraternalBenefitsModel->getAllFraternalBenefits();
 
-                                            if ($fraternalBenefits) {
-                                            foreach ($fraternalBenefits as $benefit) {?>
+                                        if ($fraternalBenefits) {
+                                            foreach ($fraternalBenefits as $benefit) { ?>
                                         <option value="<?php echo $benefit['id'] ?>"><?php echo $benefit['name'] ?>
                                         </option>
                                         <?php
                                             }
-                                            }
+                                        }
                                         ?>
                                     </select>
                                     <select class="border rounded p-2" name="payment_mode">
@@ -172,15 +172,15 @@ textarea.border-red-500 {
                                     <select class="border rounded p-2" name="council_id">
                                         <option selected disabled>Select Council</option>
                                         <?php $councilModel = new CouncilModel($conn);
-                                            $councils                                                   = $councilModel->getAllCouncil();
-                                            if ($councils) {
-                                            foreach ($councils as $council) {?>
+                                        $councils                                                   = $councilModel->getAllCouncil();
+                                        if ($councils) {
+                                            foreach ($councils as $council) { ?>
                                         <option value="<?php echo $council['council_id'] ?>">
                                             <?php echo $council['council_name'] ?>
                                         </option>
                                         <?php
                                             }
-                                            }
+                                        }
                                         ?>
                                     </select>
                                     <input type="number" placeholder="Payment Amount" name="contribution_amount"
@@ -188,38 +188,82 @@ textarea.border-red-500 {
                                 </div>
                             </div>
 
-<!-- Step 5 -->
-<div class="step-content">
-    <h2 class="text-lg font-bold mb-4">Step 5: Beneficiaries</h2>
+                            <!-- Step 5 -->
+                            <div class="step-content">
+                                <h2 class="text-lg font-bold mb-4">Step 5: Beneficiaries</h2>
 
-    <!-- Beneficiaries Container -->
-    <div id="beneficiaries-container" class="space-y-6">
-        <!-- First Beneficiary Group -->
-        <div class="beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded bg-gray-50">
-            <input type="text" name="benefit_type[]" placeholder="Type of Benefit" class="border rounded p-2 w-full" required>
-            <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full" required>
-            <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full" required>
-            <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full" required>
-            <input type="number" name="benefit_percentage[]" placeholder="Percentage (%)" class="border rounded p-2 w-full" required>
-        </div>
-    </div>
+                                <!-- Beneficiaries Container -->
+                                <div id="beneficiaries-container" class="space-y-6">
+                                    <!-- First Beneficiary Group -->
+                                    <div
+                                        class="beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded">
+                                        <!-- <input type="text" name="benefit_type[]" placeholder="Type of Benefit"
+                                            class="border rounded p-2 w-full" required> -->
+                                        <select class="border rounded p-2" name="benefit_type[]">
+                                            <option selected disabled>Type of Benefit</option>
+                                            <option name="Revocable">Revocable</option>
+                                            <option name="Irrevocable">Irrevocable</option>
+                                        </select>
+                                        <input type="text" name="benefit_name[]" placeholder="Beneficiary Name"
+                                            class="border rounded p-2 w-full">
+                                        <input type="date" name="benefit_birthdate[]" placeholder="Birthdate"
+                                            class="border rounded p-2 w-full">
+                                        <input type="text" name="benefit_relationship[]" placeholder="Relationship"
+                                            class="border rounded p-2 w-full">
+                                        <!-- <input type="number" name="benefit_percentage[]" placeholder="Percentage (%)"
+                                            class="border rounded p-2 w-full" required> -->
+                                    </div>
+                                </div>
 
-    <!-- Add Beneficiary Button -->
-    <button type="button" onclick="addBeneficiary()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
-        + Add Another Beneficiary
-    </button>
-</div>
+                                <!-- Add Beneficiary Button -->
+                                <button type="button" onclick="addBeneficiary()"
+                                    class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
+                                    + Add Another Beneficiary
+                                </button>
+                            </div>
 
-                            <!-- Step 6 -->
+                            <!-- Step 6: Family Background -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 6: Family Background</h2>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="Father's Name" class="border rounded p-2">
-                                    <input type="text" placeholder="Mother's Name" class="border rounded p-2">
-                                    <input type="text" placeholder="Spouse's Name" class="border rounded p-2">
-                                    <input type="text" placeholder="Number of Children" class="border rounded p-2">
-                                </div>
+                                <form method="POST" action="your_backend_script.php">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <!-- Father Information -->
+                                        <input type="text" name="father_lastname" placeholder="Father's Last Name"
+                                            class="border rounded p-2">
+                                        <input type="text" name="father_firstname" placeholder="Father's First Name"
+                                            class="border rounded p-2">
+                                        <input type="text" name="father_mi" placeholder="Father's Middle Initial"
+                                            class="border rounded p-2">
+
+                                        <!-- Mother Information -->
+                                        <input type="text" name="mother_lastname" placeholder="Mother's Last Name"
+                                            class="border rounded p-2">
+                                        <input type="text" name="mother_firstname" placeholder="Mother's First Name"
+                                            class="border rounded p-2">
+                                        <input type="text" name="mother_mi" placeholder="Mother's Middle Initial"
+                                            class="border rounded p-2">
+
+                                        <!-- Siblings Information -->
+                                        <input type="number" name="siblings_living"
+                                            placeholder="Number of Living Siblings" class="border rounded p-2">
+                                        <input type="number" name="siblings_deceased"
+                                            placeholder="Number of Deceased Siblings" class="border rounded p-2">
+
+                                        <!-- Children Information -->
+                                        <input type="number" name="children_living"
+                                            placeholder="Number of Living Children" class="border rounded p-2">
+                                        <input type="number" name="children_deceased"
+                                            placeholder="Number of Deceased Children" class="border rounded p-2">
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <button type="submit"
+                                        class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
+                                        Submit Family Background
+                                    </button>
+                                </form>
                             </div>
+
 
                             <!-- Step 7 -->
                             <div class="step-content">
@@ -371,103 +415,107 @@ textarea.border-red-500 {
                 </div>
 
                 <script>
-                    const steps = [
-                        "Personal Info", "Contact", "Employment", "Plan", "Beneficiaries",
-                        "Family", "Medical", "Physician", "Health", "Signature", "Confirm"
-                    ];
+                const steps = [
+                    "Personal Info", "Contact", "Employment", "Plan", "Beneficiaries",
+                    "Family", "Medical", "Physician", "Health", "Signature", "Confirm"
+                ];
 
-                    const stepContents = document.querySelectorAll('.step-content');
-                    const stepHeaderContainer = document.querySelector('.grid');
-                    const stepTemplate = document.querySelector('#step-header-template');
-                    let currentStep = 0;
+                const stepContents = document.querySelectorAll('.step-content');
+                const stepHeaderContainer = document.querySelector('.grid');
+                const stepTemplate = document.querySelector('#step-header-template');
+                let currentStep = 0;
 
-                    // Render step headers
-                    steps.forEach((label, idx) => {
-                        const clone = stepTemplate.content.cloneNode(true);
-                        clone.querySelector('.step-circle').textContent = idx + 1;
-                        clone.querySelector('.step-label').textContent = label;
-                        clone.querySelector('.step-circle').classList.add(idx === 0 ? 'bg-cyan-500' :
-                            'bg-cyan-300');
-                        stepHeaderContainer.appendChild(clone);
+                // Render step headers
+                steps.forEach((label, idx) => {
+                    const clone = stepTemplate.content.cloneNode(true);
+                    clone.querySelector('.step-circle').textContent = idx + 1;
+                    clone.querySelector('.step-label').textContent = label;
+                    clone.querySelector('.step-circle').classList.add(idx === 0 ? 'bg-cyan-500' :
+                        'bg-cyan-300');
+                    stepHeaderContainer.appendChild(clone);
+                });
+
+                // Update the UI for the current step
+                const updateStep = () => {
+                    stepContents.forEach((el, i) => el.classList.toggle('active', i === currentStep));
+                    const circles = document.querySelectorAll('.step-circle');
+                    circles.forEach((circle, i) => {
+                        circle.classList.remove('bg-cyan-500', 'bg-cyan-300');
+                        circle.classList.add(i === currentStep ? 'bg-cyan-500' : 'bg-cyan-300');
                     });
+                    document.getElementById('prevBtn').disabled = currentStep === 0;
+                    document.getElementById('nextBtn').textContent = currentStep === steps.length - 1 ? 'Finish' :
+                        'Next';
+                };
 
-                    // Update the UI for the current step
-                    const updateStep = () => {
-                        stepContents.forEach((el, i) => el.classList.toggle('active', i === currentStep));
-                        const circles = document.querySelectorAll('.step-circle');
-                        circles.forEach((circle, i) => {
-                            circle.classList.remove('bg-cyan-500', 'bg-cyan-300');
-                            circle.classList.add(i === currentStep ? 'bg-cyan-500' : 'bg-cyan-300');
-                        });
-                        document.getElementById('prevBtn').disabled = currentStep === 0;
-                        document.getElementById('nextBtn').textContent = currentStep === steps.length - 1 ? 'Finish' :
-                            'Next';
-                    };
-
-                    // Next button logic with validation
-                    document.getElementById('nextBtn').addEventListener('click', () => {
-                        // Validate required fields before going to next step
-                        const currentInputs = stepContents[currentStep].querySelectorAll(
-                            'input[required], select[required], textarea[required]');
-                        let allFilled = true;
-                        currentInputs.forEach(input => {
-                            if (!input.value.trim()) {
-                                allFilled = false;
-                                input.classList.add('border-red-500');
-                            } else {
-                                input.classList.remove('border-red-500');
-                            }
-                        });
-
-                        if (!allFilled) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Incomplete Step',
-                                text: 'Please fill in all required fields before proceeding.',
-                                confirmButtonColor: '#06b6d4'
-                            });
-                            return;
-                        }
-
-                        // Proceed to next step or submit form
-                        if (currentStep < steps.length - 1) {
-                            currentStep++;
-                            updateStep();
+                // Next button logic with validation
+                document.getElementById('nextBtn').addEventListener('click', () => {
+                    // Validate required fields before going to next step
+                    const currentInputs = stepContents[currentStep].querySelectorAll(
+                        'input[required], select[required], textarea[required]');
+                    let allFilled = true;
+                    currentInputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            allFilled = false;
+                            input.classList.add('border-red-500');
                         } else {
-                            document.getElementById('multiStepForm').submit();
+                            input.classList.remove('border-red-500');
                         }
                     });
 
-                    // Previous button
-                    document.getElementById('prevBtn').addEventListener('click', () => {
-                        if (currentStep > 0) {
-                            currentStep--;
-                            updateStep();
-                        }
-                    });
+                    if (!allFilled) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Incomplete Step',
+                            text: 'Please fill in all required fields before proceeding.',
+                            confirmButtonColor: '#06b6d4'
+                        });
+                        return;
+                    }
+
+                    // Proceed to next step or submit form
+                    if (currentStep < steps.length - 1) {
+                        currentStep++;
+                        updateStep();
+                    } else {
+                        document.getElementById('multiStepForm').submit();
+                    }
+                });
+
+                // Previous button
+                document.getElementById('prevBtn').addEventListener('click', () => {
+                    if (currentStep > 0) {
+                        currentStep--;
+                        updateStep();
+                    }
+                });
 
 
-                    updateStep();
+                updateStep();
                 </script>
 
-<!-- JavaScript for Dynamic Fields -->
-<script>
-function addBeneficiary() {
-    const container = document.getElementById('beneficiaries-container');
-    const group = document.createElement('div');
-    group.className = "beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded bg-gray-50";
+                <!-- JavaScript for Dynamic Fields -->
+                <script>
+                function addBeneficiary() {
+                    const container = document.getElementById('beneficiaries-container');
+                    const group = document.createElement('div');
+                    group.className =
+                        "beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded";
 
-    group.innerHTML = `
-        <input type="text" name="benefit_type[]" placeholder="Type of Benefit" class="border rounded p-2 w-full" required>
-        <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full" required>
-        <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full" required>
-        <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full" required>
-        <input type="number" name="benefit_percentage[]" placeholder="Percentage (%)" class="border rounded p-2 w-full" required>
-    `;
+                    group.innerHTML = `
+                                <select class="border rounded p-2" name="benefit_type[]">
+                                    <option selected disabled>Type of Benefit</option>
+                                    <option name="Revocable">Revocable</option>
+                                    <option name="Irrevocable">Irrevocable</option>
+                                </select>
+                                <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full">
+                                <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full" >
+                                <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full">
+                            `;
 
-    container.appendChild(group);
-}
-</script>
+                    container.appendChild(group);
+                }
+                </script>
             </div>
     </main>
 </div>

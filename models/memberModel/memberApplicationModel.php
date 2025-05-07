@@ -140,10 +140,75 @@ class MemberApplicationModel
         }
     }
 
-    public function addBeneficiaries()
+    public function addBeneficiaries($applicant_id, $user_id)
+    {
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id      = mysqli_real_escape_string($this->conn, $user_id);
+
+        $benefit_types         = $_POST['benefit_type'] ?? [];
+        $benefit_names         = $_POST['benefit_name'] ?? [];
+        $benefit_birthdates    = $_POST['benefit_birthdate'] ?? [];
+        $benefit_relationships = $_POST['benefit_relationship'] ?? [];
+
+        $count = count($benefit_names);
+
+        for ($i = 0; $i < $count; $i++) {
+            $benefit_type         = mysqli_real_escape_string($this->conn, $benefit_types[$i] ?? '');
+            $benefit_name         = mysqli_real_escape_string($this->conn, $benefit_names[$i] ?? '');
+            $benefit_birthdate    = mysqli_real_escape_string($this->conn, $benefit_birthdates[$i] ?? '');
+            $benefit_relationship = mysqli_real_escape_string($this->conn, $benefit_relationships[$i] ?? '');
+
+            $sql = "INSERT INTO beneficiaries (
+                        applicant_id, benefit_type, benefit_name1,
+                        benefit_birthdate1, benefit_relationship1, user_id
+                    ) VALUES (
+                        '$applicant_id', '$benefit_type', '$benefit_name',
+                        '$benefit_birthdate', '$benefit_relationship', '$user_id'
+                    )";
+
+            if (! mysqli_query($this->conn, $sql)) {
+                return "Error inserting beneficiary $i: " . mysqli_error($this->conn);
+            }
+        }
+
+        return true;
+    }
+    public function insertFamilyBackground($applicant_id, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_deceased)
     {
 
+        $father_lastname   = mysqli_real_escape_string($this->conn, $_POST['father_lastname'] ?? '');
+        $father_firstname  = mysqli_real_escape_string($this->conn, $_POST['father_firstname'] ?? '');
+        $father_mi         = mysqli_real_escape_string($this->conn, $_POST['father_mi'] ?? '');
+        $mother_lastname   = mysqli_real_escape_string($this->conn, $_POST['mother_lastname'] ?? '');
+        $mother_firstname  = mysqli_real_escape_string($this->conn, $_POST['mother_firstname'] ?? '');
+        $mother_mi         = mysqli_real_escape_string($this->conn, $_POST['mother_mi'] ?? '');
+        $siblings_living   = mysqli_real_escape_string($this->conn, $_POST['siblings_living'] ?? 0);
+        $siblings_deceased = mysqli_real_escape_string($this->conn, $_POST['siblings_deceased'] ?? 0);
+        $children_living   = mysqli_real_escape_string($this->conn, $_POST['children_living'] ?? 0);
+        $children_deceased = mysqli_real_escape_string($this->conn, $_POST['children_deceased'] ?? 0);
+
+        if (empty($father_lastname) || empty($father_firstname) || empty($mother_lastname) || empty($mother_firstname)) {
+            return "Error: Father and Mother names must be provided.";
+        }
+
+        $sql = "INSERT INTO family_background (
+                applicant_id, father_lastname, father_firstname, father_mi,
+                mother_lastname, mother_firstname, mother_mi,
+                siblings_living, siblings_deceased, children_living, children_deceased
+            ) VALUES (
+                '$applicant_id', '$father_lastname', '$father_firstname', '$father_mi',
+                '$mother_lastname', '$mother_firstname', '$mother_mi',
+                '$siblings_living', '$siblings_deceased', '$children_living', '$children_deceased'
+            )";
+
+        if (mysqli_query($this->conn, $sql)) {
+            return true;
+        } else {
+            return "Error: " . mysqli_error($this->conn);
+        }
     }
+
+    
 
     public function updateAApplication()
     {
