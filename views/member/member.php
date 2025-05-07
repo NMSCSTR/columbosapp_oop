@@ -58,7 +58,7 @@ textarea.border-red-500 {
 
                     <!-- Form -->
                     <form id="multiStepForm" method="POST"
-                        action="<?php echo BASE_URL ?>controllers/member/addMemberApplicant.php"
+                        action="<?php echo BASE_URL ?>controllers/memberController/addMemberApplicant.php"
                         enctype="multipart/form-data" class="p-6 space-y-6">
                         <!-- Step Content Containers -->
                         <div id="stepContents">
