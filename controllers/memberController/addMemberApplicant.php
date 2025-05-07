@@ -11,28 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lastname              = $_POST['lastname'];
     $middlename            = $_POST['middlename'];
     $birthdate             = $_POST['birthdate'];
-    $birthplace             = $_POST['birthplace'];
+    $birthplace            = $_POST['birthplace'];
     $age                   = $_POST['age'];
     $gender                = $_POST['gender'];
     $marital_status        = $_POST['marital_status'];
     $tin_sss               = $_POST['tin_sss'];
     $nationality           = $_POST['nationality'];
-
-    $model  = new MemberApplicationModel($conn);
-    $result = $model->insertApplicant(
-        $user_id,
-        $frateral_counselor_id,
-        $lastname,
-        $firstname,
-        $middlename,
-        $birthdate,
-        $birthplace,
-        $age,
-        $gender,
-        $marital_status,
-        $tin_sss,
-        $nationality
-    );
 
     // insertApplicantContactDetailsController
     $applicant_id  = $_POST['applicant_id'] ?? null;
@@ -41,18 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $city_province = $_POST['city_province'] ?? '';
     $mobile_number = $_POST['mobile_number'] ?? '';
     $email_address = $_POST['email_address'] ?? '';
-
-    if ($applicant_id) {
-        $result = $model->insertApplicantContactDetails(
-            $applicant_id,
-            $user_id,
-            $street,
-            $barangay,
-            $city_province,
-            $mobile_number,
-            $email_address
-        );
-    }
 
     // insertEmploymentDetailsController
     $occupation             = $_POST['occupation'] ?? '';
@@ -65,23 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $employer_email_address = $_POST['employer_email_address'] ?? '';
     $monthly_income         = $_POST['monthly_income'] ?? '';
 
-    if ($applicant_id && $user_id) {
-        $result = $model->insertEmploymentDetails(
-            $applicant_id,
-            $user_id,
-            $occupation,
-            $employment_status,
-            $duties,
-            $employer,
-            $work,
-            $nature_business,
-            $employer_mobile_number,
-            $employer_email_address,
-            $monthly_income
-        );
-
-    }
-
     // insertPlanInformationController
     $fraternal_benefits_id = $_POST['fraternal_benefits_id'] ?? '';
     $council_id            = $_POST['council_id'] ?? '';
@@ -89,35 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contribution_amount   = $_POST['contribution_amount'] ?? '';
     $currency              = $_POST['currency'] ?? '';
 
-    if ($applicant_id && $user_id) {
-        $result = $model->insertPlanInformation(
-            $applicant_id,
-            $user_id,
-            $fraternal_benefits_id,
-            $council_id,
-            $payment_mode,
-            $contribution_amount,
-            $currency
-        );
-
-    }
-
     // addBeneficiariesController
     $benefit_types         = $_POST['benefit_type'] ?? [];
     $benefit_names         = $_POST['benefit_name'] ?? [];
     $benefit_birthdates    = $_POST['benefit_birthdate'] ?? [];
     $benefit_relationships = $_POST['benefit_relationship'] ?? [];
-
-    if ($applicant_id && $user_id) {
-        $result = $model->addBeneficiaries(
-            $applicant_id,
-            $user_id,
-            $benefit_types,
-            $benefit_names,
-            $benefit_birthdates,
-            $benefit_relationships
-        );
-    }
 
     // insertFamilyBackgroundController
     $father_lastname   = $_POST['father_lastname'] ?? '';
@@ -131,22 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $children_living   = $_POST['children_living'] ?? 0;
     $children_deceased = $_POST['children_deceased'] ?? 0;
 
-    $result =$model->insertFamilyBackground(
-        $applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi,
-        $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased,
-        $children_living, $children_deceased
-    );
-
     // insertMedicalHistoryController
     $past_illness       = $_POST['past_illness'] ?? '';
     $current_medication = $_POST['current_medication'] ?? '';
-
-    $result = $model->insertMedicalHistory(
-        $applicant_id,
-        $user_id,
-        $past_illness,
-        $current_medication
-    );
 
     // insertFamilyHealthController
     $father_living_age   = $_POST['father_living_age'] ?? '';
@@ -166,39 +84,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $children_death_age  = $_POST['children_death_age'] ?? '';
     $children_cause      = $_POST['children_cause'] ?? '';
 
-    $result = $model->insertFamilyHealth(
-        $applicant_id,
-        $user_id,
-        $father_living_age,
-        $father_health,
-        $mother_living_age,
-        $mother_health,
-        $siblings_living_age,
-        $siblings_health,
-        $children_living_age,
-        $children_health,
-        $father_death_age,
-        $father_cause,
-        $mother_death_age,
-        $mother_cause,
-        $siblings_death_age,
-        $siblings_cause,
-        $children_death_age,
-        $children_cause
-    );
-
     // insertPhysicianDetailsController
     $physician_name = $_POST['physician_name'] ?? '';
     $contact_number = $_POST['contact_number'] ?? '';
     $clinic_address = $_POST['clinic_address'] ?? '';
 
-    $result = $model->insertPhysicianDetails(
-        $applicant_id,
-        $user_id,
-        $physician_name,
-        $contact_number,
-        $clinic_address
-    );
+    // insertPersonalAndMembershipDetailsController
+    $height            = $_POST['height'] ?? '';
+    $weight            = $_POST['weight'] ?? '';
+    $pregnant_question = $_POST['pregnant_question'] ?? '';
+    $first_degree_date = $_POST['first_degree_date'] ?? '';
+    $present_degree    = $_POST['present_degree'] ?? '';
+    $good_standing     = $_POST['good_standing'] ?? '';
+
+    $model  = new MemberApplicationModel($conn);
+    $result = $model->insertApplicant($user_id,$frateral_counselor_id,$lastname,$firstname,$middlename,$birthdate,$birthplace,$age,$gender,$marital_status,$tin_sss,$nationality);
+
+    $result1 = $model->insertApplicantContactDetails($applicant_id,$user_id,$street,$barangay,$city_province,$mobile_number,$email_address);
+
+    $result2 = $model->insertEmploymentDetails( $applicant_id, $user_id, $occupation, $employment_status, $duties, $employer, $work, $nature_business, $employer_mobile_number, $employer_email_address, $monthly_income);
+    $result3 = $model->insertPlanInformation( $applicant_id, $user_id, $fraternal_benefits_id, $council_id, $payment_mode, $contribution_amount, $currency);
+
+    $result4 = $model->addBeneficiaries( $applicant_id, $user_id, $benefit_types, $benefit_names, $benefit_birthdates,$benefit_relationships);
+
+    $result5 = $model->insertFamilyBackground( $applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_decease);
+
+    $result6 = $model->insertMedicalHistory( $applicant_id, $user_id, $past_illness, $current_medication);
+
+    $result7 = $model->insertFamilyHealth( $applicant_id, $user_id, $father_living_age, $father_health, $mother_living_age, $mother_health, $siblings_living_age, $siblings_health, $children_living_age, $children_health, $father_death_age, $father_cause, $mother_death_age, $mother_cause, $siblings_death_age, $siblings_cause, $children_death_age, $children_cause);
+
+    $result8 = $model->insertPhysicianDetails( $applicant_id, $user_id, $physician_name, $contact_number, $clinic_address);
 
     // insertHealthQuestionsController
     $responses = [];
@@ -220,17 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'details'  => $_POST["{$question_code}_details"] ?? '',
         ];
     }
-    $result = $model->insertHealthQuestions($applicant_id, $user_id, $responses);
-
-    // insertPersonalAndMembershipDetailsController
-    $height            = $_POST['height'] ?? '';
-    $weight            = $_POST['weight'] ?? '';
-    $pregnant_question = $_POST['pregnant_question'] ?? '';
-    $council_id        = $_POST['council_id'] ?? '';
-    $first_degree_date = $_POST['first_degree_date'] ?? '';
-    $present_degree    = $_POST['present_degree'] ?? '';
-    $good_standing     = $_POST['good_standing'] ?? '';
-
+    $result9 = $model->insertHealthQuestions($applicant_id, $user_id, $responses);
 
     if (isset($_FILES['signature_file']) && $_FILES['signature_file']['error'] === UPLOAD_ERR_OK) {
         $signature_tmp  = $_FILES['signature_file']['tmp_name'];
@@ -241,19 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    $result = $model->insertPersonalAndMembershipDetails(
-        $applicant_id,
-        $user_id,
-        $height,
-        $weight,
-        $signature_tmp,
-        $signature_name,
-        $pregnant_question,
-        $council_id,
-        $first_degree_date,
-        $present_degree,
-        $good_standing
-    );
-
+    $result10 = $model->insertPersonalAndMembershipDetails( $applicant_id, $user_id, $height, $weight, $signature_tmp, $signature_name, $pregnant_question, $council_id, $first_degree_date, $present_degree, $good_standing);
 
 }
