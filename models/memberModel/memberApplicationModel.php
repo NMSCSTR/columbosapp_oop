@@ -162,7 +162,7 @@ class MemberApplicationModel
         $siblings_deceased = mysqli_real_escape_string($this->conn, $siblings_deceased ?? 0);
         $children_living   = mysqli_real_escape_string($this->conn, $children_living ?? 0);
         $children_deceased = mysqli_real_escape_string($this->conn, $children_deceased ?? 0);
-        
+
         $sql = "INSERT INTO family_background (
                 applicant_id, user_id, father_lastname, father_firstname, father_mi,
                 mother_lastname, mother_firstname, mother_mi,
@@ -204,6 +204,7 @@ class MemberApplicationModel
             return "Error: " . mysqli_error($this->conn);
         }
     }
+    
     public function insertFamilyHealth(
         $applicant_id,
         $user_id,

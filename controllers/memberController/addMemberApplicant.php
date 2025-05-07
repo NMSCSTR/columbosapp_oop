@@ -18,7 +18,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nationality           = $_POST['nationality'];
 
     $model  = new MemberApplicationModel($conn);
-    $result = $model->insertApplicant($user_id, $frateral_counselor_id, $firstname, $lastname, $middlename, $birthdate, $age, $gender, $marital_status, $tin_sss, $nationality);
+    $result = $model->insertApplicant(
+        $user_id, 
+        $frateral_counselor_id, 
+        $firstname, 
+        $lastname,
+        $middlename, 
+        $birthdate, 
+        $age,
+        $gender, 
+        $marital_status, 
+        $tin_sss, 
+        $nationality
+    );
 
     // insertApplicantContactDetailsController
     $applicant_id  = $_POST['applicant_id'] ?? null;
@@ -123,6 +135,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $children_living, $children_deceased
     );
 
+    // insertMedicalHistoryController
+    $past_illness       = $_POST['past_illness'] ?? '';
+    $current_medication = $_POST['current_medication'] ?? '';
     
+    $result = $this->medicalHistoryModel->insertMedicalHistory(
+        $applicant_id,
+        $user_id,
+        $past_illness,
+        $current_medication
+    );
+
 
 }
