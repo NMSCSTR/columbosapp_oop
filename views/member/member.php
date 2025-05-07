@@ -10,7 +10,8 @@ include '../../models/adminModel/fraternalBenefitsModel.php';
 
 $userModel = new UserModel($conn);
 $user      = $userModel->getUserById($_SESSION['user_id']);
-// var_dump($user);
+$fraternalCounselor = $userModel->getUserWhereRoleFraternalCounselor();
+// var_dump($fraternalCounselor);
 ?>
 <style>
 .step-content {
@@ -65,6 +66,7 @@ textarea.border-red-500 {
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
+                                    
                                     <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id'] ?>">
                                     <input type="text" placeholder="First Name"
                                         value="<?php echo htmlspecialchars($user['firstname']); ?>" name="firstname"

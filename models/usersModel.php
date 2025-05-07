@@ -22,8 +22,20 @@ class UserModel
     }
     public function getUserById($id)
     {
-        $id  = mysqli_real_escape_string($this->conn, $id);
+        $id     = mysqli_real_escape_string($this->conn, $id);
         $sql    = "SELECT * FROM users WHERE id = '$id' LIMIT 1";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            return mysqli_fetch_assoc($result);
+        }
+
+        return null;
+    }
+    public function getUserWhereRoleFraternalCounselor()
+    {
+        $sql = "SELECT * FROM `users` WHERE `role` = 'fraternal-counselor'";
+
         $result = mysqli_query($this->conn, $sql);
 
         if ($result && mysqli_num_rows($result) > 0) {
