@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $children_living   = $_POST['children_living'] ?? 0;
     $children_deceased = $_POST['children_deceased'] ?? 0;
 
-    $result = $this->familyBackgroundModel->insertFamilyBackground(
+    $result = $this->$model->insertFamilyBackground(
         $applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi,
         $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased,
         $children_living, $children_deceased
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $past_illness       = $_POST['past_illness'] ?? '';
     $current_medication = $_POST['current_medication'] ?? '';
 
-    $result = $this->medicalHistoryModel->insertMedicalHistory(
+    $result = $this->$model->insertMedicalHistory(
         $applicant_id,
         $user_id,
         $past_illness,
@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $children_death_age  = $_POST['children_death_age'] ?? '';
     $children_cause      = $_POST['children_cause'] ?? '';
 
-    $result = $this->familyHealthModel->insertFamilyHealth(
+    $result = $this->$model->insertFamilyHealth(
         $applicant_id,
         $user_id,
         $father_living_age,
@@ -184,5 +184,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $children_death_age,
         $children_cause
     );
+
+    // insertPhysicianDetailsController
+    $physician_name = $_POST['physician_name'] ?? '';
+    $contact_number = $_POST['contact_number'] ?? '';
+    $clinic_address = $_POST['clinic_address'] ?? '';
+
+    $result = $this->model->insertPhysicianDetails(
+        $applicant_id,
+        $user_id,
+        $physician_name,
+        $contact_number,
+        $clinic_address
+    );
+
+    
 
 }
