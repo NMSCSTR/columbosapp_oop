@@ -30,12 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($applicant_id) {
         $result = $this->model->insertApplicantContactDetails(
-            $applicant_id, 
-            $user_id, 
-            $street, 
-            $barangay, 
-            $city_province, 
-            $mobile_number, 
+            $applicant_id,
+            $user_id,
+            $street,
+            $barangay,
+            $city_province,
+            $mobile_number,
             $email_address
         );
     }
@@ -89,10 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // addBeneficiariesController
-    $benefit_types          = $_POST['benefit_type'] ?? [];
-    $benefit_names          = $_POST['benefit_name'] ?? [];
-    $benefit_birthdates     = $_POST['benefit_birthdate'] ?? [];
-    $benefit_relationships  = $_POST['benefit_relationship'] ?? [];
+    $benefit_types         = $_POST['benefit_type'] ?? [];
+    $benefit_names         = $_POST['benefit_name'] ?? [];
+    $benefit_birthdates    = $_POST['benefit_birthdate'] ?? [];
+    $benefit_relationships = $_POST['benefit_relationship'] ?? [];
 
     if ($applicant_id && $user_id) {
         $result = $this->model->addBeneficiaries(
@@ -105,7 +105,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
     }
 
-    
+    // insertFamilyBackgroundController
+    $father_lastname   = $_POST['father_lastname'] ?? '';
+    $father_firstname  = $_POST['father_firstname'] ?? '';
+    $father_mi         = $_POST['father_mi'] ?? '';
+    $mother_lastname   = $_POST['mother_lastname'] ?? '';
+    $mother_firstname  = $_POST['mother_firstname'] ?? '';
+    $mother_mi         = $_POST['mother_mi'] ?? '';
+    $siblings_living   = $_POST['siblings_living'] ?? 0;
+    $siblings_deceased = $_POST['siblings_deceased'] ?? 0;
+    $children_living   = $_POST['children_living'] ?? 0;
+    $children_deceased = $_POST['children_deceased'] ?? 0;
 
+    $result = $this->familyBackgroundModel->insertFamilyBackground(
+        $applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi,
+        $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased,
+        $children_living, $children_deceased
+    );
+
+    
 
 }

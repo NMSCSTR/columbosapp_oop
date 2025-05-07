@@ -123,18 +123,19 @@ class MemberApplicationModel
     
             $sql = "INSERT INTO beneficiaries (
                         applicant_id,
+                        user_id,
                         benefit_type,
                         benefit_name,
                         benefit_birthdate,
-                        benefit_relationship,
-                        user_id
+                        benefit_relationship
                     ) VALUES (
                         '$applicant_id',
+                        '$user_id',
                         '$benefit_type',
                         '$benefit_name',
                         '$benefit_birthdate',
-                        '$benefit_relationship',
-                        '$user_id'
+                        '$benefit_relationship'
+                        
                     )";
     
             if (!mysqli_query($this->conn, $sql)) {
@@ -149,23 +150,19 @@ class MemberApplicationModel
     public function insertFamilyBackground($applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_deceased)
     {
 
-        $applicant_id      = mysqli_real_escape_string($this->conn, $_POST['applicant_id'] ?? '');
-        $user_id           = mysqli_real_escape_string($this->conn, $_POST ['user_id'] ?? '');
-        $father_lastname   = mysqli_real_escape_string($this->conn, $_POST['father_lastname'] ?? '');
-        $father_firstname  = mysqli_real_escape_string($this->conn, $_POST['father_firstname'] ?? '');
-        $father_mi         = mysqli_real_escape_string($this->conn, $_POST['father_mi'] ?? '');
-        $mother_lastname   = mysqli_real_escape_string($this->conn, $_POST['mother_lastname'] ?? '');
-        $mother_firstname  = mysqli_real_escape_string($this->conn, $_POST['mother_firstname'] ?? '');
-        $mother_mi         = mysqli_real_escape_string($this->conn, $_POST['mother_mi'] ?? '');
-        $siblings_living   = mysqli_real_escape_string($this->conn, $_POST['siblings_living'] ?? 0);
-        $siblings_deceased = mysqli_real_escape_string($this->conn, $_POST['siblings_deceased'] ?? 0);
-        $children_living   = mysqli_real_escape_string($this->conn, $_POST['children_living'] ?? 0);
-        $children_deceased = mysqli_real_escape_string($this->conn, $_POST['children_deceased'] ?? 0);
-
-        if (empty($father_lastname) || empty($father_firstname) || empty($mother_lastname) || empty($mother_firstname)) {
-            return "Error: Father and Mother names must be provided.";
-        }
-
+        $applicant_id      = mysqli_real_escape_string($this->conn, $applicant_id ?? '');
+        $user_id           = mysqli_real_escape_string($this->conn, $user_id ?? '');
+        $father_lastname   = mysqli_real_escape_string($this->conn, $father_lastname ?? '');
+        $father_firstname  = mysqli_real_escape_string($this->conn, $father_firstname ?? '');
+        $father_mi         = mysqli_real_escape_string($this->conn, $father_mi ?? '');
+        $mother_lastname   = mysqli_real_escape_string($this->conn, $mother_lastname ?? '');
+        $mother_firstname  = mysqli_real_escape_string($this->conn, $mother_firstname ?? '');
+        $mother_mi         = mysqli_real_escape_string($this->conn, $mother_mi ?? '');
+        $siblings_living   = mysqli_real_escape_string($this->conn, $siblings_living ?? 0);
+        $siblings_deceased = mysqli_real_escape_string($this->conn, $siblings_deceased ?? 0);
+        $children_living   = mysqli_real_escape_string($this->conn, $children_living ?? 0);
+        $children_deceased = mysqli_real_escape_string($this->conn, $children_deceased ?? 0);
+        
         $sql = "INSERT INTO family_background (
                 applicant_id, user_id, father_lastname, father_firstname, father_mi,
                 mother_lastname, mother_firstname, mother_mi,
