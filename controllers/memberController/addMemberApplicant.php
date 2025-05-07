@@ -19,16 +19,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $model  = new MemberApplicationModel($conn);
     $result = $model->insertApplicant(
-        $user_id, 
-        $frateral_counselor_id, 
-        $firstname, 
+        $user_id,
+        $frateral_counselor_id,
+        $firstname,
         $lastname,
-        $middlename, 
-        $birthdate, 
+        $middlename,
+        $birthdate,
         $age,
-        $gender, 
-        $marital_status, 
-        $tin_sss, 
+        $gender,
+        $marital_status,
+        $tin_sss,
         $nationality
     );
 
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // insertMedicalHistoryController
     $past_illness       = $_POST['past_illness'] ?? '';
     $current_medication = $_POST['current_medication'] ?? '';
-    
+
     $result = $this->medicalHistoryModel->insertMedicalHistory(
         $applicant_id,
         $user_id,
@@ -146,5 +146,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $current_medication
     );
 
+    // insertFamilyHealthController
+    $father_living_age   = $_POST['father_living_age'] ?? '';
+    $father_health       = $_POST['father_health'] ?? '';
+    $mother_living_age   = $_POST['mother_living_age'] ?? '';
+    $mother_health       = $_POST['mother_health'] ?? '';
+    $siblings_living_age = $_POST['siblings_living_age'] ?? '';
+    $siblings_health     = $_POST['siblings_health'] ?? '';
+    $children_living_age = $_POST['children_living_age'] ?? '';
+    $children_health     = $_POST['children_health'] ?? '';
+    $father_death_age    = $_POST['father_death_age'] ?? '';
+    $father_cause        = $_POST['father_cause'] ?? '';
+    $mother_death_age    = $_POST['mother_death_age'] ?? '';
+    $mother_cause        = $_POST['mother_cause'] ?? '';
+    $siblings_death_age  = $_POST['siblings_death_age'] ?? '';
+    $siblings_cause      = $_POST['siblings_cause'] ?? '';
+    $children_death_age  = $_POST['children_death_age'] ?? '';
+    $children_cause      = $_POST['children_cause'] ?? '';
+
+    $result = $this->familyHealthModel->insertFamilyHealth(
+        $applicant_id,
+        $user_id,
+        $father_living_age,
+        $father_health,
+        $mother_living_age,
+        $mother_health,
+        $siblings_living_age,
+        $siblings_health,
+        $children_living_age,
+        $children_health,
+        $father_death_age,
+        $father_cause,
+        $mother_death_age,
+        $mother_cause,
+        $siblings_death_age,
+        $siblings_cause,
+        $children_death_age,
+        $children_cause
+    );
 
 }
