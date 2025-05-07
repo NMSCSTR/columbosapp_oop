@@ -35,7 +35,6 @@ class MemberApplicationModel
         $response = curl_exec($ch);
         curl_close($ch);
 
-        // Log or inspect the response
         file_put_contents('sms_log.txt', date('Y-m-d H:i:s') . " | To: $number | Response: $response\n", FILE_APPEND);
 
         return $response;
@@ -140,10 +139,199 @@ class MemberApplicationModel
         }
     }
 
-    public function addBeneficiaries()
+    public function addBeneficiaries($applicant_id, $user_id)
+    {
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id      = mysqli_real_escape_string($this->conn, $user_id);
+
+        $benefit_types         = $_POST['benefit_type'] ?? [];
+        $benefit_names         = $_POST['benefit_name'] ?? [];
+        $benefit_birthdates    = $_POST['benefit_birthdate'] ?? [];
+        $benefit_relationships = $_POST['benefit_relationship'] ?? [];
+
+        $count = count($benefit_names);
+
+        for ($i = 0; $i < $count; $i++) {
+            $benefit_type         = mysqli_real_escape_string($this->conn, $benefit_types[$i] ?? '');
+            $benefit_name         = mysqli_real_escape_string($this->conn, $benefit_names[$i] ?? '');
+            $benefit_birthdate    = mysqli_real_escape_string($this->conn, $benefit_birthdates[$i] ?? '');
+            $benefit_relationship = mysqli_real_escape_string($this->conn, $benefit_relationships[$i] ?? '');
+
+            $sql = "INSERT INTO beneficiaries (
+                        applicant_id, benefit_type, benefit_name1,
+                        benefit_birthdate1, benefit_relationship1, user_id
+                    ) VALUES (
+                        '$applicant_id', '$benefit_type', '$benefit_name',
+                        '$benefit_birthdate', '$benefit_relationship', '$user_id'
+                    )";
+
+            if (! mysqli_query($this->conn, $sql)) {
+                return "Error inserting beneficiary $i: " . mysqli_error($this->conn);
+            }
+        }
+
+        return true;
+    }
+    public function insertFamilyBackground($applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_deceased)
     {
 
+        $applicant_id      = mysqli_real_escape_string($this->conn, $_POST['applicant_id'] ?? '');
+        $user_id           = mysqli_real_escape_string($this->conn, $_POST['user_id'] ?? '');
+        $father_lastname   = mysqli_real_escape_string($this->conn, $_POST['father_lastname'] ?? '');
+        $father_firstname  = mysqli_real_escape_string($this->conn, $_POST['father_firstname'] ?? '');
+        $father_mi         = mysqli_real_escape_string($this->conn, $_POST['father_mi'] ?? '');
+        $mother_lastname   = mysqli_real_escape_string($this->conn, $_POST['mother_lastname'] ?? '');
+        $mother_firstname  = mysqli_real_escape_string($this->conn, $_POST['mother_firstname'] ?? '');
+        $mother_mi         = mysqli_real_escape_string($this->conn, $_POST['mother_mi'] ?? '');
+        $siblings_living   = mysqli_real_escape_string($this->conn, $_POST['siblings_living'] ?? 0);
+        $siblings_deceased = mysqli_real_escape_string($this->conn, $_POST['siblings_deceased'] ?? 0);
+        $children_living   = mysqli_real_escape_string($this->conn, $_POST['children_living'] ?? 0);
+        $children_deceased = mysqli_real_escape_string($this->conn, $_POST['children_deceased'] ?? 0);
+
+        if (empty($father_lastname) || empty($father_firstname) || empty($mother_lastname) || empty($mother_firstname)) {
+            return "Error: Father and Mother names must be provided.";
+        }
+
+        $sql = "INSERT INTO family_background (
+                applicant_id, user_id, father_lastname, father_firstname, father_mi,
+                mother_lastname, mother_firstname, mother_mi,
+                siblings_living, siblings_deceased, children_living, children_deceased
+            ) VALUES (
+                '$applicant_id','$user_id, '$father_lastname', '$father_firstname', '$father_mi',
+                '$mother_lastname', '$mother_firstname', '$mother_mi',
+                '$siblings_living', '$siblings_deceased', '$children_living', '$children_deceased'
+            )";
+
+        if (mysqli_query($this->conn, $sql)) {
+            return true;
+        } else {
+            return "Error: " . mysqli_error($this->conn);
+        }
     }
+
+    public function insertMedicalHistory($applicant_id, $user_id, $past_illness, $current_medication)
+    {
+
+        $applicant_id       = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id            = mysqli_real_escape_string($this->conn, $user_id);
+        $past_illness       = mysqli_real_escape_string($this->conn, $past_illness);
+        $current_medication = mysqli_real_escape_string($this->conn, $current_medication);
+
+        if (empty($past_illness) || empty($current_medication)) {
+            return "Error: Both Past Illnesses and Current Medications must be provided.";
+        }
+
+        $sql = "INSERT INTO medical_history (
+                applicant_id, user_id, past_illness, current_medication
+            ) VALUES (
+                '$applicant_id', '$user_id', '$past_illness', '$current_medication'
+            )";
+
+        if (mysqli_query($this->conn, $sql)) {
+            return true;
+        } else {
+            return "Error: " . mysqli_error($this->conn);
+        }
+    }
+
+    public function insertPhysicianDetails($applicant_id, $user_id, $physician_name, $contact_number, $clinic_address)
+    {
+
+        $applicant_id   = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id        = mysqli_real_escape_string($this->conn, $user_id);
+        $physician_name = mysqli_real_escape_string($this->conn, $physician_name);
+        $contact_number = mysqli_real_escape_string($this->conn, $contact_number);
+        $clinic_address = mysqli_real_escape_string($this->conn, $clinic_address);
+
+        $sql = "INSERT INTO `physician` (`applicant_id`, `user_id`, `physician_name`, `contact_number`, `clinic_address`)
+            VALUES ('$applicant_id', '$user_id', '$physician_name', '$contact_number', '$clinic_address')";
+
+        if (mysqli_query($this->conn, $sql)) {
+            return true;
+        } else {
+            return "Error: " . mysqli_error($this->conn);
+        }
+    }
+
+    public function insertHealthQuestions($applicant_id, $user_id, $responses)
+    {
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id      = mysqli_real_escape_string($this->conn, $user_id);
+
+        foreach ($responses as $question_code => $response_details) {
+            $response = mysqli_real_escape_string($this->conn, $response_details['response']);
+            $details  = mysqli_real_escape_string($this->conn, $response_details['details']);
+
+            $sql = "INSERT INTO health_questions (
+                    applicant_id, user_id, question_code, response, yes_details
+                ) VALUES (
+                    '$applicant_id', '$user_id', '$question_code', '$response', '$details'
+                )";
+
+            if (! mysqli_query($this->conn, $sql)) {
+                return "Error: " . mysqli_error($this->conn);
+            }
+        }
+
+        return true;
+    }
+
+    public function insertPersonalAndMembershipDetails(
+        $applicant_id,
+        $user_id,
+        $height,
+        $weight,
+        $signature_file_tmp,
+        $signature_file_name,
+        $pregnant_question,
+        $council_id,
+        $first_degree_date,
+        $present_degree,
+        $good_standing
+    ) {
+
+        $applicant_id       = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id            = mysqli_real_escape_string($this->conn, $user_id);
+        $height             = mysqli_real_escape_string($this->conn, $height);
+        $weight             = mysqli_real_escape_string($this->conn, $weight);
+        $pregnant_question  = mysqli_real_escape_string($this->conn, $pregnant_question);
+        $council_id         = mysqli_real_escape_string($this->conn, $council_id);
+        $first_degree_date  = mysqli_real_escape_string($this->conn, $first_degree_date);
+        $present_degree     = mysqli_real_escape_string($this->conn, $present_degree);
+        $good_standing      = mysqli_real_escape_string($this->conn, $good_standing);
+    
+        
+        $upload_dir = "../../uploads/signatures/";
+        $signature_path = $upload_dir . basename($signature_file_name);
+    
+        if (!move_uploaded_file($signature_file_tmp, $signature_path)) {
+            return "Error uploading signature file.";
+        }
+    
+        
+        $sql1 = "INSERT INTO personal_details (
+                    applicant_id, user_id, height, weight, signature_file, pregnant_question
+                ) VALUES (
+                    '$applicant_id', '$user_id', '$height', '$weight', '$signature_path', '$pregnant_question'
+                )";
+    
+
+        $sql2 = "INSERT INTO membership (
+                    applicant_id, user_id, council_id, first_degree_date, present_degree, good_standing
+                ) VALUES (
+                    '$applicant_id', '$user_id', '$council_id', '$first_degree_date', '$present_degree', '$good_standing'
+                )";
+    
+ 
+        if (mysqli_query($this->conn, $sql1) && mysqli_query($this->conn, $sql2)) {
+            return true;
+        } else {
+            return "Error: " . mysqli_error($this->conn);
+        }
+    }
+    
+
+
 
     public function updateAApplication()
     {
@@ -155,4 +343,3 @@ class MemberApplicationModel
     }
 
 }
-// asncj
