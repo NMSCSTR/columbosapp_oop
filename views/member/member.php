@@ -66,7 +66,6 @@ textarea.border-red-500 {
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    
                                     <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id'] ?>">
                                     <input type="text" placeholder="First Name"
                                         value="<?php echo htmlspecialchars($user['firstname']); ?>" name="firstname"
@@ -86,6 +85,19 @@ textarea.border-red-500 {
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
+                                    <select class="border rounded p-2" name="fraternal_counselor_id">
+                                        <option selected disabled>Select Fraternal Counselor</option>
+                                        <?php 
+                                        if ($fraternalCounselor) {
+                                            foreach ($fraternalCounselor as $fc) { ?>
+                                                <option value="<?php echo htmlspecialchars($fc['id']); ?>">
+                                                    <?php echo htmlspecialchars($fc['firstname'] . ' ' . $fc['lastname']); ?>
+                                                </option>
+                                            <?php }
+                                        }
+                                        ?>
+                                    </select>
+
                                     <select class="border rounded p-2" name="marital_status">
                                         <option disabled>Marital Status</option>
                                         <option value="Single">Single</option>

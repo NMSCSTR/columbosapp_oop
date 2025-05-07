@@ -35,15 +35,19 @@ class UserModel
     public function getUserWhereRoleFraternalCounselor()
     {
         $sql = "SELECT * FROM `users` WHERE `role` = 'fraternal-counselor'";
-
         $result = mysqli_query($this->conn, $sql);
-
+    
+        $users = [];
+    
         if ($result && mysqli_num_rows($result) > 0) {
-            return mysqli_fetch_assoc($result);
+            while ($row = mysqli_fetch_assoc($result)) {
+                $users[] = $row;
+            }
         }
-
-        return null;
+    
+        return $users;
     }
+    
 
     public function createUser($firstname, $lastname, $kcfapicode, $email, $phone_number, $password, $confirmPassword, $role)
     {

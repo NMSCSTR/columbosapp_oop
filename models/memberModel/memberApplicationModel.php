@@ -38,9 +38,10 @@ class MemberApplicationModel
         }
     }
 
-    public function insertApplicantContactDetails($applicant_id, $street, $barangay, $city_province, $mobile_number, $email_address)
+    public function insertApplicantContactDetails($applicant_id, $user_id, $street, $barangay, $city_province, $mobile_number, $email_address)
     {
         $applicant_id  = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id               = mysqli_real_escape_string($this->conn, $user_id);
         $street        = mysqli_real_escape_string($this->conn, $street);
         $barangay      = mysqli_real_escape_string($this->conn, $barangay);
         $city_province = mysqli_real_escape_string($this->conn, $city_province);
@@ -49,9 +50,9 @@ class MemberApplicationModel
 
         $sql = "
             INSERT INTO contact_info
-            (applicant_id, street, barangay, city_province, mobile_number, email_address)
+            (applicant_id, user_id, street, barangay, city_province, mobile_number, email_address)
             VALUES
-            ('$applicant_id', '$street', '$barangay', '$city_province', '$mobile_number', '$email_address')
+            ('$applicant_id', '$user_id', '$street', '$barangay', '$city_province', '$mobile_number', '$email_address')
         ";
 
         if (mysqli_query($this->conn, $sql)) {
@@ -107,7 +108,7 @@ class MemberApplicationModel
         }
     }
 
-    public function addBeneficiaries($applicant_id, $user_id)
+    public function addBeneficiaries($applicant_id, $user_id, $benefit_types, $benefit_names, $benefit_birthdates, $benefit_relationship)
     {
         $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
         $user_id      = mysqli_real_escape_string($this->conn, $user_id);
@@ -140,11 +141,12 @@ class MemberApplicationModel
 
         return true;
     }
+
     public function insertFamilyBackground($applicant_id, $user_id, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_deceased)
     {
 
         $applicant_id      = mysqli_real_escape_string($this->conn, $_POST['applicant_id'] ?? '');
-        $user_id           = mysqli_real_escape_string($this->conn, $_POST['user_id'] ?? '');
+        $user_id           = mysqli_real_escape_string($this->conn, $_POST ['user_id'] ?? '');
         $father_lastname   = mysqli_real_escape_string($this->conn, $_POST['father_lastname'] ?? '');
         $father_firstname  = mysqli_real_escape_string($this->conn, $_POST['father_firstname'] ?? '');
         $father_mi         = mysqli_real_escape_string($this->conn, $_POST['father_mi'] ?? '');
