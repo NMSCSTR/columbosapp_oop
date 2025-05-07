@@ -88,7 +88,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     }
 
-    // 
+    // addBeneficiariesController
+    $benefit_types          = $_POST['benefit_type'] ?? [];
+    $benefit_names          = $_POST['benefit_name'] ?? [];
+    $benefit_birthdates     = $_POST['benefit_birthdate'] ?? [];
+    $benefit_relationships  = $_POST['benefit_relationship'] ?? [];
+
+    if ($applicant_id && $user_id) {
+        $result = $this->model->addBeneficiaries(
+            $applicant_id,
+            $user_id,
+            $benefit_types,
+            $benefit_names,
+            $benefit_birthdates,
+            $benefit_relationships
+        );
+    }
+
+    
 
 
 }
