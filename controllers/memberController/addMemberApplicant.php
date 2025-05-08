@@ -98,22 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $present_degree    = $_POST['present_degree'] ?? '';
     $good_standing     = $_POST['good_standing'] ?? '';
 
-    if (isset($_FILES['signature_file']) && $_FILES['signature_file']['error'] === UPLOAD_ERR_OK) {
-        $allowed_types = ['image/png', 'image/jpeg'];
-        $file_type     = $_FILES['signature_file']['type'];
-        if (! in_array($file_type, $allowed_types)) {
-            $_SESSION['error'] = "Invalid signature file type.";
-            header("Location: " . BASE_URL . "views/member/member.php");
-            exit();
-        }
-
-        $signature_tmp  = $_FILES['signature_file']['tmp_name'];
-        $signature_name = basename($_FILES['signature_file']['name']);
-    } else {
-        $_SESSION['error'] = "Signature upload failed.";
-        header("Location: " . BASE_URL . "views/member/member.php");
-        exit();
-    }
 
     $model  = new MemberApplicationModel($conn);
     $applicant_id = $model->insertApplicant(
@@ -158,16 +142,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $result9 = $model->insertHealthQuestions($applicant_id, $user_id, $responses);
 
-    if (isset($_FILES['signature_file']) && $_FILES['signature_file']['error'] === UPLOAD_ERR_OK) {
-        $signature_tmp  = $_FILES['signature_file']['tmp_name'];
-        $signature_name = basename($_FILES['signature_file']['name']);
-    } else {
-        $_SESSION['error'] = "Signature upload failed.";
-        header("Location: " . BASE_URL . "views/member/member.php");
-        exit();
+    $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/app/uploads/signature/';
+    $imagePath = ''; 
+
+
+    if (isset($_FILES['signature_file']) && $_FILES['signature_file']['error'] === 0) {
+        $cleanType = preg_replace('/[^A-Za-z0-9]/', '', $type);
+        $imageFileType = strtolower(pathinfo($_FILES['signature_file']['name'], PATHINFO_EXTENSION));
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+        if (in_array($imageFileType, $allowedTypes)) {
+
+            $imageName = $cleanType . 'Image_' . time() . '.' . $imageFileType;
+            $targetPath = $uploadDir . $imageName;
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            if (move_uploaded_file($_FILES['signature_file']['tmp_name'], $targetPath)) {
+                $signature_file = BASE_URL . 'uploads/signature/' . $imageName; 
+            } else {
+                $_SESSION['error'] = "Failed to upload image.";
+                header("Location: " . BASE_URL . "member/member.php");
+                exit;
+            }
+        } else {
+            $_SESSION['error'] = "Invalid image format. Only JPG, PNG, and GIF are allowed.";
+            header("Location: " . BASE_URL . "member/member.php");
+            exit;
+        }
     }
 
-    $result10 = $model->insertPersonalAndMembershipDetails($applicant_id, $user_id, $height, $weight, $signature_tmp, $signature_name, $pregnant_question, $council_id, $first_degree_date, $present_degree, $good_standing);
+    $result10 = $model->insertPersonalAndMembershipDetails($applicant_id, $user_id, $height, $weight, $signature_file, $pregnant_question, $council_id, $first_degree_date, $present_degree, $good_standing);
 
     if (! $applicant_id || ! $result2 || ! $result4 || ! $result5 || ! $result6 || ! $result7 || ! $result8 || ! $result9 || ! $result10) {
         $_SESSION['error'] = "There was an error saving the application. Please try again.";

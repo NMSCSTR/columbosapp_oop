@@ -15,20 +15,20 @@ class MemberApplicationModel
 
     public function insertApplicant($user_id, $fraternal_counselor_id, $firstname, $lastname, $middlename, $age, $birthdate, $birthplace, $gender, $marital_status, $tin_sss, $nationality)
     {
-        $user_id               = mysqli_real_escape_string($this->conn, $user_id);
+        $user_id                = mysqli_real_escape_string($this->conn, $user_id);
         $fraternal_counselor_id = mysqli_real_escape_string($this->conn, $fraternal_counselor_id);
-        $firstname             = mysqli_real_escape_string($this->conn, $firstname);
-        $lastname              = mysqli_real_escape_string($this->conn, $lastname);
-        $middlename            = mysqli_real_escape_string($this->conn, $middlename);
-        $birthdate             = mysqli_real_escape_string($this->conn, $birthdate);
-        $birthplace            = mysqli_real_escape_string($this->conn, $birthplace);
-        $age                   = mysqli_real_escape_string($this->conn, $age);
-        $gender                = mysqli_real_escape_string($this->conn, $gender);
-        $marital_status        = mysqli_real_escape_string($this->conn, $marital_status);
-        $tin_sss               = mysqli_real_escape_string($this->conn, $tin_sss);
-        $nationality           = mysqli_real_escape_string($this->conn, $nationality);
-        $status                = mysqli_real_escape_string($this->conn, "Active");
-        $application_Status    = mysqli_real_escape_string($this->conn, "Pending");
+        $firstname              = mysqli_real_escape_string($this->conn, $firstname);
+        $lastname               = mysqli_real_escape_string($this->conn, $lastname);
+        $middlename             = mysqli_real_escape_string($this->conn, $middlename);
+        $birthdate              = mysqli_real_escape_string($this->conn, $birthdate);
+        $birthplace             = mysqli_real_escape_string($this->conn, $birthplace);
+        $age                    = mysqli_real_escape_string($this->conn, $age);
+        $gender                 = mysqli_real_escape_string($this->conn, $gender);
+        $marital_status         = mysqli_real_escape_string($this->conn, $marital_status);
+        $tin_sss                = mysqli_real_escape_string($this->conn, $tin_sss);
+        $nationality            = mysqli_real_escape_string($this->conn, $nationality);
+        $status                 = mysqli_real_escape_string($this->conn, "Active");
+        $application_Status     = mysqli_real_escape_string($this->conn, "Pending");
 
         $sql = "
             INSERT INTO applicants
@@ -272,10 +272,10 @@ class MemberApplicationModel
     public function insertPhysicianDetails($applicant_id, $user_id, $physician_name, $contact_number, $physician_address)
     {
 
-        $applicant_id   = mysqli_real_escape_string($this->conn, $applicant_id);
-        $user_id        = mysqli_real_escape_string($this->conn, $user_id);
-        $physician_name = mysqli_real_escape_string($this->conn, $physician_name);
-        $contact_number = mysqli_real_escape_string($this->conn, $contact_number);
+        $applicant_id      = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id           = mysqli_real_escape_string($this->conn, $user_id);
+        $physician_name    = mysqli_real_escape_string($this->conn, $physician_name);
+        $contact_number    = mysqli_real_escape_string($this->conn, $contact_number);
         $physician_address = mysqli_real_escape_string($this->conn, $physician_address);
 
         $sql = "INSERT INTO `physician` (`applicant_id`, `user_id`, `physician_name`, `contact_number`, `physician_address`)
@@ -316,8 +316,7 @@ class MemberApplicationModel
         $user_id,
         $height,
         $weight,
-        $signature_file_tmp,
-        $signature_file_name,
+        $signature_file,
         $pregnant_question,
         $council_id,
         $first_degree_date,
@@ -335,17 +334,10 @@ class MemberApplicationModel
         $present_degree    = mysqli_real_escape_string($this->conn, $present_degree);
         $good_standing     = mysqli_real_escape_string($this->conn, $good_standing);
 
-        $upload_dir     = "../../uploads/signatures/";
-        $signature_path = $upload_dir . basename($signature_file_name);
-
-        if (! move_uploaded_file($signature_file_tmp, $signature_path)) {
-            return "Error uploading signature file.";
-        }
-
         $sql1 = "INSERT INTO personal_details (
                     applicant_id, user_id, height, weight, signature_file, pregnant_question
                 ) VALUES (
-                    '$applicant_id', '$user_id', '$height', '$weight', '$signature_path', '$pregnant_question'
+                    '$applicant_id', '$user_id', '$height', '$weight', '$signature_file', '$pregnant_question'
                 )";
 
         $sql2 = "INSERT INTO membership (
@@ -361,9 +353,51 @@ class MemberApplicationModel
         }
     }
 
-    public function deleteApplication($id)
+    public function deleteApplicant($applicant_id)
     {
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
 
+        // Start a transaction to ensure all related data is deleted successfully
+        mysqli_begin_transaction($this->conn);
+
+        try {
+            // Delete data from all related tables
+            $sqlContactInfo      = "DELETE FROM contact_info WHERE applicant_id = '$applicant_id'";
+            $sqlEmployment       = "DELETE FROM employment WHERE applicant_id = '$applicant_id'";
+            $sqlPlans            = "DELETE FROM plans WHERE applicant_id = '$applicant_id'";
+            $sqlBeneficiaries    = "DELETE FROM beneficiaries WHERE applicant_id = '$applicant_id'";
+            $sqlFamilyBackground = "DELETE FROM family_background WHERE applicant_id = '$applicant_id'";
+            $sqlMedicalHistory   = "DELETE FROM medical_history WHERE applicant_id = '$applicant_id'";
+            $sqlFamilyHealth     = "DELETE FROM family_health WHERE applicant_id = '$applicant_id'";
+            $sqlPhysician        = "DELETE FROM physician WHERE applicant_id = '$applicant_id'";
+
+            // Execute the delete queries
+            mysqli_query($this->conn, $sqlContactInfo);
+            mysqli_query($this->conn, $sqlEmployment);
+            mysqli_query($this->conn, $sqlPlans);
+            mysqli_query($this->conn, $sqlBeneficiaries);
+            mysqli_query($this->conn, $sqlFamilyBackground);
+            mysqli_query($this->conn, $sqlMedicalHistory);
+            mysqli_query($this->conn, $sqlFamilyHealth);
+            mysqli_query($this->conn, $sqlPhysician);
+
+            // Finally, delete the applicant record from the main applicants table
+            $sqlApplicant = "DELETE FROM applicants WHERE applicant_id = '$applicant_id'";
+
+            if (mysqli_query($this->conn, $sqlApplicant)) {
+                // Commit the transaction if all deletes were successful
+                mysqli_commit($this->conn);
+                return true;
+            } else {
+                // Rollback the transaction if an error occurs
+                mysqli_rollback($this->conn);
+                return "Error deleting applicant: " . mysqli_error($this->conn);
+            }
+        } catch (Exception $e) {
+            // Rollback the transaction if any exception occurs
+            mysqli_rollback($this->conn);
+            return "Error: " . $e->getMessage();
+        }
     }
 
 }
