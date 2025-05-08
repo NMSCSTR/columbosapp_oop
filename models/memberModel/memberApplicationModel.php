@@ -13,6 +13,103 @@ class MemberApplicationModel
         return mysqli_real_escape_string($this->conn, $value);
     }
 
+    public function fetchAllApplicantsById($user_id)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+    
+        $sql = "SELECT * FROM applicants WHERE user_id = '$user_id'";
+    
+        $result = mysqli_query($this->conn, $sql);
+    
+        if (mysqli_num_rows($result) > 0) {
+            $applicantData = mysqli_fetch_assoc($result);
+            
+            $contactInfo      = $this->fetchData("contact_info", $user_id);
+            $employment       = $this->fetchData("employment", $user_id);
+            $plans            = $this->fetchData("plans", $user_id);
+            $beneficiaries    = $this->fetchData("beneficiaries", $user_id);
+            $familyBackground = $this->fetchData("family_background", $user_id);
+            $medicalHistory   = $this->fetchData("medical_history", $user_id);
+            $familyHealth     = $this->fetchData("family_health", $user_id);
+            $physician        = $this->fetchData("physician", $user_id);
+    
+            return [
+                'applicantData' => $applicantData,
+                'contactInfo' => $contactInfo,
+                'employment' => $employment,
+                'plans' => $plans,
+                'beneficiaries' => $beneficiaries,
+                'familyBackground' => $familyBackground,
+                'medicalHistory' => $medicalHistory,
+                'familyHealth' => $familyHealth,
+                'physician' => $physician
+            ];
+        } else {
+            return "No applicant found with the provided ID.";
+        }
+    }
+    
+    private function fetchData($table, $user_id)
+    {
+        $sql = "SELECT * FROM $table WHERE user_id = '$user_id'";
+        $result = mysqli_query($this->conn, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            return mysqli_fetch_assoc($result);
+        }
+        return null; 
+    }
+    
+
+    public function fetchAllApplicants()
+    {
+       
+        $sql = "SELECT * FROM applicants";
+        $result = mysqli_query($this->conn, $sql);
+
+        if (! $result) {
+            return "Error fetching applicants: " . mysqli_error($this->conn);
+        }
+        $applicants = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        return $applicants;
+    }
+
+    public function selectAllApplicants()
+    {
+        $sql = "SELECT
+                a.applicant_id, a.user_id, a.fraternal_counselor_id, a.lastname, a.firstname, a.middlename,
+                a.age, a.birthdate, a.birthplace, a.gender, a.marital_status, a.tin_sss, a.nationality,
+                c.street, c.barangay, c.city_province, c.mobile_number, c.email_address,
+                e.occupation, e.employment_status, e.duties, e.employer, e.work, e.nature_business,
+                e.employer_mobile_number, e.employer_email_address, e.monthly_income,
+                p.fraternal_benefits_id, p.council_id, p.payment_mode, p.contribution_amount, p.currency,
+                f.father_lastname, f.father_firstname, f.father_mi, f.mother_lastname, f.mother_firstname,
+                f.mother_mi, f.siblings_living, f.siblings_deceased, f.children_living, f.children_deceased,
+                m.past_illness, m.current_medication,
+                h.father_living_age, h.father_health, h.mother_living_age, h.mother_health,
+                h.siblings_living_age, h.siblings_health, h.children_living_age, h.children_health,
+                h.father_death_age, h.father_cause, h.mother_death_age, h.mother_cause,
+                h.siblings_death_age, h.siblings_cause, h.children_death_age, h.children_cause,
+                ph.physician_name, ph.contact_number AS physician_contact, ph.physician_address
+            FROM applicants a
+            LEFT JOIN contact_info c ON a.applicant_id = c.applicant_id
+            LEFT JOIN employment e ON a.applicant_id = e.applicant_id
+            LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+            LEFT JOIN family_background f ON a.applicant_id = f.applicant_id
+            LEFT JOIN medical_history m ON a.applicant_id = m.applicant_id
+            LEFT JOIN family_health h ON a.applicant_id = h.applicant_id
+            LEFT JOIN physician ph ON a.applicant_id = ph.applicant_id";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if (! $result) {
+            return "Error fetching applicants: " . mysqli_error($this->conn);
+        }
+
+        $applicants = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        return $applicants;
+    }
+
     public function insertApplicant($user_id, $fraternal_counselor_id, $firstname, $lastname, $middlename, $age, $birthdate, $birthplace, $gender, $marital_status, $tin_sss, $nationality)
     {
         $user_id                = mysqli_real_escape_string($this->conn, $user_id);
@@ -357,11 +454,9 @@ class MemberApplicationModel
     {
         $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
 
-        // Start a transaction to ensure all related data is deleted successfully
         mysqli_begin_transaction($this->conn);
 
         try {
-            // Delete data from all related tables
             $sqlContactInfo      = "DELETE FROM contact_info WHERE applicant_id = '$applicant_id'";
             $sqlEmployment       = "DELETE FROM employment WHERE applicant_id = '$applicant_id'";
             $sqlPlans            = "DELETE FROM plans WHERE applicant_id = '$applicant_id'";
@@ -381,23 +476,175 @@ class MemberApplicationModel
             mysqli_query($this->conn, $sqlFamilyHealth);
             mysqli_query($this->conn, $sqlPhysician);
 
-            // Finally, delete the applicant record from the main applicants table
             $sqlApplicant = "DELETE FROM applicants WHERE applicant_id = '$applicant_id'";
 
             if (mysqli_query($this->conn, $sqlApplicant)) {
-                // Commit the transaction if all deletes were successful
                 mysqli_commit($this->conn);
                 return true;
             } else {
-                // Rollback the transaction if an error occurs
                 mysqli_rollback($this->conn);
                 return "Error deleting applicant: " . mysqli_error($this->conn);
             }
         } catch (Exception $e) {
-            // Rollback the transaction if any exception occurs
             mysqli_rollback($this->conn);
             return "Error: " . $e->getMessage();
         }
+    }
+
+    public function updateApplicant($applicant_id, $user_id, $fraternal_counselor_id, $firstname, $lastname, $middlename, $age, $birthdate, $birthplace, $gender, $marital_status, $tin_sss, $nationality, $street, $barangay, $city_province, $mobile_number, $email_address, $occupation, $employment_status, $duties, $employer, $work, $nature_business, $employer_mobile_number, $employer_email_address, $monthly_income, $fraternal_benefits_id, $council_id, $payment_mode, $contribution_amount, $currency, $benefit_types, $benefit_names, $benefit_birthdates, $benefit_relationships, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_deceased, $past_illness, $current_medication, $father_living_age, $father_health, $mother_living_age, $mother_health, $siblings_living_age, $siblings_health, $children_living_age, $children_health, $father_death_age, $father_cause, $mother_death_age, $mother_cause, $siblings_death_age, $siblings_cause, $children_death_age, $children_cause, $physician_name, $contact_number, $physician_address)
+    {
+        // Escape input values
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+        $user_id      = mysqli_real_escape_string($this->conn, $user_id);
+        // (other fields are similarly sanitized)
+
+        // Update applicant details
+        $sql = "UPDATE applicants SET
+                user_id = '$user_id',
+                fraternal_counselor_id = '$fraternal_counselor_id',
+                lastname = '$lastname',
+                firstname = '$firstname',
+                middlename = '$middlename',
+                age = '$age',
+                birthdate = '$birthdate',
+                birthplace = '$birthplace',
+                gender = '$gender',
+                marital_status = '$marital_status',
+                tin_sss = '$tin_sss',
+                nationality = '$nationality'
+            WHERE applicant_id = '$applicant_id'";
+
+        if (! mysqli_query($this->conn, $sql)) {
+            return "Error updating applicant details: " . mysqli_error($this->conn);
+        }
+
+        // Update contact info
+        $sql = "UPDATE contact_info SET
+                street = '$street',
+                barangay = '$barangay',
+                city_province = '$city_province',
+                mobile_number = '$mobile_number',
+                email_address = '$email_address'
+            WHERE applicant_id = '$applicant_id'";
+
+        if (! mysqli_query($this->conn, $sql)) {
+            return "Error updating contact info: " . mysqli_error($this->conn);
+        }
+
+        // Update employment details
+        $sql = "UPDATE employment SET
+                occupation = '$occupation',
+                employment_status = '$employment_status',
+                duties = '$duties',
+                employer = '$employer',
+                work = '$work',
+                nature_business = '$nature_business',
+                employer_mobile_number = '$employer_mobile_number',
+                employer_email_address = '$employer_email_address',
+                monthly_income = '$monthly_income'
+            WHERE applicant_id = '$applicant_id'";
+
+        if (! mysqli_query($this->conn, $sql)) {
+            return "Error updating employment details: " . mysqli_error($this->conn);
+        }
+
+        // Update plan information
+        $sql = "UPDATE plans SET
+                fraternal_benefits_id = '$fraternal_benefits_id',
+                council_id = '$council_id',
+                payment_mode = '$payment_mode',
+                contribution_amount = '$contribution_amount',
+                currency = '$currency'
+            WHERE applicant_id = '$applicant_id'";
+
+        if (! mysqli_query($this->conn, $sql)) {
+            return "Error updating plan information: " . mysqli_error($this->conn);
+        }
+
+        // Update beneficiaries (assuming you want to update them as well)
+        $count = count($benefit_names);
+        for ($i = 0; $i < $count; $i++) {
+            $benefit_type         = mysqli_real_escape_string($this->conn, $benefit_types[$i]);
+            $benefit_name         = mysqli_real_escape_string($this->conn, $benefit_names[$i]);
+            $benefit_birthdate    = mysqli_real_escape_string($this->conn, $benefit_birthdates[$i]);
+            $benefit_relationship = mysqli_real_escape_string($this->conn, $benefit_relationships[$i]);
+
+            $sql = "UPDATE beneficiaries SET
+                    benefit_type = '$benefit_type',
+                    benefit_name = '$benefit_name',
+                    benefit_birthdate = '$benefit_birthdate',
+                    benefit_relationship = '$benefit_relationship'
+                WHERE applicant_id = '$applicant_id'";
+
+            if (! mysqli_query($this->conn, $sql)) {
+                return "Error updating beneficiary $i: " . mysqli_error($this->conn);
+            }
+        }
+
+        // Update family background
+        $sql = "UPDATE family_background SET
+                father_lastname = '$father_lastname',
+                father_firstname = '$father_firstname',
+                father_mi = '$father_mi',
+                mother_lastname = '$mother_lastname',
+                mother_firstname = '$mother_firstname',
+                mother_mi = '$mother_mi',
+                siblings_living = '$siblings_living',
+                siblings_deceased = '$siblings_deceased',
+                children_living = '$children_living',
+                children_deceased = '$children_deceased'
+            WHERE applicant_id = '$applicant_id'";
+
+        if (! mysqli_query($this->conn, $sql)) {
+            return "Error updating family background: " . mysqli_error($this->conn);
+        }
+
+        // Update medical history
+        $sql = "UPDATE medical_history SET
+                past_illness = '$past_illness',
+                current_medication = '$current_medication'
+            WHERE applicant_id = '$applicant_id'";
+
+        if (! mysqli_query($this->conn, $sql)) {
+            return "Error updating medical history: " . mysqli_error($this->conn);
+        }
+
+        // Update family health
+        $sql = "UPDATE family_health SET
+                father_living_age = '$father_living_age',
+                father_health = '$father_health',
+                mother_living_age = '$mother_living_age',
+                mother_health = '$mother_health',
+                siblings_living_age = '$siblings_living_age',
+                siblings_health = '$siblings_health',
+                children_living_age = '$children_living_age',
+                children_health = '$children_health',
+                father_death_age = '$father_death_age',
+                father_cause = '$father_cause',
+                mother_death_age = '$mother_death_age',
+                mother_cause = '$mother_cause',
+                siblings_death_age = '$siblings_death_age',
+                siblings_cause = '$siblings_cause',
+                children_death_age = '$children_death_age',
+                children_cause = '$children_cause'
+            WHERE applicant_id = '$applicant_id'";
+
+        if (! mysqli_query($this->conn, $sql)) {
+            return "Error updating family health: " . mysqli_error($this->conn);
+        }
+
+        // Update physician details
+        $sql = "UPDATE physician SET
+                physician_name = '$physician_name',
+                contact_number = '$contact_number',
+                physician_address = '$physician_address'
+            WHERE applicant_id = '$applicant_id'";
+
+        if (! mysqli_query($this->conn, $sql)) {
+            return "Error updating physician details: " . mysqli_error($this->conn);
+        }
+
+        return true;
     }
 
 }

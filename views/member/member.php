@@ -29,6 +29,8 @@ textarea.border-red-500 {
 }
 </style>
 
+
+
 <div class="flex flex-col md:flex-row min-h-screen">
     <?php include '../../partials/sidebar.php' ?>
     <!-- Main Content -->
