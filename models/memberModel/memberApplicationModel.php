@@ -16,14 +16,14 @@ class MemberApplicationModel
     public function fetchAllApplicantsById($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
-    
+
         $sql = "SELECT * FROM applicants WHERE user_id = '$user_id'";
-    
+
         $result = mysqli_query($this->conn, $sql);
-    
+
         if (mysqli_num_rows($result) > 0) {
             $applicantData = mysqli_fetch_assoc($result);
-            
+
             $contactInfo      = $this->fetchData("contact_info", $user_id);
             $employment       = $this->fetchData("employment", $user_id);
             $plans            = $this->fetchData("plans", $user_id);
@@ -32,38 +32,37 @@ class MemberApplicationModel
             $medicalHistory   = $this->fetchData("medical_history", $user_id);
             $familyHealth     = $this->fetchData("family_health", $user_id);
             $physician        = $this->fetchData("physician", $user_id);
-    
+
             return [
-                'applicantData' => $applicantData,
-                'contactInfo' => $contactInfo,
-                'employment' => $employment,
-                'plans' => $plans,
-                'beneficiaries' => $beneficiaries,
+                'applicantData'    => $applicantData,
+                'contactInfo'      => $contactInfo,
+                'employment'       => $employment,
+                'plans'            => $plans,
+                'beneficiaries'    => $beneficiaries,
                 'familyBackground' => $familyBackground,
-                'medicalHistory' => $medicalHistory,
-                'familyHealth' => $familyHealth,
-                'physician' => $physician
+                'medicalHistory'   => $medicalHistory,
+                'familyHealth'     => $familyHealth,
+                'physician'        => $physician,
             ];
         } else {
             return "No applicant found with the provided ID.";
         }
     }
-    
+
     private function fetchData($table, $user_id)
     {
-        $sql = "SELECT * FROM $table WHERE user_id = '$user_id'";
+        $sql    = "SELECT * FROM $table WHERE user_id = '$user_id'";
         $result = mysqli_query($this->conn, $sql);
         if (mysqli_num_rows($result) > 0) {
             return mysqli_fetch_assoc($result);
         }
-        return null; 
+        return null;
     }
-    
 
     public function fetchAllApplicants()
     {
-       
-        $sql = "SELECT * FROM applicants";
+
+        $sql    = "SELECT * FROM applicants";
         $result = mysqli_query($this->conn, $sql);
 
         if (! $result) {
