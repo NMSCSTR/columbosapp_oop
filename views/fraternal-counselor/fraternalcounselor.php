@@ -105,28 +105,36 @@ $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
                         <td class='px-4 py-3'><?php echo $fetchFraternalBenefits['name'] ?></td>
                         <td class='px-4 py-3'>
                             <?php echo $applicantData['lastname'] . ' ' . $applicantData['firstname'] ?></td>
-                        <td class='px-4 py-3'><?php echo $applicantData['application_status'] ?></td>
+                        <td class='px-4 py-3 font-bold' style="color: <?php echo $applicantData['application_status'] === 'Approved' ? 'green' : 'orange'; ?>"><?php echo $applicantData['application_status'] ?></td>
                         <td class='px-4 py-3'>
                             <?php echo date("F j, Y", strtotime($applicantData['created_at'])); ?>
                         </td>
-                        <td>
+                        <td class='px-4 py-3'>
                             <div class="flex gap-2 justify-center">
-                                <a href="#"
-                                    class="px-2 py-1 text-[10px] font-medium text-center inline-flex items-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 delete-application"
-                                    data-id="<?= $applicantData['applicant_id'] ?>">
-                                    <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                        viewBox="0 0 24 24">
+                                <?php if ($applicantData['application_status'] === 'Pending' || $applicantData['application_status'] === 'Dis-approved'): ?>
+                                <a href="../../controllers/fraternalCounselorController/applicationStatusController.php?id=<?= $applicantData['applicant_id'] ?>&action=approve"
+                                    class="px-2 py-1 text-xs font-medium text-center inline-flex items-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    <svg class="w-4 h-4 text-white dark:text-white mr-1"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                         <path fill-rule="evenodd"
                                             d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z"
                                             clip-rule="evenodd" />
                                     </svg>
-
-                                    Approved
+                                    Approve
                                 </a>
-
+                                <?php elseif ($applicantData['application_status'] === 'Approved'): ?>
+                                <a href="../../controllers/fraternalCounselorController/applicationStatusController.php?action=not_approve&id=<?= $applicantData['applicant_id'] ?>"
+                                    class="px-2 py-1 text-xs font-medium inline-flex items-center text-white bg-red-600 rounded-lg hover:bg-red-700">
+                                    <svg class="w-4 h-4 text-white mr-1" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
+                                    </svg>
+                                    Disapprove
+                                </a>
+                                <?php endif; ?>
                                 <a href="javascript:void(0);"
-                                    onclick="fetchApplicantData(<?php echo $applicantData['user_id']; ?>)"
+                                    onclick="fetchApplicantData(<?= $applicantData['user_id']; ?>)"
                                     class="px-2 py-1 text-[10px] font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800">
                                     <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -137,12 +145,10 @@ $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
                                     </svg>
                                     View
                                 </a>
-
-
-
-
+                                
                             </div>
                         </td>
+
                     </tr>
                     <?php
                                 }
@@ -156,7 +162,7 @@ $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
     </div>
 
     <!-- Profile Section -->
-    <div x-show="activeSection === 'profile'" class="space-y-6">
+    <!-- <div x-show="activeSection === 'profile'" class="space-y-6">
         <header>
             <h1 class="text-2xl font-bold text-gray-800">Your Profile</h1>
             <p class="text-gray-600">Update your personal information and settings.</p>
@@ -181,7 +187,7 @@ $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
                 </button>
             </form>
         </div>
-    </div>
+    </div> -->
 </main>
 <script>
 function fetchApplicantData(userId) {

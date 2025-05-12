@@ -88,6 +88,18 @@ class MemberApplicationModel
         }
     }
 
+    public function changedApplicationStatus($applicant_id,  $status){
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+        $status = mysqli_real_escape_string($this->conn, $status);
+
+        $sql    = "UPDATE `applicants` SET `application_status`='$status' WHERE applicant_id = '$applicant_id'";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        return $result ? true : false;
+
+    }
+
     public function fetchAllApplicantById($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);

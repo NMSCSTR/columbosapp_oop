@@ -43,7 +43,7 @@
                             class="text-gray-700 transition-opacity duration-300">Applicants</span>
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="#" @click.prevent="activeSection = 'profile'; openSidebar = false"
                         class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors"
                         :class="{ 'bg-gray-100': activeSection === 'profile' }">
@@ -56,7 +56,7 @@
                             :class="{ 'block opacity-100': openSidebar || window.innerWidth >= 768, 'hidden opacity-0': !openSidebar && window.innerWidth < 768 }"
                             class="text-gray-700 transition-opacity duration-300">Profile</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </nav>
     </aside>
