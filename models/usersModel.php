@@ -20,6 +20,20 @@ class UserModel
 
         return null;
     }
+
+    public function getUserByEmailIgnoreStatus($email)
+    {
+        $email  = mysqli_real_escape_string($this->conn, $email);
+        $sql    = "SELECT * FROM users WHERE email = '$email' LIMIT 1";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            return mysqli_fetch_assoc($result);
+        }
+
+        return null;
+    }
+
     public function getUserById($id)
     {
         $id     = mysqli_real_escape_string($this->conn, $id);
@@ -34,20 +48,19 @@ class UserModel
     }
     public function getUserWhereRoleFraternalCounselor()
     {
-        $sql = "SELECT * FROM `users` WHERE `role` = 'fraternal-counselor'";
+        $sql    = "SELECT * FROM `users` WHERE `role` = 'fraternal-counselor'";
         $result = mysqli_query($this->conn, $sql);
-    
+
         $users = [];
-    
+
         if ($result && mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $users[] = $row;
             }
         }
-    
+
         return $users;
     }
-    
 
     public function createUser($firstname, $lastname, $kcfapicode, $email, $phone_number, $password, $confirmPassword, $role)
     {

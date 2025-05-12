@@ -9,22 +9,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     $userModel = new UserModel($conn);
-    $user = $userModel->getUserByEmail($email); 
+    $user = $userModel->getUserByEmailIgnoreStatus($email); // New method below
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['firstname'] = $user['firstname'];
-        $_SESSION['lastname'] = $user['lastname'];
-        $_SESSION['role'] = $user['role'];
+    if ($user) {
+        if ($user['status'] !== 'approved') {
+            $_SESSION['error'] = "Your account is not yet approved.";
+        } elseif (!password_verify($password, $user['password'])) {
+            $_SESSION['error'] = "Incorrect password.";
+        } else {
+            // Login success
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['firstname'] = $user['firstname'];
+            $_SESSION['lastname'] = $user['lastname'];
+            $_SESSION['role'] = $user['role'];
 
-        // Redirect to role redirect middleware
-        header('Location: ' . BASE_URL . 'middleware/role_redirect.php');
-        exit;
+            header('Location: ' . BASE_URL . 'middleware/role_redirect.php');
+            exit;
+        }
     } else {
-        $_SESSION['error'] = "Invalid email or password.";
-        header('Location: ' . BASE_URL . 'views/login.php');
-        exit;
+        $_SESSION['error'] = "Email not found.";
     }
+
+    header('Location: ' . BASE_URL . 'views/login.php');
+    exit;
 } else {
     $_SESSION['error'] = "Invalid request.";
     header('Location: ' . BASE_URL . 'views/login.php');
