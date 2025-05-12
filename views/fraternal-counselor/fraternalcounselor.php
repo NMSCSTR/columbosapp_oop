@@ -16,25 +16,22 @@ $applicantData = $applicationModel->getApplicantByFraternalCounselor($_SESSION['
 $totalApplicants = $applicationModel->countAllApplicants($_SESSION['user_id']);
 $fetchFraternalBenefits = $fraternalBenefitsModel->getFraternalBenefitById($applicantData['fraternal_benefits_id']);
 $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
-var_dump($applicantData);
+// var_dump($applicantData);
 
 ?>
 
 
 <?php include '../../partials/fcsidebar.php' ?>
 
-<!-- Modal -->
-<div id="viewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden justify-center items-center">
-    <div class="bg-white w-full max-w-3xl rounded-lg shadow-lg p-6 overflow-y-auto max-h-[80vh]">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold">Applicant Information</h2>
-            <button onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl font-bold">&times;</button>
-        </div>
-        <div id="modalContent" class="text-sm space-y-2">
-            <!-- Injected content from JavaScript -->
-        </div>
+<div id="viewModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full max-h-[80vh] overflow-y-auto p-6 relative">
+        <button onclick="closeModal()"
+            class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl">&times;</button>
+        <h2 class="text-xl font-bold mb-4">Applicant Details</h2>
+        <div id="modalContent" class="space-y-2"></div>
     </div>
 </div>
+
 
 <!-- Main Content -->
 <main class="flex-1 p-4 md:p-6 overflow-y-auto">
@@ -129,17 +126,19 @@ var_dump($applicantData);
                                 </a>
 
                                 <a href="javascript:void(0);"
-    onclick='openModal(<?php echo json_encode($applicantData); ?>)'
-    class="px-2 py-1 text-[10px] font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800">
-    <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
-    </svg>
-    View
-</a>
+                                    onclick="fetchApplicantData(<?php echo $applicantData['user_id']; ?>)"
+                                    class="px-2 py-1 text-[10px] font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+                                    <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    View
+                                </a>
+
+
 
 
                             </div>
@@ -185,6 +184,15 @@ var_dump($applicantData);
     </div>
 </main>
 <script>
+function fetchApplicantData(userId) {
+    fetch(`../../controllers/memberController/viewApplicant.php?id=${userId}`)
+        .then(res => res.json())
+        .then(data => {
+            openModal(data);
+        })
+        .catch(err => console.error('Error:', err));
+}
+
 function openModal(data) {
     const modal = document.getElementById('viewModal');
     const modalContent = document.getElementById('modalContent');
@@ -206,10 +214,10 @@ function openModal(data) {
 
 function closeModal() {
     const modal = document.getElementById('viewModal');
-    modal.classList.remove('flex');
     modal.classList.add('hidden');
 }
 </script>
+
 
 <?php
 include '../../includes/footer.php';
