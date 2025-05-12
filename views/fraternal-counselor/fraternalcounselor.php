@@ -7,6 +7,10 @@ include '../../includes/header.php';
 include '../../models/usersModel.php';
 include '../../models/adminModel/councilModel.php';
 include '../../models/adminModel/fraternalBenefitsModel.php';
+include '../../models/adminModel/memberApplicationModel.php';
+
+$applicationModel = new MemberApplicationModel($conn);
+$applicantData = $applicationModel->fetchAllApplicantById($_SESSION['user_id']);
 
 
 ?>
@@ -49,38 +53,79 @@ include '../../models/adminModel/fraternalBenefitsModel.php';
     <!-- Orders Section -->
     <div x-show="activeSection === 'orders'" class="space-y-6">
         <header>
-            <h1 class="text-2xl font-bold text-gray-800">Your Orders</h1>
-            <p class="text-gray-600">View and manage your recent orders.</p>
+            <h1 class="text-2xl font-bold text-gray-800">List of applicant</h1>
+            <p class="text-gray-600">View and manage your applicants.</p>
         </header>
         <div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order
-                            ID</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date
-                        </th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Amount</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <tr>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">#ORD12345</td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2023-10-10</td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-green-600">Completed</td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$100.00</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">#ORD67890</td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2023-10-05</td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-yellow-600">Pending</td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$50.00</td>
-                    </tr>
-                </tbody>
-            </table>
+        <table id="myTable" class="stripe hover w-full" style="width:100%">
+                        <thead class="bg-gray-800 text-white text-xs">
+                            <tr>
+                                <!-- <th class="px-4 py-3">Id</th> -->
+                                <th class="px-4 py-3">Council Number</th>
+                                <th class="px-4 py-3">Plan</th>
+                                <th class="px-4 py-3">Name</th>
+                                <th class="px-4 py-3">UNIT MANAGER</th>
+                                <th class="px-4 py-3">FRATERNAL COUNSELOR</th>
+                                <th class="px-4 py-3">Council Established</th>
+                                <!-- <th class="px-4 py-3">Date Created</th> -->
+                                <th class="px-4 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs">
+                            <?php
+                            $councilModel = new CouncilModel($conn);
+                            $councils     = $councilModel->getAllCouncil();
+
+                            if ($councils) {
+                                foreach ($councils as $council) {
+                                    $um_name = $councilModel->getUserNameById($council['unit_manager_id'], 'unit-manager');
+                                    $fc_name = $councilModel->getUserNameById($council['fraternal_counselor_id'], 'fraternal-counselor'); ?>
+
+                            <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
+                                <!-- <td class='px-4 py-3'><?php echo $council['council_id'] ?></td> -->
+                                <td class='px-4 py-3'><?php echo $council['council_number'] ?></td>
+                                <td class='px-4 py-3'><?php echo $council['council_name'] ?></td>
+                                <td class='px-4 py-3'><?php echo $um_name ?></td>
+                                <td class='px-4 py-3'><?php echo $fc_name ?></td>
+                                <td class='px-4 py-3'>
+                                    <?php echo date("F j, Y", strtotime($council['date_established'])); ?>
+                                </td>
+                                <!-- <td class='px-4 py-3'><?php echo date("F j, Y", strtotime($council['date_created'])); ?>
+                                        </td> -->
+                                <td>
+                                    <a href="#"
+                                        class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 delete-council"
+                                        data-id="<?= $council['council_id'] ?>">
+                                        <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                            viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                        </svg>
+                                        Delete
+                                    </a>
+                                    <a href="updateCouncilForm.php?id=<?= $council['council_id'] ?>"
+                                        class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                            viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                        </svg>
+                                        Update
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php
+                                }
+                            } else {
+                                echo "<tr><td colspan='7' class='px-4 py-3 text-center'>No councils found.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
         </div>
     </div>
 

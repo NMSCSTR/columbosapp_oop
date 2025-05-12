@@ -13,41 +13,69 @@ class MemberApplicationModel
         return mysqli_real_escape_string($this->conn, $value);
     }
 
-    // public function fetchAllApplicantsById($user_id)
-    // {
-    //     $user_id = mysqli_real_escape_string($this->conn, $user_id);
+    public function getApplicantByFraternalCounselor($fraternal_counselor_id)
+    {
+        $fraternal_counselor_id = mysqli_real_escape_string($this->conn, $fraternal_counselor_id);
 
-    //     $sql = "SELECT * FROM applicants WHERE user_id = '$user_id'";
+        $sql = "
+        SELECT a.*, c.*, e.*, p.*, b.*, f.*, m.*, fh.*, ph.*
+        FROM applicants a
+        LEFT JOIN contact_info c ON a.applicant_id = c.applicant_id
+        LEFT JOIN employment e ON a.applicant_id = e.applicant_id
+        LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+        LEFT JOIN beneficiaries b ON a.applicant_id = b.applicant_id
+        LEFT JOIN family_background f ON a.applicant_id = f.applicant_id
+        LEFT JOIN medical_history m ON a.applicant_id = m.applicant_id
+        LEFT JOIN family_health fh ON a.applicant_id = fh.applicant_id
+        LEFT JOIN physician ph ON a.applicant_id = ph.applicant_id
+        WHERE a.user_id = '$fraternal_counselor_id'
+    ";
 
-    //     $result = mysqli_query($this->conn, $sql);
+        $result = mysqli_query($this->conn, $sql);
 
-    //     if (mysqli_num_rows($result) > 0) {
-    //         $applicantData = mysqli_fetch_assoc($result);
+        if ($result) {
+            return mysqli_fetch_assoc($result);
+        } else {
+            return "Error fetching applicant: " . mysqli_error($this->conn);
+        }
+    }
 
-    //         $contactInfo      = $this->fetchData("contact_info", $user_id);
-    //         $employment       = $this->fetchData("employment", $user_id);
-    //         $plans            = $this->fetchData("plans", $user_id);
-    //         $beneficiaries    = $this->fetchData("beneficiaries", $user_id);
-    //         $familyBackground = $this->fetchData("family_background", $user_id);
-    //         $medicalHistory   = $this->fetchData("medical_history", $user_id);
-    //         $familyHealth     = $this->fetchData("family_health", $user_id);
-    //         $physician        = $this->fetchData("physician", $user_id);
+    public function fetchAllApplicantsByIdV2($user_id)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
 
-    //         return [
-    //             'applicantData'    => $applicantData,
-    //             'contactInfo'      => $contactInfo,
-    //             'employment'       => $employment,
-    //             'plans'            => $plans,
-    //             'beneficiaries'    => $beneficiaries,
-    //             'familyBackground' => $familyBackground,
-    //             'medicalHistory'   => $medicalHistory,
-    //             'familyHealth'     => $familyHealth,
-    //             'physician'        => $physician,
-    //         ];
-    //     } else {
-    //         return "No applicant found with the provided ID.";
-    //     }
-    // }
+        $sql = "SELECT * FROM applicants WHERE user_id = '$user_id'";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if (mysqli_num_rows($result) > 0) {
+            $applicantData = mysqli_fetch_assoc($result);
+
+            $contactInfo      = $this->fetchData("contact_info", $user_id);
+            $employment       = $this->fetchData("employment", $user_id);
+            $plans            = $this->fetchData("plans", $user_id);
+            $beneficiaries    = $this->fetchData("beneficiaries", $user_id);
+            $familyBackground = $this->fetchData("family_background", $user_id);
+            $medicalHistory   = $this->fetchData("medical_history", $user_id);
+            $familyHealth     = $this->fetchData("family_health", $user_id);
+            $physician        = $this->fetchData("physician", $user_id);
+
+            return [
+                'applicantData'    => $applicantData,
+                'contactInfo'      => $contactInfo,
+                'employment'       => $employment,
+                'plans'            => $plans,
+                'beneficiaries'    => $beneficiaries,
+                'familyBackground' => $familyBackground,
+                'medicalHistory'   => $medicalHistory,
+                'familyHealth'     => $familyHealth,
+                'physician'        => $physician,
+            ];
+        } else {
+            return "No applicant found with the provided ID.";
+        }
+    }
+
     public function fetchAllApplicantById($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);

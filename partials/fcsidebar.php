@@ -5,7 +5,7 @@
         :class="{ 'w-64': openSidebar, 'hidden md:block': !openSidebar }">
         <div class="p-4 flex items-center justify-between border-b">
             <h1 :class="{ 'opacity-100': openSidebar || window.innerWidth >= 768, 'opacity-0 hidden': !openSidebar && window.innerWidth < 768 }"
-                class="text-xl font-bold text-green-600 transition-opacity duration-300">KCFAPI</h1>
+                class="text-xl font-bold text-green-600 transition-opacity duration-300">COLUMBOS</h1>
             <button @click="openSidebar = !openSidebar" class="md:hidden p-2 rounded-full hover:bg-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -40,7 +40,7 @@
                         </svg>
                         <span
                             :class="{ 'block opacity-100': openSidebar || window.innerWidth >= 768, 'hidden opacity-0': !openSidebar && window.innerWidth < 768 }"
-                            class="text-gray-700 transition-opacity duration-300">Orders</span>
+                            class="text-gray-700 transition-opacity duration-300">Applicants</span>
                     </a>
                 </li>
                 <li>
