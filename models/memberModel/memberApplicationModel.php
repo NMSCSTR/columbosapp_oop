@@ -12,6 +12,18 @@ class MemberApplicationModel
     {
         return mysqli_real_escape_string($this->conn, $value);
     }
+    public function countAllApplicants($fraternal_counselor_id)
+    {
+        $sql    = "SELECT COUNT(*) as total FROM applicants WHERE fraternal_counselor_id = '$fraternal_counselor_id'";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            return $row['total'];
+        }
+
+        return 0; 
+    }
 
     public function getApplicantByFraternalCounselor($fraternal_counselor_id)
     {
@@ -28,7 +40,7 @@ class MemberApplicationModel
         LEFT JOIN medical_history m ON a.applicant_id = m.applicant_id
         LEFT JOIN family_health fh ON a.applicant_id = fh.applicant_id
         LEFT JOIN physician ph ON a.applicant_id = ph.applicant_id
-        WHERE a.user_id = '$fraternal_counselor_id'
+        WHERE a.fraternal_counselor_id = '$fraternal_counselor_id'
     ";
 
         $result = mysqli_query($this->conn, $sql);
