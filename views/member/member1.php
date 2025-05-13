@@ -29,20 +29,49 @@ textarea.border-red-500 {
 }
 </style>
 
+<?php include '../../partials/memberSideBar.php'?>
 
+<!-- Main Content -->
+<main class="flex-1 p-4 md:p-6 overflow-y-auto">
+    <!-- Mobile Menu Toggle -->
+    <div class="md:hidden flex justify-between items-center mb-4">
+        <h1 class="text-xl font-bold text-gray-800">COLUMBOS</h1>
+        <button @click="openSidebar = !openSidebar" class="p-2 rounded-full hover:bg-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        </button>
+    </div>
 
-<div class="flex flex-col md:flex-row min-h-screen">
-    <?php include '../../partials/memberSideBar.php'?>
-    <!-- Main Content -->
-    <main class="flex-1">
-        <div class="p-4">
+    <!-- Dashboard Section -->
+    <div x-show="activeSection === 'dashboard'" class="space-y-6">
+        <header>
+            <h1 class="text-2xl font-bold text-gray-800">Welcome Back,
+                <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['lastname'] ?>!</h1>
+            <p class="text-gray-600">Here's what's happening with your account today.</p>
+        </header>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h2 class="text-lg font-semibold text-gray-700">APPLICATION STATUS</h2>
+                <p class="text-2xl font-bold text-green-600">Pending</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h2 class="text-lg font-semibold text-gray-700">FRATERNAL COUNSELOR</h2>
+                <p class="text-2xl font-bold text-yellow-600">BONG MARCOS</p>
+            </div>
+        </div>
+    </div>
 
-            <h3 class="text-3xl text-center font-extrabold dark:text-white mb-8">Application form for
-                <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['lastname'] ?></h3>
-
-            <div class="p-4 rounded-lg dark:border-gray-700">
-                <!-- Responsive grid layout -->
-                <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
+    <!-- Orders Section -->
+    <div x-show="activeSection === 'orders'" class="space-y-6">
+        <header>
+            <h1 class="text-2xl font-bold text-gray-800">Application form for
+                <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['lastname'] ?></h1>
+            <p class="text-gray-600">View and manage your recent orders.</p>
+        </header>
+        <div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+        <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
                     <!-- Stepper Header -->
                     <div
                         class="grid grid-cols-11 border-b border-cyan-200 text-center text-xs font-semibold text-cyan-700">
@@ -89,14 +118,14 @@ textarea.border-red-500 {
                                     </select>
                                     <select class="border rounded p-2" name="fraternal_counselor_id">
                                         <option selected disabled>Select Fraternal Counselor</option>
-                                        <?php
-                                            if ($fraternalCounselor) {
-                                            foreach ($fraternalCounselor as $fc) {?>
+                                        <?php 
+                                        if ($fraternalCounselor) {
+                                            foreach ($fraternalCounselor as $fc) { ?>
                                         <option value="<?php echo htmlspecialchars($fc['id']); ?>">
                                             <?php echo htmlspecialchars($fc['firstname'] . ' ' . $fc['lastname']); ?>
                                         </option>
                                         <?php }
-                                            }
+                                        }
                                         ?>
                                     </select>
 
@@ -163,16 +192,16 @@ textarea.border-red-500 {
                                     <select class="border rounded p-2" name="fraternal_benefits_id">
                                         <option>Select Plan</option>
                                         <?php
-                                            $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
-                                            $fraternalBenefits      = $fraternalBenefitsModel->getAllFraternalBenefits();
+                                        $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
+                                        $fraternalBenefits      = $fraternalBenefitsModel->getAllFraternalBenefits();
 
-                                            if ($fraternalBenefits) {
-                                            foreach ($fraternalBenefits as $benefit) {?>
+                                        if ($fraternalBenefits) {
+                                            foreach ($fraternalBenefits as $benefit) { ?>
                                         <option value="<?php echo $benefit['id'] ?>"><?php echo $benefit['name'] ?>
                                         </option>
                                         <?php
                                             }
-                                            }
+                                        }
                                         ?>
                                     </select>
                                     <select class="border rounded p-2" name="payment_mode">
@@ -188,15 +217,15 @@ textarea.border-red-500 {
                                     <select class="border rounded p-2" name="council_id">
                                         <option selected disabled>Select Council</option>
                                         <?php $councilModel = new CouncilModel($conn);
-                                            $councils                                                   = $councilModel->getAllCouncil();
-                                            if ($councils) {
-                                            foreach ($councils as $council) {?>
+                                        $councils                                                   = $councilModel->getAllCouncil();
+                                        if ($councils) {
+                                            foreach ($councils as $council) { ?>
                                         <option value="<?php echo $council['council_id'] ?>">
                                             <?php echo $council['council_name'] ?>
                                         </option>
                                         <?php
                                             }
-                                            }
+                                        }
                                         ?>
                                     </select>
                                     <input type="number" placeholder="Payment Amount" name="contribution_amount"
@@ -551,15 +580,15 @@ textarea.border-red-500 {
                                     <select class="border rounded" name="council_id">
                                         <option selected disabled>Select Council</option>
                                         <?php $councilModel = new CouncilModel($conn);
-                                            $councils                                                   = $councilModel->getAllCouncil();
-                                            if ($councils) {
-                                            foreach ($councils as $council) {?>
+                                        $councils                                                   = $councilModel->getAllCouncil();
+                                        if ($councils) {
+                                            foreach ($councils as $council) { ?>
                                         <option value="<?php echo $council['council_id'] ?>">
                                             <?php echo $council['council_name'] ?>
                                         </option>
                                         <?php
                                             }
-                                            }
+                                        }
                                         ?>
                                     </select>
 
@@ -602,9 +631,39 @@ textarea.border-red-500 {
                                 class="bg-cyan-500 text-white px-4 py-2 rounded text-sm">Next</button>
                         </div>
                     </form>
-                </div>
+        </div>
+    </div>
 
-                <script>
+    <!-- Profile Section -->
+    <div x-show="activeSection === 'profile'" class="space-y-6">
+        <header>
+            <h1 class="text-2xl font-bold text-gray-800">Your Profile</h1>
+            <p class="text-gray-600">Update your personal information and settings.</p>
+        </header>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <form class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="name"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                        placeholder="John Doe">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input type="email" id="email"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                        placeholder="john.doe@example.com">
+                </div>
+                <button type="submit"
+                    class="w-full sm:w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+</div>
+<script>
                 const steps = [
                     "Personal Info", "Contact", "Employment", "Plan", "Beneficiaries",
                     "Family", "Medical", "Physician", "Health", "Signature", "Confirm"
@@ -738,21 +797,19 @@ textarea.border-red-500 {
                     group.className = "beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded";
 
                     group.innerHTML = `
-                                <select class="border rounded p-2" name="benefit_type[]">
-                                    <option selected disabled>Type of Benefit</option>
-                                    <option value="Revocable">Revocable</option>
-                                    <option value="Irrevocable">Irrevocable</option>
-                                </select>
-                                <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full">
-                                <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full">
-                                <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full">
-                            `;
+        <select class="border rounded p-2" name="benefit_type[]">
+            <option selected disabled>Type of Benefit</option>
+            <option value="Revocable">Revocable</option>
+            <option value="Irrevocable">Irrevocable</option>
+        </select>
+        <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full">
+        <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full">
+        <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full">
+    `;
+
                     container.appendChild(group);
                 }
                 </script>
-            </div>
-    </main>
-</div>
 
 <?php
 include '../../includes/footer.php';

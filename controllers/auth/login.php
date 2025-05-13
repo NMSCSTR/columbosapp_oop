@@ -9,15 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     $userModel = new UserModel($conn);
-    $user = $userModel->getUserByEmailIgnoreStatus($email); // New method below
-
+    $user = $userModel->getUserByEmailIgnoreStatus($email); 
     if ($user) {
         if ($user['status'] !== 'approved') {
             $_SESSION['error'] = "Your account is not yet approved.";
         } elseif (!password_verify($password, $user['password'])) {
             $_SESSION['error'] = "Incorrect password.";
         } else {
-            // Login success
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['firstname'] = $user['firstname'];
             $_SESSION['lastname'] = $user['lastname'];
