@@ -8,6 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = $_POST['type'];
     $name = $_POST['name'];
     $about = $_POST['about'];
+    $face_value = $_POST['face_value'];
+    $years_to_maturity = $_POST['years_to_maturity'];
+    $years_of_protection = $_POST['years_of_protection'];
     $benefits = $_POST['benefits'];
     $contribution_period = $_POST['contribution_period'];
 
@@ -45,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     $model = new fraternalBenefitsModel($conn);
-    $result = $model->insertFraternalBenefits($type, $name, $about, $benefits, $contribution_period, $imagePath);
+    $result = $model->insertFraternalBenefits($type, $name, $about, $face_value, $years_to_maturity, $years_of_protection, $benefits, $contribution_period, $imagePath);
 
     if ($result) {
         $_SESSION['success'] = 'Plan created successfully.';

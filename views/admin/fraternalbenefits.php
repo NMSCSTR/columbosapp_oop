@@ -63,6 +63,29 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Please input about plan...." required></textarea>
                     </div>
+
+                    <div class="col-span-2">
+                        <label for="contribution_period"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Face Value</label>
+                        <input type="number" name="face_value" id="face_value"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Please input plan contribution period...." required="">
+                    </div>
+                    <div class="col-span-2">
+                        <label for="contribution_period"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Years to maturity</label>
+                        <input type="number" name="years_to_maturity" id="years_to_maturity"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Please input plan contribution period...." required="">
+                    </div>
+                    <div class="col-span-2">
+                        <label for="contribution_period"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Years of protection</label>
+                        <input type="number" name="years_of_protection" id="years_of_protection"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Please input plan contribution period...." required="">
+                    </div>
+
                     <div class="col-span-2">
                         <label for="benefits"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Benefits</label>

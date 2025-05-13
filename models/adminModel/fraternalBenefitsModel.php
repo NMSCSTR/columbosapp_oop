@@ -40,16 +40,19 @@ class fraternalBenefitsModel
         return null;
     }
 
-    public function insertFraternalBenefits($type, $name, $about, $benefits, $contribution_period, $image)
+    public function insertFraternalBenefits($type, $name, $about,$face_value, $years_to_maturity, $years_of_protection, $benefits, $contribution_period, $image)
     {
         $type                = mysqli_real_escape_string($this->conn, $type);
         $name                = mysqli_real_escape_string($this->conn, $name);
         $about               = mysqli_real_escape_string($this->conn, $about);
+        $face_value          = mysqli_real_escape_string($this->conn, $face_value);
+        $years_to_maturity   = mysqli_real_escape_string($this->conn, $years_to_maturity);
+        $years_of_protection = mysqli_real_escape_string($this->conn, $years_of_protection);
         $benefits            = mysqli_real_escape_string($this->conn, $benefits);
         $contribution_period = mysqli_real_escape_string($this->conn, $contribution_period);
         $image               = mysqli_real_escape_string($this->conn, $image);
 
-        $insertFraternalBenefits = "INSERT INTO `fraternal_benefits`(`type`, `name`, `about`, `benefits`, `contribution_period`, `image`) VALUES ('$type','$name','$about','$benefits','$contribution_period','$image')";
+        $insertFraternalBenefits = "INSERT INTO `fraternal_benefits`(`type`, `name`, `about`, `face_value`, `years_to_maturity`, `years_of_protection`, `benefits`, `contribution_period`, `image`) VALUES ('$type','$name','$about', '$face_value', '$years_to_maturity', '$years_of_protection', '$benefits','$contribution_period','$image')";
 
         $result = mysqli_query($this->conn, $insertFraternalBenefits);
         return $result ? true : false;
