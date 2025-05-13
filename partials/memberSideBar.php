@@ -13,8 +13,8 @@
             </div>
             <nav class="py-4">
                 <ul class="space-y-2">
-                    <li>
-                        <a href="#" @click.prevent="activeSection = 'dashboard'; openSidebar = false" 
+                    <!-- <li>
+                        <a href="#"
                            class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors" 
                            :class="{ 'bg-gray-100': activeSection === 'dashboard' }">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,11 +23,10 @@
                             <span :class="{ 'block opacity-100': openSidebar || window.innerWidth >= 768, 'hidden opacity-0': !openSidebar && window.innerWidth < 768 }" 
                                   class="text-gray-700 transition-opacity duration-300">Dashboard</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
-                        <a href="#" @click.prevent="activeSection = 'orders'; openSidebar = false" 
-                           class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors" 
-                           :class="{ 'bg-gray-100': activeSection === 'orders' }">
+                        <a href="#" 
+                           class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                             </svg>
@@ -46,6 +45,20 @@
                                   class="text-gray-700 transition-opacity duration-300">Profile</span>
                         </a>
                     </li> -->
+                    <li>
+                    <a href="#" id="logoutBtn"
+                        class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        :class="{ 'bg-gray-100': activeSection === 'profile' }">
+                        <svg class="shrink-0 w-5 h-5 text-red-600 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3" />
+                    </svg>
+                        <span
+                            :class="{ 'block opacity-100': openSidebar || window.innerWidth >= 768, 'hidden opacity-0': !openSidebar && window.innerWidth < 768 }"
+                            class="text-gray-700 transition-opacity duration-300">Logout</span>
+                    </a>
+                </li>
                 </ul>
             </nav>
         </aside>

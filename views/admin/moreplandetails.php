@@ -90,6 +90,21 @@
                                 <p class="text-gray-700 leading-tight mb-4">
                                     <?php echo htmlspecialchars($benefit['contribution_period']); ?>
                                 </p>
+                                <div class="d-flex gap-3">
+                                    <strong>Face value:</strong>
+                                    <p class="text-gray-700 leading-tight mb-4">
+                                        PHP <?php echo number_format($benefit['face_value'],2); ?>
+                                    </p>
+                                    <strong>Face value:</strong>
+                                    <p class="text-gray-700 leading-tight mb-4">
+                                        PHP <?php echo number_format($benefit['face_value'],2); ?>
+                                    </p>
+                                    <strong>Face value:</strong>
+                                    <p class="text-gray-700 leading-tight mb-4">
+                                        PHP <?php echo number_format($benefit['face_value'],2); ?>
+                                    </p>
+                                </div>
+
                             </div>
 
                             <div class="flex justify-between mt-4">

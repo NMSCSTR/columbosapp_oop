@@ -186,6 +186,9 @@
                             <tr>
                                 <th scope="col" class="px-4 py-3">TYPE</th>
                                 <th scope="col" class="px-4 py-3">NAME</th>
+                                <!-- <th scope="col" class="px-4 py-3">FACE VALUE</th>
+                                <th scope="col" class="px-4 py-3">YEARS TO MATURITY</th>
+                                <th scope="col" class="px-4 py-3">YEARS OF PROTECTION</th> -->
                                 <th scope="col" class="px-4 py-3">CONTRIBUTION PERIOD</th>
                                 <th scope="col" class="px-4 py-3">ACTIONS</th>
                             </tr>
@@ -201,6 +204,9 @@
                             <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <td class="px-4 py-3"><?php echo $fraternal['type']; ?></td>
                                 <td class="px-4 py-3"><?php echo $fraternal['name']; ?></td>
+                                <!-- <td class="px-4 py-3"><?php echo $fraternal['face_value']; ?></td>
+                                <td class="px-4 py-3"><?php echo $fraternal['years_to_maturity']; ?></td>
+                                <td class="px-4 py-3"><?php echo $fraternal['years_of_protection']; ?></td> -->
                                 <td class="px-4 py-3"><?php echo $fraternal['contribution_period']; ?></td>
                                 <td>
                                     <a href="moreplandetails.php?id=<?= $fraternal['id'] ?>"
