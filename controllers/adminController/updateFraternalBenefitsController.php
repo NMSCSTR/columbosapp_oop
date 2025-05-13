@@ -4,19 +4,21 @@ include '../../includes/db.php';
 include '../../includes/config.php';
 include '../../models/adminModel/fraternalBenefitsModel.php';
 
-// Check if the form is submitted
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $type = $_POST['type'];
     $name = $_POST['name'];
+    $face_value = $_POST['face_value'];
+    $years_to_maturity = $_POST['years_to_maturity'];
+    $years_of_protection = $_POST['years_of_protection'];
     $about = $_POST['about'];
     $benefits = $_POST['benefits'];
     $contribution_period = $_POST['contribution_period'];
 
     // Upload path setup
     $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/app/uploads/fraternalBenefitsUpload/';
-    $imagePath = $_POST['current_image'] ?? ''; // Retain current image unless a new one is uploaded
-
+    $imagePath = $_POST['current_image'] ?? '';
     // If a new image is uploaded
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
         $cleanType = preg_replace('/[^A-Za-z0-9]/', '', $type);
@@ -48,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Update in DB
     $model = new fraternalBenefitsModel($conn);
-    $result = $model->updateFraternalBenefits($id, $type, $name, $about, $benefits, $contribution_period, $imagePath);
+    $result = $model->updateFraternalBenefits($id, $type, $name, $about, $face_value, $years_to_maturity, $years_of_protection, $benefits, $contribution_period, $imagePath);
 
     if ($result) {
         $_SESSION['success'] = 'Plan updated successfully.';

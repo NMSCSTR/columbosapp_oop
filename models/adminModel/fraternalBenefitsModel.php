@@ -55,18 +55,21 @@ class fraternalBenefitsModel
         return $result ? true : false;
     }
 
-    public function updateFraternalBenefits($id, $type, $name, $about, $benefits, $contribution_period, $image_path)
+    public function updateFraternalBenefits($id, $type, $name, $about, $face_value, $years_to_maturity, $years_of_protection, $benefits, $contribution_period, $image_path)
     {
 
         $id                  = mysqli_real_escape_string($this->conn, $id);
         $type                = mysqli_real_escape_string($this->conn, $type);
         $name                = mysqli_real_escape_string($this->conn, $name);
         $about               = mysqli_real_escape_string($this->conn, $about);
+        $face_value          = mysqli_real_escape_string($this->conn, $face_value);
+        $years_to_maturity   = mysqli_real_escape_string($this->conn, $years_to_maturity);
+        $years_of_protection = mysqli_real_escape_string($this->conn, $years_of_protection);
         $benefits            = mysqli_real_escape_string($this->conn, $benefits);
         $contribution_period = mysqli_real_escape_string($this->conn, $contribution_period);
         $image_path          = mysqli_real_escape_string($this->conn, $image_path);
 
-        $updateQuery = "UPDATE `fraternal_benefits` SET `type`='$type', `name`='$name', `about`='$about', `benefits`='$benefits', `contribution_period`='$contribution_period', `image`='$image_path' WHERE `id`='$id'";
+        $updateQuery = "UPDATE `fraternal_benefits` SET `type`='$type', `name`='$name', `about`='$about', `face_value`='$face_value',`years_to_maturity`='$years_to_maturity',`years_of_protection`='$years_of_protection', `benefits`='$benefits', `contribution_period`='$contribution_period', `image`='$image_path' WHERE `id`='$id'";
 
         $result = mysqli_query($this->conn, $updateQuery);
         return $result ? true : false;

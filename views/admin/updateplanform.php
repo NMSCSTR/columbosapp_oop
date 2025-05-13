@@ -6,17 +6,16 @@
     include '../../includes/db.php';
     include '../../models/adminModel/fraternalBenefitsModel.php';
 
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
 
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+        $model   = new fraternalBenefitsModel($conn);
+        $benefit = $model->getFraternalBenefitById($id);
 
-    $model = new fraternalBenefitsModel($conn);
-    $benefit = $model->getFraternalBenefitById($id);
-
-    if (!$benefit) {
-        die('Fraternal benefit not found.');
+        if (! $benefit) {
+            die('Fraternal benefit not found.');
+        }
     }
-}
 ?>
 
 <div class="flex flex-col md:flex-row min-h-screen">
@@ -78,13 +77,13 @@ if (isset($_GET['id'])) {
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"
                                 required>
                                 <option disabled>Select category</option>
-                                <?php 
-                    $types = ['Investment Plan', 'Retirement Plan', 'Educational Plan', 'Protection Plan', 'Term Plan'];
-                    foreach ($types as $typeOption) {
-                        $selected = ($benefit['type'] === $typeOption) ? 'selected' : '';
-                        echo "<option value=\"$typeOption\" $selected>$typeOption</option>";
-                    }
-                ?>
+                                <?php
+                                    $types = ['Investment Plan', 'Retirement Plan', 'Educational Plan', 'Protection Plan', 'Term Plan'];
+                                    foreach ($types as $typeOption) {
+                                        $selected = ($benefit['type'] === $typeOption) ? 'selected' : '';
+                                        echo "<option value=\"$typeOption\" $selected>$typeOption</option>";
+                                    }
+                                ?>
                             </select>
                         </div>
 
@@ -119,6 +118,27 @@ if (isset($_GET['id'])) {
                             <input type="text" name="contribution_period" id="contribution_period"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                                 value="<?php echo htmlspecialchars($benefit['contribution_period']); ?>" required>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="contribution_period"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Face value</label>
+                            <input type="text" name="face_value" id="face_value"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                                value="<?php echo htmlspecialchars($benefit['face_value']); ?>" required>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="contribution_period"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Years to maturity</label>
+                            <input type="text" name="years_to_maturity" id="years_to_maturity"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                                value="<?php echo htmlspecialchars($benefit['years_to_maturity']); ?>" required>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="contribution_period"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Years of protection</label>
+                            <input type="text" name="years_of_protection" id="years_of_protection"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                                value="<?php echo htmlspecialchars($benefit['years_of_protection']); ?>" required>
                         </div>
 
                         <div class="col-span-2">

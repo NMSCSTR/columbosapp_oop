@@ -86,27 +86,33 @@
                                 <p class="text-gray-700 leading-tight mb-4">
                                     <?php echo htmlspecialchars($benefit['benefits']); ?>
                                 </p>
-                                <strong>Contribution Period:</strong>
-                                <p class="text-gray-700 leading-tight mb-4">
-                                    <?php echo htmlspecialchars($benefit['contribution_period']); ?>
-                                </p>
-                                <div class="d-flex gap-3">
-                                    <strong>Face value:</strong>
-                                    <p class="text-gray-700 leading-tight mb-4">
-                                        PHP <?php echo number_format($benefit['face_value'],2); ?>
-                                    </p>
-                                    <strong>Face value:</strong>
-                                    <p class="text-gray-700 leading-tight mb-4">
-                                        PHP <?php echo number_format($benefit['face_value'],2); ?>
-                                    </p>
-                                    <strong>Face value:</strong>
-                                    <p class="text-gray-700 leading-tight mb-4">
-                                        PHP <?php echo number_format($benefit['face_value'],2); ?>
-                                    </p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div class="bg-white p-4 rounded-lg shadow-md">
+                                        <strong>Contribution Period:</strong>
+                                        <p class="text-gray-700 leading-tight mb-4">
+                                            <?php echo htmlspecialchars($benefit['contribution_period']); ?>
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg shadow-md">
+                                        <strong>Face value:</strong>
+                                        <p class="text-gray-700 leading-tight mb-4">
+                                            PHP <?php echo number_format($benefit['face_value'],2); ?>
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg shadow-md">
+                                        <strong>Years to maturity:</strong>
+                                        <p class="text-gray-700 leading-tight mb-4">
+                                            <?php echo $benefit['years_to_maturity']; ?>
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg shadow-md">
+                                        <strong>Years of protection:</strong>
+                                        <p class="text-gray-700 leading-tight mb-4">
+                                            <?php echo $benefit['years_of_protection']; ?>
+                                        </p>
+                                    </div>
                                 </div>
-
                             </div>
-
                             <div class="flex justify-between mt-4">
                                 <a href="fraternalBenefits.php" class="text-blue-600 hover:underline">← Back to list</a>
                                 <a href="updateplanform.php?id=<?php echo $benefit['id']; ?>"
@@ -117,9 +123,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
     </main>
 </div>
