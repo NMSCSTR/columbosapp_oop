@@ -25,6 +25,10 @@ class MemberApplicationModel
         return 0; 
     }
 
+    public function calculatePlan(){
+        
+    }
+
     public function getApplicantByFraternalCounselor($fraternal_counselor_id)
     {
         $fraternal_counselor_id = mysqli_real_escape_string($this->conn, $fraternal_counselor_id);
