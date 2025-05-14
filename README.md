@@ -213,3 +213,7 @@ Monthly Savings Fund (SF) =0.75×1,000 = ₱750
 
 ​
  
+| Condition                 | Loop Ends When...           | Typically Used For...               |
+| ------------------------- | --------------------------- | ----------------------------------- |
+| `while current.next`      | `current.next == None`      | Traverse full list or get last node |
+| `while current.next.next` | `current.next.next == None` | Stop at second-to-last node         |

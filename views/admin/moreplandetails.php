@@ -90,7 +90,7 @@
                                     <div class="bg-white p-4 rounded-lg shadow-md">
                                         <strong>Contribution Period:</strong>
                                         <p class="text-gray-700 leading-tight mb-4">
-                                            <?php echo htmlspecialchars($benefit['contribution_period']); ?>
+                                            <?php echo htmlspecialchars($benefit['contribution_period']); ?> years
                                         </p>
                                     </div>
                                     <div class="bg-white p-4 rounded-lg shadow-md">
@@ -102,13 +102,13 @@
                                     <div class="bg-white p-4 rounded-lg shadow-md">
                                         <strong>Years to maturity:</strong>
                                         <p class="text-gray-700 leading-tight mb-4">
-                                            <?php echo $benefit['years_to_maturity']; ?>
+                                            <?php echo $benefit['years_to_maturity']; ?> years
                                         </p>
                                     </div>
                                     <div class="bg-white p-4 rounded-lg shadow-md">
                                         <strong>Years of protection:</strong>
                                         <p class="text-gray-700 leading-tight mb-4">
-                                            <?php echo $benefit['years_of_protection']; ?>
+                                            <?php echo $benefit['years_of_protection']; ?> years
                                         </p>
                                     </div>
                                 </div>
