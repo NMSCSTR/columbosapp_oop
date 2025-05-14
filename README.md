@@ -175,3 +175,41 @@ This could be:
 The ₱100,000 face value (if it's structured as an endowment), or
 
 A guaranteed amount (possibly with dividends or bonuses if it's a participating policy)
+
+
+Here’s how you can estimate allocation using a formula based on the given insurance structure:
+📌 Key Variables:
+P = Monthly premium = ₱1,000
+
+n = Number of months = 60
+
+FV = Face Value / Maturity = ₱100,000
+
+r = Annual interest rate used for fund growth (assumed: 4%)
+
+t = Years fund grows after payment = 10 years (Year 6 to Year 15)
+
+Total Contributions = P×n=₱1,000×60=₱60,000
+
+
+
+🧠 2. Assume Allocation Percentages (Industry Estimate):
+
+| Component              | Symbol | Approx. % | Formula              |
+| ---------------------- | ------ | --------- | -------------------- |
+| Insurance Cost         | IC     | 15%       | IC = 0.15 X P |
+| Admin Fees             | AF     | 10%       | AF = 0.10 X P |
+| Savings (Reserve Fund) | SF     | 75%       | SF = 0.75 X P |
+
+
+💰 3. Monthly Allocation Formula:
+Monthly Insurance Cost (IC) = 0.15×1,000 = ₱150          - So for each month, ₱750 goes into a growing fund.
+Monthly Admin Fee (AF) =0.10×1,000 = ₱100
+Monthly Savings Fund (SF) =0.75×1,000 = ₱750
+​
+  
+
+
+
+​
+ 
