@@ -25,14 +25,28 @@ class MemberApplicationModel
         return 0;
     }
 
+    public function getAllApplicants(){
+        $sql    = "SELECT * FROM applicants";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $applicants = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $applicants[] = $row;
+            }
+            return $applicants;
+        }
+
+        return null;
+    }
+
     public function calculatePremium($targetFutureValue, $annualInterestRate, $paymentMonths, $growthYears, $paymentMode)
     {
-        // Interest rates and periods
+
         $monthlyInterestRate    = $annualInterestRate / 12;
         $quarterlyInterestRate  = $annualInterestRate / 4;
         $semiAnnualInterestRate = $annualInterestRate / 2;
 
-        // Adjust number of payments based on payment mode
         switch ($paymentMode) {
             case "Monthly":
                 $compoundingFactor = pow(1 + $monthlyInterestRate, $paymentMonths) - 1;
@@ -50,20 +64,16 @@ class MemberApplicationModel
                 return "Invalid Payment Mode";
         }
 
-        // Calculate the required savings portion
         $requiredSavings = $targetFutureValue / $compoundedGrowth;
 
-        // Calculate the required savings per period
         if ($compoundingFactor == 0) {
             return "Invalid calculation parameters.";
         }
 
         $requiredSavingsPerPeriod = $requiredSavings * $monthlyInterestRate / $compoundingFactor;
 
-        // Calculate the total monthly premium (85% goes to savings)
         $requiredMonthlyPremium = $requiredSavingsPerPeriod / 0.85;
 
-        // Return the result
         return number_format($requiredMonthlyPremium, 2);
     }
 
@@ -613,9 +623,74 @@ class MemberApplicationModel
 
     public function updateApplicant($applicant_id, $user_id, $fraternal_counselor_id, $firstname, $lastname, $middlename, $age, $birthdate, $birthplace, $gender, $marital_status, $tin_sss, $nationality, $street, $barangay, $city_province, $mobile_number, $email_address, $occupation, $employment_status, $duties, $employer, $work, $nature_business, $employer_mobile_number, $employer_email_address, $monthly_income, $fraternal_benefits_id, $council_id, $payment_mode, $contribution_amount, $currency, $benefit_types, $benefit_names, $benefit_birthdates, $benefit_relationships, $father_lastname, $father_firstname, $father_mi, $mother_lastname, $mother_firstname, $mother_mi, $siblings_living, $siblings_deceased, $children_living, $children_deceased, $past_illness, $current_medication, $father_living_age, $father_health, $mother_living_age, $mother_health, $siblings_living_age, $siblings_health, $children_living_age, $children_health, $father_death_age, $father_cause, $mother_death_age, $mother_cause, $siblings_death_age, $siblings_cause, $children_death_age, $children_cause, $physician_name, $contact_number, $physician_address)
     {
-        // Escape input values
-        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
-        $user_id      = mysqli_real_escape_string($this->conn, $user_id);
+
+        // $applicant_id           = mysqli_real_escape_string($this->conn, $applicant_id);
+        // $user_id                = mysqli_real_escape_string($this->conn, $user_id);
+        // $fraternal_counselor_id = mysqli_real_escape_string($this->conn, $fraternal_counselor_id);
+        // $firstname              = mysqli_real_escape_string($this->conn, $firstname);
+        // $lastname               = mysqli_real_escape_string($this->conn, $lastname);
+        // $middlename             = mysqli_real_escape_string($this->conn, $middlename);
+        // $age                    = mysqli_real_escape_string($this->conn, $age);
+        // $birthdate              = mysqli_real_escape_string($this->conn, $birthdate);
+        // $birthplace             = mysqli_real_escape_string($this->conn, $birthplace);
+        // $gender                 = mysqli_real_escape_string($this->conn, $gender);
+        // $marital_status         = mysqli_real_escape_string($this->conn, $marital_status);
+        // $tin_sss                = mysqli_real_escape_string($this->conn, $tin_sss);
+        // $nationality            = mysqli_real_escape_string($this->conn, $nationality);
+        // $street                 = mysqli_real_escape_string($this->conn, $street);
+        // $barangay               = mysqli_real_escape_string($this->conn, $barangay);
+        // $city_province          = mysqli_real_escape_string($this->conn, $city_province);
+        // $mobile_number          = mysqli_real_escape_string($this->conn, $mobile_number);
+        // $email_address          = mysqli_real_escape_string($this->conn, $email_address);
+        // $occupation             = mysqli_real_escape_string($this->conn, $occupation);
+        // $employment_status      = mysqli_real_escape_string($this->conn, $employment_status);
+        // $duties                 = mysqli_real_escape_string($this->conn, $duties);
+        // $employer               = mysqli_real_escape_string($this->conn, $employer);
+        // $work                   = mysqli_real_escape_string($this->conn, $work);
+        // $nature_business        = mysqli_real_escape_string($this->conn, $nature_business);
+        // $employer_mobile_number = mysqli_real_escape_string($this->conn, $employer_mobile_number);
+        // $employer_email_address = mysqli_real_escape_string($this->conn, $employer_email_address);
+        // $monthly_income         = mysqli_real_escape_string($this->conn, $monthly_income);
+        // $fraternal_benefits_id  = mysqli_real_escape_string($this->conn, $fraternal_benefits_id);
+        // $council_id             = mysqli_real_escape_string($this->conn, $council_id);
+        // $payment_mode           = mysqli_real_escape_string($this->conn, $payment_mode);
+        // $contribution_amount    = mysqli_real_escape_string($this->conn, $contribution_amount);
+        // $currency               = mysqli_real_escape_string($this->conn, $currency);
+        // $benefit_types          = mysqli_real_escape_string($this->conn, $benefit_types);
+        // $benefit_names          = mysqli_real_escape_string($this->conn, $benefit_names);
+        // $benefit_birthdates     = mysqli_real_escape_string($this->conn, $benefit_birthdates);
+        // $benefit_relationships  = mysqli_real_escape_string($this->conn, $benefit_relationships);
+        // $father_lastname        = mysqli_real_escape_string($this->conn, $father_lastname);
+        // $father_firstname       = mysqli_real_escape_string($this->conn, $father_firstname);
+        // $father_mi              = mysqli_real_escape_string($this->conn, $father_mi);
+        // $mother_lastname        = mysqli_real_escape_string($this->conn, $mother_lastname);
+        // $mother_firstname       = mysqli_real_escape_string($this->conn, $mother_firstname);
+        // $mother_mi              = mysqli_real_escape_string($this->conn, $mother_mi);
+        // $siblings_living        = mysqli_real_escape_string($this->conn, $siblings_living);
+        // $siblings_deceased      = mysqli_real_escape_string($this->conn, $siblings_deceased);
+        // $children_living        = mysqli_real_escape_string($this->conn, $children_living);
+        // $children_deceased      = mysqli_real_escape_string($this->conn, $children_deceased);
+        // $past_illness           = mysqli_real_escape_string($this->conn, $past_illness);
+        // $current_medication     = mysqli_real_escape_string($this->conn, $current_medication);
+        // $father_living_age      = mysqli_real_escape_string($this->conn, $father_living_age);
+        // $father_health          = mysqli_real_escape_string($this->conn, $father_health);
+        // $mother_living_age      = mysqli_real_escape_string($this->conn, $mother_living_age);
+        // $mother_health          = mysqli_real_escape_string($this->conn, $mother_health);
+        // $siblings_living_age    = mysqli_real_escape_string($this->conn, $siblings_living_age);
+        // $siblings_health        = mysqli_real_escape_string($this->conn, $siblings_health);
+        // $children_living_age    = mysqli_real_escape_string($this->conn, $children_living_age);
+        // $children_health        = mysqli_real_escape_string($this->conn, $children_health);
+        // $father_death_age       = mysqli_real_escape_string($this->conn, $father_death_age);
+        // $father_cause           = mysqli_real_escape_string($this->conn, $father_cause);
+        // $mother_death_age       = mysqli_real_escape_string($this->conn, $mother_death_age);
+        // $mother_cause           = mysqli_real_escape_string($this->conn, $mother_cause);
+        // $siblings_death_age     = mysqli_real_escape_string($this->conn, $siblings_death_age);
+        // $siblings_cause         = mysqli_real_escape_string($this->conn, $siblings_cause);
+        // $children_death_age     = mysqli_real_escape_string($this->conn, $children_death_age);
+        // $children_cause         = mysqli_real_escape_string($this->conn, $children_cause);
+        // $physician_name         = mysqli_real_escape_string($this->conn, $physician_name);
+        // $contact_number         = mysqli_real_escape_string($this->conn, $contact_number);
+        // $physician_address      = mysqli_real_escape_string($this->conn, $physician_address);
         // (other fields are similarly sanitized)
 
         // Update applicant details

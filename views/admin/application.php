@@ -1,12 +1,12 @@
 <?php
-session_start();
-include '../../includes/config.php';
-include '../../includes/header.php';
-include '../../includes/db.php';
-include '../../models/adminModel/councilModel.php';
-include '../../models/adminModel/userModel.php';
-include '../../models/adminModel/fraternalBenefitsModel.php';
-include '../../includes/alert2.php';
+    session_start();
+    include '../../includes/config.php';
+    include '../../includes/header.php';
+    include '../../includes/db.php';
+    include '../../models/adminModel/councilModel.php';
+    include '../../models/adminModel/userModel.php';
+    include '../../models/adminModel/fraternalBenefitsModel.php';
+    include '../../includes/alert2.php';
 ?>
 
 <!-- Import DataTables CSS and JS -->
@@ -17,7 +17,7 @@ include '../../includes/alert2.php';
 
 
 <div class="flex flex-col md:flex-row min-h-screen">
-    <?php include '../../partials/sidebar.php' ?>
+    <?php include '../../partials/sidebar.php'?>
 
     <!-- Main Content -->
     <main class="flex-1">
@@ -67,40 +67,46 @@ include '../../includes/alert2.php';
                         <thead class="bg-gray-800 text-white text-xs">
                             <tr>
                                 <!-- <th class="px-4 py-3">Id</th> -->
-                                <th class="px-4 py-3">Council Number</th>
-                                <th class="px-4 py-3">Name</th>
-                                <th class="px-4 py-3">UNIT MANAGER</th>
-                                <th class="px-4 py-3">FRATERNAL COUNSELOR</th>
-                                <th class="px-4 py-3">Council Established</th>
+                                <th class="px-4 py-3">NAME</th>
+                                <th class="px-4 py-3">PLAN TYPE</th>
+                                <th class="px-4 py-3">PLAN NAME</th>
+                                <th class="px-4 py-3">FACE VALUE</th>
+                                <th class="px-4 py-3">YEARS TO MATURE</th>
+                                <th class="px-4 py-3">YEARS PROTECT</th>
+                                <th class="px-4 py-3">PAYMENT MODE</th>
+                                <th class="px-4 py-3">APPLICATION STATUS</th>
                                 <!-- <th class="px-4 py-3">Date Created</th> -->
-                                <th class="px-4 py-3">Actions</th>
+                                <th class="px-4 py-3">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody class="text-xs">
-                            <?php
-                            $councilModel = new CouncilModel($conn);
-                            $councils     = $councilModel->getAllCouncil();
+                        <?php
+                            $councilModel           = new CouncilModel($conn);
+                            $applicationModel       = new MemberApplicationModel($conn);
+                            $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
+                            $fraternals             = $fraternalBenefitsModel->getAllFraternalBenefits();
+                            $councils               = $councilModel->getAllCouncil();
 
-                            if ($councils) {
-                                foreach ($councils as $council) {
-                                    $um_name = $councilModel->getUserNameById($council['unit_manager_id'], 'unit-manager');
-                                    $fc_name = $councilModel->getUserNameById($council['fraternal_counselor_id'], 'fraternal-counselor'); ?>
+                            if ($councils && $fraternals) {
+                                $length = min(count($councils), count($fraternals));
+                                if ($length > 0) {
+                                    for ($i = 0; $i < $length; $i++) {
+                                        $council   = $councils[$i];
+                                        $fraternal = $fraternals[$i];
 
+                                        $um_name = $councilModel->getUserNameById($council['unit_manager_id'], 'unit-manager');
+                                        $fc_name = $councilModel->getUserNameById($council['fraternal_counselor_id'], 'fraternal-counselor');
+                                    ?>
                             <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
-                                <!-- <td class='px-4 py-3'><?php echo $council['council_id'] ?></td> -->
                                 <td class='px-4 py-3'><?php echo $council['council_number'] ?></td>
                                 <td class='px-4 py-3'><?php echo $council['council_name'] ?></td>
                                 <td class='px-4 py-3'><?php echo $um_name ?></td>
                                 <td class='px-4 py-3'><?php echo $fc_name ?></td>
-                                <td class='px-4 py-3'>
-                                    <?php echo date("F j, Y", strtotime($council['date_established'])); ?>
-                                </td>
-                                <!-- <td class='px-4 py-3'><?php echo date("F j, Y", strtotime($council['date_created'])); ?>
-                                        </td> -->
+                                <td class='px-4 py-3'><?php echo date("F j, Y", strtotime($council['date_established'])); ?></td>
                                 <td>
-                                    <a href="#"
+                                <a href="#"
                                         class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 delete-council"
-                                        data-id="<?= $council['council_id'] ?>">
+                                        data-id="<?php echo $council['council_id']?>">
                                         <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                             viewBox="0 0 24 24">
@@ -110,7 +116,7 @@ include '../../includes/alert2.php';
                                         </svg>
                                         Delete
                                     </a>
-                                    <a href="updateCouncilForm.php?id=<?= $council['council_id'] ?>"
+                                    <a href="updateCouncilForm.php?id=<?php echo $council['council_id']?>"
                                         class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                         <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
@@ -123,12 +129,15 @@ include '../../includes/alert2.php';
                                     </a>
                                 </td>
                             </tr>
-                            <?php
+                        <?php
+                            }
+                                } else {
+                                    echo "<tr><td colspan='7' class='px-4 py-3 text-center'>No councils or fraternal benefits found.</td></tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='7' class='px-4 py-3 text-center'>No councils found.</td></tr>";
+                                echo "<tr><td colspan='7' class='px-4 py-3 text-center'>No data available.</td></tr>";
                             }
-                            ?>
+                        ?>
                         </tbody>
                     </table>
                 </section>
