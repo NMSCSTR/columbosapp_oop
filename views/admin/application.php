@@ -5,6 +5,7 @@
     include '../../includes/db.php';
     include '../../models/adminModel/councilModel.php';
     include '../../models/adminModel/userModel.php';
+    include '../../models/memberModel/memberApplicationModel.php';
     include '../../models/adminModel/fraternalBenefitsModel.php';
     include '../../includes/alert2.php';
 ?>
@@ -67,15 +68,15 @@
                         <thead class="bg-gray-800 text-white text-xs">
                             <tr>
                                 <!-- <th class="px-4 py-3">Id</th> -->
-                                <th class="px-4 py-3">NAME</th>
+                                <th class="px-4 py-3">APPLICANT NAME</th>
                                 <th class="px-4 py-3">PLAN TYPE</th>
                                 <th class="px-4 py-3">PLAN NAME</th>
                                 <th class="px-4 py-3">FACE VALUE</th>
                                 <th class="px-4 py-3">YEARS TO MATURE</th>
                                 <th class="px-4 py-3">YEARS PROTECT</th>
                                 <th class="px-4 py-3">PAYMENT MODE</th>
+                                <th class="px-4 py-3">CONTRIBUTION AMOUNT</th>
                                 <th class="px-4 py-3">APPLICATION STATUS</th>
-                                <!-- <th class="px-4 py-3">Date Created</th> -->
                                 <th class="px-4 py-3">ACTIONS</th>
                             </tr>
                         </thead>
@@ -86,58 +87,37 @@
                             $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
                             $fraternals             = $fraternalBenefitsModel->getAllFraternalBenefits();
                             $councils               = $councilModel->getAllCouncil();
+                            $applicants             = $applicationModel->getAllApplicantsWithPlans();
 
-                            if ($councils && $fraternals) {
-                                $length = min(count($councils), count($fraternals));
-                                if ($length > 0) {
-                                    for ($i = 0; $i < $length; $i++) {
-                                        $council   = $councils[$i];
-                                        $fraternal = $fraternals[$i];
+                            if ($applicants && is_array($applicants) && count($applicants) > 0) {
+                                foreach ($applicants as $applicant) {
 
-                                        $um_name = $councilModel->getUserNameById($council['unit_manager_id'], 'unit-manager');
-                                        $fc_name = $councilModel->getUserNameById($council['fraternal_counselor_id'], 'fraternal-counselor');
-                                    ?>
-                            <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
-                                <td class='px-4 py-3'><?php echo $council['council_number'] ?></td>
-                                <td class='px-4 py-3'><?php echo $council['council_name'] ?></td>
-                                <td class='px-4 py-3'><?php echo $um_name ?></td>
-                                <td class='px-4 py-3'><?php echo $fc_name ?></td>
-                                <td class='px-4 py-3'><?php echo date("F j, Y", strtotime($council['date_established'])); ?></td>
+                                ?>
+                            <tr>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['applicant_name'])?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_type'])?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_name'])?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars(number_format($applicant['face_value']))?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_to_maturity'])?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_of_protection'])?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['payment_mode'])?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['contribution_amount'])?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['application_status'])?></td>
                                 <td>
-                                <a href="#"
-                                        class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 delete-council"
-                                        data-id="<?php echo $council['council_id']?>">
-                                        <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                        </svg>
-                                        Delete
-                                    </a>
-                                    <a href="updateCouncilForm.php?id=<?php echo $council['council_id']?>"
-                                        class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                        <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                                        </svg>
-                                        Update
-                                    </a>
+                                    <button>delete</button>
                                 </td>
                             </tr>
-                        <?php
-                            }
-                                } else {
-                                    echo "<tr><td colspan='7' class='px-4 py-3 text-center'>No councils or fraternal benefits found.</td></tr>";
+                            <?php
                                 }
-                            } else {
-                                echo "<tr><td colspan='7' class='px-4 py-3 text-center'>No data available.</td></tr>";
-                            }
-                        ?>
+                                } else {
+                                    // Check for related data availability (optional)
+                                    if (empty($councils) || empty($fraternals)) {
+                                        echo "<tr><td colspan='8' class='px-4 py-3 text-center'>No councils or fraternal benefits found.</td></tr>";
+                                    } else {
+                                        echo "<tr><td colspan='8' class='px-4 py-3 text-center'>No data available.</td></tr>";
+                                    }
+                                }
+                            ?>
                         </tbody>
                     </table>
                 </section>

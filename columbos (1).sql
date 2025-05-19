@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2025 at 06:03 PM
+-- Generation Time: May 18, 2025 at 07:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,8 +66,15 @@ CREATE TABLE `applicants` (
   `nationality` varchar(50) DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
   `application_status` varchar(50) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL
+  `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `applicants`
+--
+
+INSERT INTO `applicants` (`applicant_id`, `user_id`, `fraternal_counselor_id`, `lastname`, `firstname`, `middlename`, `age`, `birthdate`, `birthplace`, `gender`, `marital_status`, `tin_sss`, `nationality`, `status`, `application_status`, `created_at`) VALUES
+(17, 13, 11, 'Sandro', 'Marcos', 'Lysandra Dyer', 2002, '0000-00-00', '28', 'Female', 'Single', 'Sapiente dolorum per', 'Id praesentium anim', 'Active', 'Dis-approved', '2025-05-08 11:35:23');
 
 -- --------------------------------------------------------
 
@@ -80,10 +87,17 @@ CREATE TABLE `beneficiaries` (
   `applicant_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   `benefit_type` varchar(50) DEFAULT NULL,
-  `benefit_name1` varchar(100) NOT NULL,
-  `benefit_birthdate1` date DEFAULT NULL,
-  `benefit_relationship1` varchar(50) DEFAULT NULL
+  `benefit_name` varchar(100) NOT NULL,
+  `benefit_birthdate` date DEFAULT NULL,
+  `benefit_relationship` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `beneficiaries`
+--
+
+INSERT INTO `beneficiaries` (`beneficiary_id`, `applicant_id`, `user_id`, `benefit_type`, `benefit_name`, `benefit_birthdate`, `benefit_relationship`) VALUES
+(14, 17, 13, 'Revocable', 'Hadley Cunningham', '1998-10-30', 'Est tempor excepteur');
 
 -- --------------------------------------------------------
 
@@ -101,6 +115,13 @@ CREATE TABLE `contact_info` (
   `mobile_number` varchar(20) DEFAULT NULL,
   `email_address` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contact_info`
+--
+
+INSERT INTO `contact_info` (`contact_id`, `applicant_id`, `user_id`, `street`, `barangay`, `city_province`, `mobile_number`, `email_address`) VALUES
+(17, 17, 13, 'In occaecat itaque e', 'Elit accusantium id', 'Voluptatem amet at', '101', 'nuzeka@mailinator.com');
 
 -- --------------------------------------------------------
 
@@ -146,6 +167,13 @@ CREATE TABLE `employment` (
   `monthly_income` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `employment`
+--
+
+INSERT INTO `employment` (`employment_id`, `applicant_id`, `user_id`, `occupation`, `employment_status`, `duties`, `employer`, `work`, `nature_business`, `employer_mobile_number`, `employer_email_address`, `monthly_income`) VALUES
+(15, 17, 13, 'In corporis consequa', 'employed', 'Aut possimus commod', 'A velit vero magnam', 'Voluptates sunt sed', 'Ea consequat Consec', '595', 'ziqu@mailinator.com', 711);
+
 -- --------------------------------------------------------
 
 --
@@ -167,6 +195,13 @@ CREATE TABLE `family_background` (
   `children_living` int(11) DEFAULT NULL,
   `children_deceased` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `family_background`
+--
+
+INSERT INTO `family_background` (`family_id`, `applicant_id`, `user_id`, `father_lastname`, `father_firstname`, `father_mi`, `mother_lastname`, `mother_firstname`, `mother_mi`, `siblings_living`, `siblings_deceased`, `children_living`, `children_deceased`) VALUES
+(11, 17, 13, 'Maynard', 'Herrod', 'Ipsam blan', 'Coffey', 'Pearl', 'Rerum esse', 44, 88, 82, 28);
 
 -- --------------------------------------------------------
 
@@ -196,6 +231,13 @@ CREATE TABLE `family_health` (
   `children_cause` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `family_health`
+--
+
+INSERT INTO `family_health` (`health_id`, `applicant_id`, `user_id`, `father_living_age`, `father_health`, `mother_living_age`, `mother_health`, `siblings_living_age`, `siblings_health`, `children_living_age`, `children_health`, `father_death_age`, `father_cause`, `mother_death_age`, `mother_cause`, `siblings_death_age`, `siblings_cause`, `children_death_age`, `children_cause`) VALUES
+(11, 17, 13, 15, 'Quidem in cumque ill', 65, 'Culpa eius consectet', '39', 'Soluta ea qui elit', '45', 'Sint qui voluptas ut', 31, 'Incidunt minima ess', 29, 'Accusamus ex quasi s', '63', 'Sint consequat Nih', '52', 'Inventore est et co');
+
 -- --------------------------------------------------------
 
 --
@@ -207,6 +249,9 @@ CREATE TABLE `fraternal_benefits` (
   `type` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `about` text DEFAULT NULL,
+  `face_value` int(50) NOT NULL,
+  `years_to_maturity` int(50) NOT NULL,
+  `years_of_protection` int(50) NOT NULL,
   `benefits` text DEFAULT NULL,
   `contribution_period` varchar(255) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
@@ -218,8 +263,8 @@ CREATE TABLE `fraternal_benefits` (
 -- Dumping data for table `fraternal_benefits`
 --
 
-INSERT INTO `fraternal_benefits` (`id`, `type`, `name`, `about`, `benefits`, `contribution_period`, `image`, `created_at`, `updated_at`) VALUES
-(5, 'Retirement Plan', 'Retirement Plan Name', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic ipsa dolores, nobis expedita laboriosam ab voluptatum blanditiis possimus facere voluptas?', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, aut quisquam doloribus facere consectetur optio? Blanditiis, vitae nobis, distinctio rerum et in veritatis perferendis provident facere animi ab id? A!', 'Contribution of paying period is 10 years.', 'uploads/fraternalBenefitsUpload/RetirementPlanImage_1746123658.jpg', '2025-05-01 18:20:58', '2025-05-01 18:20:58');
+INSERT INTO `fraternal_benefits` (`id`, `type`, `name`, `about`, `face_value`, `years_to_maturity`, `years_of_protection`, `benefits`, `contribution_period`, `image`, `created_at`, `updated_at`) VALUES
+(5, 'Retirement Plan', 'Retirement Plan Name', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic ipsa dolores, nobis expedita laboriosam ab voluptatum blanditiis possimus facere voluptas?', 100000, 15, 10, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, aut quisquam doloribus facere consectetur optio? Blanditiis, vitae nobis, distinctio rerum et in veritatis perferendis provident facere animi ab id? A!', '5', 'uploads/fraternalBenefitsUpload/RetirementPlanImage_1746123658.jpg', '2025-05-01 18:20:58', '2025-05-13 02:39:24');
 
 -- --------------------------------------------------------
 
@@ -236,6 +281,25 @@ CREATE TABLE `health_questions` (
   `yes_details` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `health_questions`
+--
+
+INSERT INTO `health_questions` (`question_id`, `applicant_id`, `user_id`, `question_code`, `response`, `yes_details`) VALUES
+(82, 17, 13, 'q1', 'No', ''),
+(83, 17, 13, 'q2', 'No', ''),
+(84, 17, 13, 'q3', 'No', ''),
+(85, 17, 13, 'q4', 'No', ''),
+(86, 17, 13, 'q5', 'No', ''),
+(87, 17, 13, 'q6', 'No', ''),
+(88, 17, 13, 'q7', 'No', ''),
+(89, 17, 13, 'q8', 'No', ''),
+(90, 17, 13, 'q9', 'No', ''),
+(91, 17, 13, 'q10a', 'No', ''),
+(92, 17, 13, 'q10b', 'No', ''),
+(93, 17, 13, 'q11', 'No', ''),
+(94, 17, 13, 'q12', 'No', '');
+
 -- --------------------------------------------------------
 
 --
@@ -249,6 +313,13 @@ CREATE TABLE `medical_history` (
   `past_illness` text NOT NULL,
   `current_medication` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `medical_history`
+--
+
+INSERT INTO `medical_history` (`medical_id`, `applicant_id`, `user_id`, `past_illness`, `current_medication`) VALUES
+(10, 17, 13, 'Magna officia quo as', 'Voluptate sint pari');
 
 -- --------------------------------------------------------
 
@@ -266,6 +337,13 @@ CREATE TABLE `membership` (
   `good_standing` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `membership`
+--
+
+INSERT INTO `membership` (`membership_id`, `applicant_id`, `user_id`, `council_id`, `first_degree_date`, `present_degree`, `good_standing`) VALUES
+(5, 17, 13, 6, '2010-01-11', 'Aut in qui sint qui', 'Yes');
+
 -- --------------------------------------------------------
 
 --
@@ -275,11 +353,19 @@ CREATE TABLE `membership` (
 CREATE TABLE `personal_details` (
   `details_id` int(11) NOT NULL,
   `applicant_id` int(11) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
   `height` decimal(5,2) DEFAULT NULL,
   `weight` decimal(5,2) DEFAULT NULL,
   `signature_file` varchar(255) DEFAULT NULL,
   `pregnant_question` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `personal_details`
+--
+
+INSERT INTO `personal_details` (`details_id`, `applicant_id`, `user_id`, `height`, `weight`, `signature_file`, `pregnant_question`) VALUES
+(5, 17, 13, 0.00, 0.00, 'http://localhost/app/uploads/signature/Image_1746675323.jpg', 'Yes');
 
 -- --------------------------------------------------------
 
@@ -292,8 +378,16 @@ CREATE TABLE `physician` (
   `applicant_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   `physician_name` varchar(100) DEFAULT NULL,
+  `contact_number` int(15) NOT NULL,
   `physician_address` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `physician`
+--
+
+INSERT INTO `physician` (`physician_id`, `applicant_id`, `user_id`, `physician_name`, `contact_number`, `physician_address`) VALUES
+(8, 17, 13, 'Wynne Brock', 462, 'Aperiam repudiandae');
 
 -- --------------------------------------------------------
 
@@ -311,6 +405,13 @@ CREATE TABLE `plans` (
   `contribution_amount` decimal(12,2) DEFAULT NULL,
   `currency` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `plans`
+--
+
+INSERT INTO `plans` (`plan_id`, `applicant_id`, `user_id`, `fraternal_benefits_id`, `council_id`, `payment_mode`, `contribution_amount`, `currency`) VALUES
+(15, 17, 13, 5, 6, 'semi-annually', 16.00, 'PHP');
 
 -- --------------------------------------------------------
 
@@ -340,7 +441,7 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `kcfapicode`, `email`, `phon
 (10, 'Bong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09363816243', 'unit-manager', '$2y$10$Zao9HR5toa9Lo/X2sHbvVeo5mhuBRpopN4jIPnsbeqCdBizZkBqTu', 'disabled', '2025-04-29 03:12:25'),
 (11, 'Sarah', 'Duterte', 'SARAHCODE', 'sarahduterte@gmail.com', '09683013329', 'fraternal-counselor', '$2y$10$Mz8F/Ya25UUr5dstBEZ2N.VJuxuLq0hi5IeK3y1CwC8LMvoX2ERIm', 'approved', '2025-04-29 03:17:08'),
 (12, 'Kitty', 'Duterte', 'KITTYCODE', 'kittyduterte@gmail.com', '09105200973', 'family-member', '$2y$10$kM2uW5S8ehCbpfI/7sqWS.oLhsYZNuYB69YBXPBCkTI9PbPgnAycC', 'disabled', '2025-04-29 03:18:54'),
-(13, 'Sandro', 'Marcos', 'SANDROCODE', 'sandromarcos@gmail.com', '09105200974', 'member', '$2y$10$9t/uW.w9GTrU7HsdBQjck.W3VQcNAkz71N6eZ7yPCm3aSNcdKnJCm', 'disabled', '2025-04-29 03:19:36');
+(13, 'Sandro', 'Marcos', 'SANDROCODE', 'sandromarcos@gmail.com', '09105200974', 'member', '$2y$10$9t/uW.w9GTrU7HsdBQjck.W3VQcNAkz71N6eZ7yPCm3aSNcdKnJCm', 'approved', '2025-04-29 03:19:36');
 
 --
 -- Indexes for dumped tables
@@ -357,8 +458,8 @@ ALTER TABLE `announcements`
 --
 ALTER TABLE `applicants`
   ADD PRIMARY KEY (`applicant_id`),
-  ADD KEY `user_id_applicant_FK` (`user_id`),
-  ADD KEY `fraternal_counserlor_FKs` (`fraternal_counselor_id`);
+  ADD KEY `fraternal_counserlor_FKs` (`fraternal_counselor_id`),
+  ADD KEY `fk_applicants_users` (`user_id`);
 
 --
 -- Indexes for table `beneficiaries`
@@ -444,7 +545,8 @@ ALTER TABLE `membership`
 --
 ALTER TABLE `personal_details`
   ADD PRIMARY KEY (`details_id`),
-  ADD KEY `applicant_id` (`applicant_id`);
+  ADD KEY `applicant_id` (`applicant_id`),
+  ADD KEY `pr_user_id_FK` (`user_id`);
 
 --
 -- Indexes for table `physician`
@@ -485,19 +587,19 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `applicants`
 --
 ALTER TABLE `applicants`
-  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `beneficiaries`
 --
 ALTER TABLE `beneficiaries`
-  MODIFY `beneficiary_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `beneficiary_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `contact_info`
 --
 ALTER TABLE `contact_info`
-  MODIFY `contact_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `contact_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `council`
@@ -509,19 +611,19 @@ ALTER TABLE `council`
 -- AUTO_INCREMENT for table `employment`
 --
 ALTER TABLE `employment`
-  MODIFY `employment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `employment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `family_background`
 --
 ALTER TABLE `family_background`
-  MODIFY `family_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `family_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `family_health`
 --
 ALTER TABLE `family_health`
-  MODIFY `health_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `health_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `fraternal_benefits`
@@ -533,37 +635,37 @@ ALTER TABLE `fraternal_benefits`
 -- AUTO_INCREMENT for table `health_questions`
 --
 ALTER TABLE `health_questions`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `medical_history`
 --
 ALTER TABLE `medical_history`
-  MODIFY `medical_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `medical_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `membership`
 --
 ALTER TABLE `membership`
-  MODIFY `membership_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `membership_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `personal_details`
 --
 ALTER TABLE `personal_details`
-  MODIFY `details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `physician`
 --
 ALTER TABLE `physician`
-  MODIFY `physician_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `physician_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `plans`
 --
 ALTER TABLE `plans`
-  MODIFY `plan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `plan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -579,6 +681,7 @@ ALTER TABLE `users`
 -- Constraints for table `applicants`
 --
 ALTER TABLE `applicants`
+  ADD CONSTRAINT `fk_applicants_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `fraternal_counserlor_FKs` FOREIGN KEY (`fraternal_counselor_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_id_applicant_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -650,7 +753,8 @@ ALTER TABLE `membership`
 -- Constraints for table `personal_details`
 --
 ALTER TABLE `personal_details`
-  ADD CONSTRAINT `personal_details_ibfk_1` FOREIGN KEY (`applicant_id`) REFERENCES `applicants` (`applicant_id`);
+  ADD CONSTRAINT `personal_details_ibfk_1` FOREIGN KEY (`applicant_id`) REFERENCES `applicants` (`applicant_id`),
+  ADD CONSTRAINT `pr_user_id_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `physician`

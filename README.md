@@ -197,9 +197,9 @@ Total Contributions = P×n=₱1,000×60=₱60,000
 
 | Component              | Symbol | Approx. % | Formula              |
 | ---------------------- | ------ | --------- | -------------------- |
-| Insurance Cost         | IC     | 15%       | IC = 0.15 X P |
-| Admin Fees             | AF     | 10%       | AF = 0.10 X P |
-| Savings (Reserve Fund) | SF     | 75%       | SF = 0.75 X P |
+| Insurance Cost         | IC     | 10%       | IC = 0.10 X P        |
+| Admin Fees             | AF     | 5%        | AF = 0.5 X P         |
+| Savings (Reserve Fund) | SF     | 85%       | SF = 0.85 X P        |
 
 
 💰 3. Monthly Allocation Formula:
@@ -208,12 +208,3 @@ Monthly Admin Fee (AF) =0.10×1,000 = ₱100
 Monthly Savings Fund (SF) =0.75×1,000 = ₱750
 ​
   
-
-
-
-​
- 
-| Condition                 | Loop Ends When...           | Typically Used For...               |
-| ------------------------- | --------------------------- | ----------------------------------- |
-| `while current.next`      | `current.next == None`      | Traverse full list or get last node |
-| `while current.next.next` | `current.next.next == None` | Stop at second-to-last node         |

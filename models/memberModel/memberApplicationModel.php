@@ -25,8 +25,24 @@ class MemberApplicationModel
         return 0;
     }
 
-    public function getAllApplicants(){
-        $sql    = "SELECT * FROM applicants";
+    public function getAllApplicantsWithPlans()
+    {
+        $sql = "SELECT
+                    a.applicant_id,
+                    CONCAT(a.firstname, ' ', a.lastname) AS applicant_name,
+                    fb.type AS plan_type,
+                    fb.name AS plan_name,
+                    fb.face_value,
+                    fb.years_to_maturity,
+                    fb.years_of_protection,
+                    p.payment_mode,
+                    p.contribution_amount,
+                    a.application_status
+                FROM applicants a
+                LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+                LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+                ORDER BY a.created_at DESC";
+
         $result = mysqli_query($this->conn, $sql);
 
         if ($result && mysqli_num_rows($result) > 0) {
@@ -40,7 +56,7 @@ class MemberApplicationModel
         return null;
     }
 
-    public function calculatePremium($targetFutureValue, $annualInterestRate, $paymentMonths, $growthYears, $paymentMode)
+    public function calculate($targetFutureValue, $annualInterestRate, $paymentMonths, $growthYears, $paymentMode)
     {
 
         $monthlyInterestRate    = $annualInterestRate / 12;
@@ -48,15 +64,15 @@ class MemberApplicationModel
         $semiAnnualInterestRate = $annualInterestRate / 2;
 
         switch ($paymentMode) {
-            case "Monthly":
+            case "monthly":
                 $compoundingFactor = pow(1 + $monthlyInterestRate, $paymentMonths) - 1;
                 $compoundedGrowth  = pow(1 + $annualInterestRate, $growthYears);
                 break;
-            case "Quarterly":
+            case "quarterly":
                 $compoundingFactor = pow(1 + $quarterlyInterestRate, $paymentMonths / 3) - 1;
                 $compoundedGrowth  = pow(1 + $annualInterestRate, $growthYears);
                 break;
-            case "Semi-Annually":
+            case "semi-annually":
                 $compoundingFactor = pow(1 + $semiAnnualInterestRate, $paymentMonths / 6) - 1;
                 $compoundedGrowth  = pow(1 + $annualInterestRate, $growthYears);
                 break;
