@@ -35,8 +35,10 @@ class MemberApplicationModel
                     fb.face_value,
                     fb.years_to_maturity,
                     fb.years_of_protection,
+                    fb.contribution_period,
                     p.payment_mode,
                     p.contribution_amount,
+                    p.fraternal_benefits_id,
                     a.application_status
                 FROM applicants a
                 LEFT JOIN plans p ON a.applicant_id = p.applicant_id
@@ -55,43 +57,131 @@ class MemberApplicationModel
 
         return null;
     }
-
-    public function calculate($targetFutureValue, $annualInterestRate, $paymentMonths, $growthYears, $paymentMode)
+    public function calculateTotalContributions($applicant)
     {
+        $payment_mode        = strtolower($applicant['payment_mode']);
+        $contribution_amount = (float) $applicant['contribution_amount'];
+        $contribution_period = (int) $applicant['contribution_period']; // in years
+        $face_value          = (float) $applicant['face_value'];        // not directly used here
+        $years_to_maturity   = (int) $applicant['years_to_maturity'];
 
-        $monthlyInterestRate    = $annualInterestRate / 12;
-        $quarterlyInterestRate  = $annualInterestRate / 4;
-        $semiAnnualInterestRate = $annualInterestRate / 2;
+        $periods_per_year = match ($payment_mode) {
+            'monthly' => 12,
+            'quarterly' => 4,
+            'semi-annually' => 2,
+            'annually' => 1,
+            default => 0,
+        };
 
-        switch ($paymentMode) {
-            case "monthly":
-                $compoundingFactor = pow(1 + $monthlyInterestRate, $paymentMonths) - 1;
-                $compoundedGrowth  = pow(1 + $annualInterestRate, $growthYears);
-                break;
-            case "quarterly":
-                $compoundingFactor = pow(1 + $quarterlyInterestRate, $paymentMonths / 3) - 1;
-                $compoundedGrowth  = pow(1 + $annualInterestRate, $growthYears);
-                break;
-            case "semi-annually":
-                $compoundingFactor = pow(1 + $semiAnnualInterestRate, $paymentMonths / 6) - 1;
-                $compoundedGrowth  = pow(1 + $annualInterestRate, $growthYears);
-                break;
-            default:
-                return "Invalid Payment Mode";
+        if ($periods_per_year === 0 || $contribution_period === 0) {
+            return [
+                'total_contribution' => 0,
+                'insurance_cost'     => 0,
+                'admin_fee'          => 0,
+                'savings_fund'       => 0,
+                'savings_fund_fv'    => 0,
+            ];
         }
 
-        $requiredSavings = $targetFutureValue / $compoundedGrowth;
+        $total_payments     = $periods_per_year * $contribution_period;
+        $total_contribution = $contribution_amount * $total_payments;
 
-        if ($compoundingFactor == 0) {
-            return "Invalid calculation parameters.";
-        }
+        $insurance_cost = $total_contribution * 0.10;
+        $admin_fee      = $total_contribution * 0.05;
+        $savings_fund   = $total_contribution * 0.85;
 
-        $requiredSavingsPerPeriod = $requiredSavings * $monthlyInterestRate / $compoundingFactor;
+        // Compound interest on savings fund
+        $annual_interest_rate = 0.04;
+        $growth_years         = $years_to_maturity - $contribution_period; // E.g., 15 - 5 = 10 years of growth
+        $savings_fund_fv      = $savings_fund * pow(1 + $annual_interest_rate, $growth_years);
 
-        $requiredMonthlyPremium = $requiredSavingsPerPeriod / 0.85;
-
-        return number_format($requiredMonthlyPremium, 2);
+        return [
+            'total_contribution' => $total_contribution,
+            'insurance_cost'     => $insurance_cost,
+            'admin_fee'          => $admin_fee,
+            'savings_fund'       => $savings_fund,
+            'savings_fund_fv'    => $savings_fund_fv,
+            'total_payments'     => $total_payments,
+            'total_contribution' => $total_contribution,
+            'total_payments'     => $total_payments,
+        ];
     }
+
+    // public function calculateTotalContributions($applicant)
+    // {
+    //     $payment_mode        = strtolower($applicant['payment_mode']);
+    //     $contribution_amount = (float) $applicant['contribution_amount'];
+    //     $contribution_period = (int) $applicant['contribution_period']; // from fraternal_benefits
+    //     $face_value          = (float) $applicant['face_value'];        // from fraternal_benefits
+
+    //     $periods_per_year = match ($payment_mode) {
+    //         'monthly' => 12,
+    //         'quarterly' => 4,
+    //         'semi-annually' => 2,
+    //         'annually' => 1,
+    //         default => 0,
+    //     };
+
+    //     if ($periods_per_year === 0 || $contribution_period === 0) {
+    //         return [
+    //             'total_contribution' => 0,
+    //             'insurance_cost'     => 0,
+    //             'admin_fee'          => 0,
+    //             'savings_fund'       => 0,
+    //         ];
+    //     }
+
+    //     $total_payments     = $periods_per_year * $contribution_period;
+    //     $total_contribution = $contribution_amount * $total_payments;
+
+    //     // Allocation based on total
+    //     return [
+    //         'total_contribution' => $total_contribution,
+    //         'insurance_cost'     => $total_contribution * 0.10,
+    //         'admin_fee'          => $total_contribution * 0.05,
+    //         'savings_fund'       => $total_contribution * 0.85,
+    //     ];
+    // }
+
+    // public function calculateTotalContributions($payment_mode, $face_value, $contribution_amount, $contribution_period)
+    // {
+
+    //     $payment_mode = strtolower(trim($payment_mode));
+
+    //     switch ($payment_mode) {
+    //         case "monthly":
+    //             $multiplier = 12;
+    //             break;
+    //         case "quarterly":
+    //             $multiplier = 4;
+    //             break;
+    //         case "semi-annually":
+    //             $multiplier = 2;
+    //             break;
+    //         case "annually":
+    //             $multiplier = 1;
+    //             break;
+    //         default:
+    //             return "Invalid Payment Mode";
+    //     }
+
+    //     // Total contribution = amount paid * number of periods
+    //     $totalContribution = $contribution_amount * $contribution_period;
+
+    //     // Allocation formulas
+    //     $insuranceCost = 0.10 * $totalContribution;
+    //     $adminFee = 0.05 * $totalContribution;
+    //     $savingsFund = 0.85 * $totalContribution;
+
+    //     return [
+    //         'payment_mode'      => $payment_mode,
+    //         'face_value'        => $face_value,
+    //         'total_contribution' => $totalContribution,
+    //         'insurance_cost'    => $insuranceCost,
+    //         'admin_fee'         => $adminFee,
+    //         'savings_fund'      => $savingsFund
+    //     ];
+    // }
 
     public function getApplicantByFraternalCounselor($fraternal_counselor_id)
     {

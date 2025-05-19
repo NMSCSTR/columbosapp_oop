@@ -81,7 +81,7 @@
                             </tr>
                         </thead>
                         <tbody class="text-xs">
-                        <?php
+                            <?php 
                             $councilModel           = new CouncilModel($conn);
                             $applicationModel       = new MemberApplicationModel($conn);
                             $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
@@ -89,28 +89,44 @@
                             $councils               = $councilModel->getAllCouncil();
                             $applicants             = $applicationModel->getAllApplicantsWithPlans();
 
+                            
+
                             if ($applicants && is_array($applicants) && count($applicants) > 0) {
                                 foreach ($applicants as $applicant) {
-
+                                    $result = $applicationModel->calculateTotalContributions($applicant);
                                 ?>
                             <tr>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['applicant_name'])?></td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_type'])?></td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_name'])?></td>
-                                <td class="px-4 py-3"><?php echo htmlspecialchars(number_format($applicant['face_value']))?></td>
-                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_to_maturity'])?></td>
-                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_of_protection'])?></td>
+                                <td class="px-4 py-3">
+                                    <?php echo htmlspecialchars(number_format($applicant['face_value']))?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_to_maturity'])?>
+                                </td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_of_protection'])?>
+                                </td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['payment_mode'])?></td>
-                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['contribution_amount'])?></td>
-                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['application_status'])?></td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['contribution_amount'])?>
+                                </td>
+                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['application_status'])?>
+                                </td>
                                 <td>
                                     <button>delete</button>
+                                </td>
+                            </tr>
+                            <tr class="bg-gray-50 text-sm text-gray-600">
+                                <td colspan="8" class="px-4 py-2 pl-10">
+                                    <strong>Total Contribution: ₱<?= $result['total_contribution'] ?></strong><br>
+                                    Insurance Cost (10%): ₱<?= $result['insurance_cost'] ?> |
+                                    Admin Fees (5%): ₱<?= $result['admin_fee'] ?> |
+                                    Savings Fund (85%): ₱<?= $result['savings_fund'] ?> |
+                                    Savings Fund Future Value (4% growth): ₱<?= $result['savings_fund_fv'] ?>
                                 </td>
                             </tr>
                             <?php
                                 }
                                 } else {
-                                    // Check for related data availability (optional)
+
                                     if (empty($councils) || empty($fraternals)) {
                                         echo "<tr><td colspan='8' class='px-4 py-3 text-center'>No councils or fraternal benefits found.</td></tr>";
                                     } else {

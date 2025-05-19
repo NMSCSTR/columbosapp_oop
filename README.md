@@ -191,8 +191,6 @@ t = Years fund grows after payment = 10 years (Year 6 to Year 15)
 
 Total Contributions = P×n=₱1,000×60=₱60,000
 
-
-
 🧠 2. Assume Allocation Percentages (Industry Estimate):
 
 | Component              | Symbol | Approx. % | Formula              |
@@ -203,8 +201,47 @@ Total Contributions = P×n=₱1,000×60=₱60,000
 
 
 💰 3. Monthly Allocation Formula:
-Monthly Insurance Cost (IC) = 0.15×1,000 = ₱150          - So for each month, ₱750 goes into a growing fund.
-Monthly Admin Fee (AF) =0.10×1,000 = ₱100
-Monthly Savings Fund (SF) =0.75×1,000 = ₱750
+Monthly Insurance Cost (IC) = 0.10×1,000 = ₱100     - So for each month, ₱850 goes into a growing fund.
+Monthly Admin Fee (AF) =0.5×1,000 = ₱50
+Monthly Savings Fund (SF) =0.85×1,000 = ₱850
 ​
-  
+
+<tr class="bg-gray-50 text-sm text-gray-600">
+    <td colspan="8" class="px-4 py-2 pl-10">
+        <strong>Allocation (Annualized: ₱<?= number_format($annualContribution, 2) ?>):</strong><br>
+        Insurance Cost (10%): ₱<?= number_format($insuranceCost, 2) ?> |
+        Admin Fees (5%): ₱<?= number_format($adminFees, 2) ?> |
+        Savings Fund (85%): ₱<?= number_format($savingsFund, 2) ?>
+    </td>
+</tr>
+
+
+
+✅ 1. Core Structure Summary (Based on Your Example)
+| Element                      | Value                                      | Explanation                                      |
+| ---------------------------- | ------------------------------------------ | ------------------------------------------------ |
+| Monthly Premium (`P`)        | ₱1,000                                     | Paid by applicant                                |
+| Contribution Period (`n`)    | 5 years (60 months)                        | Payment years                                    |
+| Total Contributions          | ₱60,000 = ₱1,000 × 60                      | What applicant pays                              |
+| Face Value / Coverage (`FV`) | ₱100,000                                   | What applicant gets at maturity or death benefit |
+| Growth Period (`t`)          | 10 years                                   | Time savings fund grows                          |
+| Interest Rate (`r`)          | 4% compounded annually                     | Estimated growth rate                            |
+| Allocation                   | Insurance (10%), Admin (5%), Savings (85%) | Industry estimate                                |
+
+✅ 2. Allocation Model (per month)
+Given a ₱1,000 monthly premium:
+| Component      | Formula      | Monthly Value |
+| -------------- | ------------ | ------------- |
+| Insurance Cost | 0.10 × 1,000 | ₱100          |
+| Admin Fee      | 0.05 × 1,000 | ₱50           |
+| Savings Fund   | 0.85 × 1,000 | ₱850          |
+
+✅ 3. Savings Fund Future Value Estimation
+FV = PV × (1 + r)^t
+PV = ₱51,000
+r = 4% = 0.04
+t = 10 years
+
+FV = 51,000 × (1 + 0.04)^10
+FV ≈ 51,000 × 1.48024
+FV ≈ ₱75,492.24
