@@ -12,7 +12,7 @@
     <main class="flex-1">
         <div class="p-4 sm:ml-64">
 
-            <h1 class="flex items-center text-5xl font-extrabold dark:text-white">Welcome <?php echo $_SESSION['firstname'] .' '. $_SESSION['lastname'] ?></h1>
+            <h1 class="flex items-center text-3xl font-extrabold dark:text-white">Welcome <?php echo $_SESSION['role']?></h1>
 
             <div class="p-4 rounded-lg dark:border-gray-700">
                 <!-- Responsive grid layout -->

@@ -32,13 +32,13 @@
 <!-- Stats Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
     <?php foreach ($stats as $s): ?>
-        <div class="bg-yellow-600 p-6 rounded-2xl shadow flex items-center space-x-4">
+        <div class="bg-gray-900 p-6 rounded-2xl shadow flex items-center space-x-4">
             <div class="p-3 bg-blue-100 rounded-full">
                 <i class="fas fa-<?php echo $s["icon"] ?> text-blue-500"></i>
             </div>
             <div>
                 <h3 class="text-sm text-white"><?php echo $s["title"] ?></h3>
-                <p class="text-xl font-bold text-gray-900"><?php echo $s["value"] ?></p>
+                <p class="text-xl font-bold text-white"><?php echo $s["value"] ?></p>
             </div>
         </div>
     <?php endforeach; ?>

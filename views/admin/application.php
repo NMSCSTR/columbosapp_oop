@@ -112,8 +112,10 @@
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['payment_mode'])?></td>
                                 <td class="px-4 py-3">₱<?php echo number_format($applicant['contribution_amount'], 2)?>
                                 </td>
-                                <td class="px-4 py-3">₱<?php echo number_format($applicant['total_contribution'], 2); ?></td>
-                                <td class="px-4 py-3">₱<?php echo number_format($applicant['insurance_cost'], 2); ?></td>
+                                <td class="px-4 py-3">₱<?php echo number_format($applicant['total_contribution'], 2); ?>
+                                </td>
+                                <td class="px-4 py-3">₱<?php echo number_format($applicant['insurance_cost'], 2); ?>
+                                </td>
                                 <td class="px-4 py-3">₱<?php echo number_format($applicant['admin_fee'], 2); ?></td>
                                 <td class="px-4 py-3">₱<?php echo number_format($applicant['savings_fund'], 2); ?></td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['application_status'])?>
