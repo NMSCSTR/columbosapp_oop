@@ -148,6 +148,28 @@ class MemberApplicationModel
         return null;
     }
 
+    public function calculateTotalAllocationsForAllApplicants()
+    {
+        $applicants = $this->getAllApplicants();
+        $totals     = [
+            'insurance_cost'     => 0,
+            'admin_fee'          => 0,
+            'savings_fund'       => 0,
+            'total_contribution' => 0,
+        ];
+
+        if ($applicants && is_array($applicants)) {
+            foreach ($applicants as $applicant) {
+                $totals['insurance_cost'] += $applicant['insurance_cost'] ?? 0;
+                $totals['admin_fee'] += $applicant['admin_fee'] ?? 0;
+                $totals['savings_fund'] += $applicant['savings_fund'] ?? 0;
+                $totals['total_contribution'] += $applicant['total_contribution'] ?? 0;
+            }
+        }
+
+        return $totals;
+    }
+
     // public function calculateTotalContributions($applicant)
     // {
     //     $payment_mode        = strtolower($applicant['payment_mode']);
