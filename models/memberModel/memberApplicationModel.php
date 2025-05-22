@@ -25,7 +25,7 @@ class MemberApplicationModel
         return 0;
     }
 
-    public function getAllApplicantsWithPlans()
+    public function getAllApplicantsOlderVer()
     {
         $sql = "SELECT
                     a.applicant_id,
@@ -58,13 +58,13 @@ class MemberApplicationModel
 
         return null;
     }
+
+    
     public function calculateTotalContributions($applicant)
     {
         $payment_mode        = strtolower($applicant['payment_mode']);
         $contribution_amount = (float) $applicant['contribution_amount'];
-        $contribution_period = (int) $applicant['contribution_period']; 
-        $face_value          = (float) $applicant['face_value']; 
-        $years_to_maturity   = (int) $applicant['years_to_maturity'];
+        $contribution_period = (int) $applicant['contribution_period'];
 
         $periods_per_year = match ($payment_mode) {
             'monthly' => 12,
@@ -75,38 +75,113 @@ class MemberApplicationModel
         };
 
         if ($periods_per_year === 0 || $contribution_period === 0) {
-            return [
-                'total_contribution' => 0,
-                'insurance_cost'     => 0,
-                'admin_fee'          => 0,
-                'savings_fund'       => 0,
-                'savings_fund_fv'    => 0,
-            ];
+            return 0;
         }
 
-        $total_payments     = $periods_per_year * $contribution_period;
-        $total_contribution = $contribution_amount * $total_payments;
+        $total_payments = $periods_per_year * $contribution_period;
+        return $contribution_amount * $total_payments;
+    }
 
-        $insurance_cost = $total_contribution * 0.10;
-        $admin_fee      = $total_contribution * 0.05;
-        $savings_fund   = $total_contribution * 0.85;
-
-        // Compound interest on savings fund
-        $annual_interest_rate = 0.04;
-        $growth_years         = $years_to_maturity - $contribution_period; // E.g., 15 - 5 = 10 years of growth
-        $savings_fund_fv      = $savings_fund * pow(1 + $annual_interest_rate, $growth_years);
-
+    public function calculateContributionAllocations($total_contribution)
+    {
         return [
-            'total_contribution' => $total_contribution,
-            'insurance_cost'     => $insurance_cost,
-            'admin_fee'          => $admin_fee,
-            'savings_fund'       => $savings_fund,
-            'savings_fund_fv'    => $savings_fund_fv,
-            'total_payments'     => $total_payments,
-            'total_contribution' => $total_contribution,
-            'total_payments'     => $total_payments,
+            'insurance_cost' => $total_contribution * 0.10,
+            'admin_fee'      => $total_contribution * 0.05,
+            'savings_fund'   => $total_contribution * 0.85,
         ];
     }
+
+    public function getAllApplicants()
+    {
+        $sql = "SELECT
+                a.applicant_id,
+                a.user_id,
+                CONCAT(a.firstname, ' ', a.lastname) AS applicant_name,
+                fb.type AS plan_type,
+                fb.name AS plan_name,
+                fb.face_value,
+                fb.years_to_maturity,
+                fb.years_of_protection,
+                fb.contribution_period,
+                p.payment_mode,
+                p.contribution_amount,
+                p.fraternal_benefits_id,
+                a.application_status
+            FROM applicants a
+            LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+            LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+            ORDER BY a.created_at DESC";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $applicants = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $total_contribution = $this->calculateTotalContributions($row);
+                $allocations        = $this->calculateContributionAllocations($total_contribution);
+
+                $row['total_contribution'] = $total_contribution;
+                $row['insurance_cost']     = $allocations['insurance_cost'];
+                $row['admin_fee']          = $allocations['admin_fee'];
+                $row['savings_fund']       = $allocations['savings_fund'];
+
+                $applicants[] = $row;
+            }
+            return $applicants;
+        }
+
+        return null;
+    }
+
+    // public function calculateTotalContributions($applicant)
+    // {
+    //     $payment_mode        = strtolower($applicant['payment_mode']);
+    //     $contribution_amount = (float) $applicant['contribution_amount'];
+    //     $contribution_period = (int) $applicant['contribution_period'];
+    //     $face_value          = (float) $applicant['face_value'];
+    //     $years_to_maturity   = (int) $applicant['years_to_maturity'];
+
+    //     $periods_per_year = match ($payment_mode) {
+    //         'monthly' => 12,
+    //         'quarterly' => 4,
+    //         'semi-annually' => 2,
+    //         'annually' => 1,
+    //         default => 0,
+    //     };
+
+    //     if ($periods_per_year === 0 || $contribution_period === 0) {
+    //         return [
+    //             'total_contribution' => 0,
+    //             'insurance_cost'     => 0,
+    //             'admin_fee'          => 0,
+    //             'savings_fund'       => 0,
+    //             'savings_fund_fv'    => 0,
+    //         ];
+    //     }
+
+    //     $total_payments     = $periods_per_year * $contribution_period;
+    //     $total_contribution = $contribution_amount * $total_payments;
+
+    //     $insurance_cost = $total_contribution * 0.10;
+    //     $admin_fee      = $total_contribution * 0.05;
+    //     $savings_fund   = $total_contribution * 0.85;
+
+    //     // Compound interest on savings fund
+    //     $annual_interest_rate = 0.04;
+    //     $growth_years         = $years_to_maturity - $contribution_period; // E.g., 15 - 5 = 10 years of growth
+    //     $savings_fund_fv      = $savings_fund * pow(1 + $annual_interest_rate, $growth_years);
+
+    //     return [
+    //         'total_contribution' => $total_contribution,
+    //         'insurance_cost'     => $insurance_cost,
+    //         'admin_fee'          => $admin_fee,
+    //         'savings_fund'       => $savings_fund,
+    //         'savings_fund_fv'    => $savings_fund_fv,
+    //         'total_payments'     => $total_payments,
+    //         'total_contribution' => $total_contribution,
+    //         'total_payments'     => $total_payments,
+    //     ];
+    // }
 
     // public function calculateTotalContributions($applicant)
     // {

@@ -77,6 +77,10 @@
                                 <th class="px-4 py-3">YEARS PROTECT</th>
                                 <th class="px-4 py-3">PAYMENT MODE</th>
                                 <th class="px-4 py-3">CONTRIBUTION AMOUNT</th>
+                                <th class="px-4 py-3">TOTAL CONTRIBUTION</th>
+                                <th class="px-4 py-3">INSURANCE COST</th>
+                                <th class="px-4 py-3">ADMIN FEE</th>
+                                <th class="px-4 py-3">SAVINGS FUND(ALLOCATIONS)</th>
                                 <th class="px-4 py-3">APPLICATION STATUS</th>
                                 <th class="px-4 py-3">ACTIONS</th>
                             </tr>
@@ -88,13 +92,12 @@
                             $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
                             $fraternals             = $fraternalBenefitsModel->getAllFraternalBenefits();
                             $councils               = $councilModel->getAllCouncil();
-                            $applicants             = $applicationModel->getAllApplicantsWithPlans();
+                            $applicants             = $applicationModel->getAllApplicants();
 
                             
 
                             if ($applicants && is_array($applicants) && count($applicants) > 0) {
                                 foreach ($applicants as $applicant) {
-                                    $result = $applicationModel->calculateTotalContributions($applicant);
                                 ?>
                             <tr>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['applicant_name'])?></td>
@@ -109,6 +112,10 @@
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['payment_mode'])?></td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['contribution_amount'])?>
                                 </td>
+                                <td class="px-4 py-3">₱<?php echo number_format($applicant['total_contribution'], 2); ?></td>
+                                <td class="px-4 py-3">₱<?php echo number_format($applicant['insurance_cost'], 2); ?></td>
+                                <td class="px-4 py-3">₱<?php echo number_format($applicant['admin_fee'], 2); ?></td>
+                                <td class="px-4 py-3">₱<?php echo number_format($applicant['savings_fund'], 2); ?></td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['application_status'])?>
                                 </td>
                                 <td>
@@ -149,3 +156,13 @@
 <?php
 include '../../includes/footer.php';
 ?>
+
+FACE VALUE - 100,000
+YEARS TO MATURE 15
+YEARS PROTECT 10
+PAYMENT MODE - quarterly
+CONTRIBUTION AMOUNT - 1000
+TOTAL CONTRIBUTION - ₱20,000.00
+INSURANCE COST-₱2,000.00
+ADMIN FEE- ₱1,000.00
+SAVINGS FUND - ₱17,000.00
