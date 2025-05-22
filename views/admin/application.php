@@ -104,13 +104,13 @@
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_type'])?></td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_name'])?></td>
                                 <td class="px-4 py-3">
-                                    <?php echo htmlspecialchars(number_format($applicant['face_value']))?></td>
+                                    ₱<?php echo htmlspecialchars(number_format($applicant['face_value'],2))?></td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_to_maturity'])?>
                                 </td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_of_protection'])?>
                                 </td>
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['payment_mode'])?></td>
-                                <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['contribution_amount'])?>
+                                <td class="px-4 py-3">₱<?php echo number_format($applicant['contribution_amount'], 2)?>
                                 </td>
                                 <td class="px-4 py-3">₱<?php echo number_format($applicant['total_contribution'], 2); ?></td>
                                 <td class="px-4 py-3">₱<?php echo number_format($applicant['insurance_cost'], 2); ?></td>

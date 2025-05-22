@@ -59,13 +59,13 @@ class MemberApplicationModel
         return null;
     }
 
-    
     public function calculateTotalContributions($applicant)
     {
         $payment_mode        = strtolower($applicant['payment_mode']);
         $contribution_amount = (float) $applicant['contribution_amount'];
         $contribution_period = (int) $applicant['contribution_period'];
 
+        // Number of payments per year depending on payment mode
         $periods_per_year = match ($payment_mode) {
             'monthly' => 12,
             'quarterly' => 4,
@@ -74,12 +74,27 @@ class MemberApplicationModel
             default => 0,
         };
 
-        if ($periods_per_year === 0 || $contribution_period === 0) {
+        // Number of months in each payment period
+        $months_per_payment = match ($payment_mode) {
+            'monthly' => 1,
+            'quarterly' => 3,
+            'semi-annually' => 6,
+            'annually' => 12,
+            default => 0,
+        };
+
+        if ($periods_per_year === 0 || $contribution_period === 0 || $months_per_payment === 0) {
             return 0;
         }
 
+        // Contribution amount per payment period (e.g., quarterly = contribution_amount * 3)
+        $contribution_per_payment = $contribution_amount * $months_per_payment;
+
+        // Total number of payments over the entire contribution period
         $total_payments = $periods_per_year * $contribution_period;
-        return $contribution_amount * $total_payments;
+
+        // Total contribution is contribution per payment times total payments
+        return $contribution_per_payment * $total_payments;
     }
 
     public function calculateContributionAllocations($total_contribution)
@@ -94,23 +109,23 @@ class MemberApplicationModel
     public function getAllApplicants()
     {
         $sql = "SELECT
-                a.applicant_id,
-                a.user_id,
-                CONCAT(a.firstname, ' ', a.lastname) AS applicant_name,
-                fb.type AS plan_type,
-                fb.name AS plan_name,
-                fb.face_value,
-                fb.years_to_maturity,
-                fb.years_of_protection,
-                fb.contribution_period,
-                p.payment_mode,
-                p.contribution_amount,
-                p.fraternal_benefits_id,
-                a.application_status
-            FROM applicants a
-            LEFT JOIN plans p ON a.applicant_id = p.applicant_id
-            LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
-            ORDER BY a.created_at DESC";
+            a.applicant_id,
+            a.user_id,
+            CONCAT(a.firstname, ' ', a.lastname) AS applicant_name,
+            fb.type AS plan_type,
+            fb.name AS plan_name,
+            fb.face_value,
+            fb.years_to_maturity,
+            fb.years_of_protection,
+            fb.contribution_period,
+            p.payment_mode,
+            p.contribution_amount,
+            p.fraternal_benefits_id,
+            a.application_status
+        FROM applicants a
+        LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+        LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+        ORDER BY a.created_at DESC";
 
         $result = mysqli_query($this->conn, $sql);
 
