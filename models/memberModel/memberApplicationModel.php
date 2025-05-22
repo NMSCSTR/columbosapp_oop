@@ -29,6 +29,7 @@ class MemberApplicationModel
     {
         $sql = "SELECT
                     a.applicant_id,
+                    a.user_id,
                     CONCAT(a.firstname, ' ', a.lastname) AS applicant_name,
                     fb.type AS plan_type,
                     fb.name AS plan_name,
@@ -61,8 +62,8 @@ class MemberApplicationModel
     {
         $payment_mode        = strtolower($applicant['payment_mode']);
         $contribution_amount = (float) $applicant['contribution_amount'];
-        $contribution_period = (int) $applicant['contribution_period']; // in years
-        $face_value          = (float) $applicant['face_value'];        // not directly used here
+        $contribution_period = (int) $applicant['contribution_period']; 
+        $face_value          = (float) $applicant['face_value']; 
         $years_to_maturity   = (int) $applicant['years_to_maturity'];
 
         $periods_per_year = match ($payment_mode) {

@@ -1,5 +1,6 @@
 <?php
-    session_start();
+    require_once '../../middleware/auth.php';
+    authorize(['admin']);
     include '../../includes/config.php';
     include '../../includes/header.php';
     include '../../includes/db.php';
@@ -111,16 +112,17 @@
                                 <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['application_status'])?>
                                 </td>
                                 <td>
-                                    <button>delete</button>
-                                </td>
-                            </tr>
-                            <tr class="bg-gray-50 text-sm text-gray-600">
-                                <td colspan="8" class="px-4 py-2 pl-10">
-                                    <strong>Total Contribution: ₱<?= $result['total_contribution'] ?></strong><br>
-                                    Insurance Cost (10%): ₱<?= $result['insurance_cost'] ?> |
-                                    Admin Fees (5%): ₱<?= $result['admin_fee'] ?> |
-                                    Savings Fund (85%): ₱<?= $result['savings_fund'] ?> |
-                                    Savings Fund Future Value (4% growth): ₱<?= $result['savings_fund_fv'] ?>
+                                    <a href="moreapplicationdetails.php?id=<?= $applicant['applicant_id'] ?>&user_id=<?= $applicant['user_id'] ?>"
+                                        class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                        <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                            viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
+                                        More details
+                                    </a>
                                 </td>
                             </tr>
                             <?php
