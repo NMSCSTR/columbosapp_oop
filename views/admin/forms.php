@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     deleteLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault(); // prevent default link behavior
+            e.preventDefault(); 
             const fileId = this.getAttribute('data-id');
 
             Swal.fire({
@@ -245,7 +245,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Redirect to delete URL
                     window.location.href =
                         `<?= BASE_URL ?>controllers/adminController/formControllers.php?delete=${fileId}`;
                 }

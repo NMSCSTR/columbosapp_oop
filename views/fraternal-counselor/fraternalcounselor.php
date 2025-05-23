@@ -8,19 +8,28 @@ include '../../models/usersModel.php';
 include '../../models/adminModel/councilModel.php';
 include '../../models/adminModel/fraternalBenefitsModel.php';
 include '../../models/memberModel/memberApplicationModel.php';
+include '../../models/adminModel/FormsModel.php';
+
+
+
 
 $councilModel = new CouncilModel($conn);
 $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
 $applicationModel = new MemberApplicationModel($conn);
+$formsModel = new FormsModel($conn);
 $applicantData = $applicationModel->getApplicantByFraternalCounselor($_SESSION['user_id']);
 $totalApplicants = $applicationModel->countAllApplicants($_SESSION['user_id']);
 $fetchFraternalBenefits = $fraternalBenefitsModel->getFraternalBenefitById($applicantData['fraternal_benefits_id']);
 $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
+$files = $formsModel->viewAllForms();
 // var_dump($applicantData);
 
 ?>
 
-
+<!-- Import DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 <?php include '../../partials/fcsidebar.php' ?>
 
 <div id="viewModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 hidden items-center justify-center">
@@ -105,7 +114,9 @@ $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
                         <td class='px-4 py-3'><?php echo $fetchFraternalBenefits['name'] ?></td>
                         <td class='px-4 py-3'>
                             <?php echo $applicantData['lastname'] . ' ' . $applicantData['firstname'] ?></td>
-                        <td class='px-4 py-3 font-bold' style="color: <?php echo $applicantData['application_status'] === 'Approved' ? 'green' : 'orange'; ?>"><?php echo $applicantData['application_status'] ?></td>
+                        <td class='px-4 py-3 font-bold'
+                            style="color: <?php echo $applicantData['application_status'] === 'Approved' ? 'green' : 'orange'; ?>">
+                            <?php echo $applicantData['application_status'] ?></td>
                         <td class='px-4 py-3'>
                             <?php echo date("F j, Y", strtotime($applicantData['created_at'])); ?>
                         </td>
@@ -145,7 +156,7 @@ $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
                                     </svg>
                                     View
                                 </a>
-                                
+
                             </div>
                         </td>
 
@@ -162,32 +173,56 @@ $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
     </div>
 
     <!-- Profile Section -->
-    <!-- <div x-show="activeSection === 'profile'" class="space-y-6">
+    <div x-show="activeSection === 'forms'" class="space-y-6">
         <header>
-            <h1 class="text-2xl font-bold text-gray-800">Your Profile</h1>
-            <p class="text-gray-600">Update your personal information and settings.</p>
+            <h1 class="text-2xl font-bold text-gray-800">All Forms</h1>
+            <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
         </header>
         <div class="bg-white p-4 rounded-lg shadow-md">
-            <form class="space-y-4">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input type="text" id="name"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                        placeholder="John Doe">
-                </div>
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                    <input type="email" id="email"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                        placeholder="john.doe@example.com">
-                </div>
-                <button type="submit"
-                    class="w-full sm:w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                    Save Changes
-                </button>
-            </form>
+            <div class="p-4 rounded-lg dark:border-gray-700">
+                <section class="bg-gray-50 p-5 rounded shadow">
+                    <table id="myTable2" class="stripe hover w-full" style="width:100%">
+                        <thead class="bg-gray-800 text-white text-xs">
+                            <tr>
+                                <!-- <th class="px-4 py-3">Id</th> -->
+                                <th class="px-4 py-3">FILENAME</th>
+                                <th class="px-4 py-3">DESCRIPTION</th>
+                                <th class="px-4 py-3">TYPE</th>
+                                <th class="px-4 py-3">UPLOADED</th>
+                                <th class="px-4 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs">
+                            <?php while($row = mysqli_fetch_assoc($files)): ?>
+                            <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
+                                <!-- <td contenteditable="true" class="filename"><?= htmlspecialchars($file['filename']) ?></td> -->
+                                <td class='px-4 py-3'><?= htmlspecialchars($row['filename']) ?></td>
+                                <td class='px-4 py-3'><?php echo $row['description'] ?></td>
+                                <td class='px-4 py-3'><?= htmlspecialchars($row['file_type']) ?></td>
+                                <td class='px-4 py-3'><?= date("F j, Y", strtotime($row['uploaded_on'])) ?></td>
+                                <td>
+                                    <!-- if live -->
+                                    <!-- <a href="https://docs.google.com/gview?url=<?= urlencode($row['file_located']) ?>&embedded=true"
+                                        target="_blank" class="text-green-600">View</a> | -->
+
+                                    <a href="<?= BASE_URL ?>controllers/adminController/view_docx.php?path=uploads/forms/<?= basename($row['file_located']) ?>"
+                                        target="_blank" class="text-green-600">View</a> |
+
+                                    <a href="<?= BASE_URL ?>controllers/adminController/formControllers.php?download=<?= $row['id'] ?>"
+                                        class="text-blue-600">Download</a>
+
+                                    <!-- <a href="#" data-id="<?= $row['id'] ?>" class="text-red-600 delete-btn">Delete</a> -->
+
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </section>
+
+            </div>
         </div>
-    </div> -->
+    </div>
 </main>
 <script>
 function fetchApplicantData(userId) {
@@ -223,6 +258,20 @@ function closeModal() {
     modal.classList.add('hidden');
 }
 </script>
+
+<script>
+$(document).ready(function() {
+    $('#myTable2').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        pageLength: 10, 
+    });
+});
+</script>
+
 
 
 <?php
