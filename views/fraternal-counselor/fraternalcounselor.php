@@ -172,10 +172,10 @@ $files = $formsModel->viewAllForms();
         </div>
     </div>
 
-    <!-- Profile Section -->
+    <!-- Forms Section -->
     <div x-show="activeSection === 'forms'" class="space-y-6">
         <header>
-            <h1 class="text-2xl font-bold text-gray-800">All Forms</h1>
+            <h1 class="text-2xl font-bold text-gray-800">View list of forms</h1>
             <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
         </header>
         <div class="bg-white p-4 rounded-lg shadow-md">
@@ -219,11 +219,129 @@ $files = $formsModel->viewAllForms();
                         </tbody>
                     </table>
                 </section>
+            </div>
+        </div>
+    </div>
 
+    <!-- Councils Section -->
+    <div x-show="activeSection === 'council'" class="space-y-6">
+        <header>
+            <h1 class="text-2xl font-bold text-gray-800">View list of Councils</h1>
+            <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
+        </header>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="p-4 rounded-lg dark:border-gray-700">
+                <section class="bg-gray-50 p-5 rounded shadow">
+                    <table id="myTable3" class="stripe hover w-full" style="width:100%">
+                        <thead class="bg-gray-800 text-white text-xs">
+                            <tr>
+                                <!-- <th class="px-4 py-3">Id</th> -->
+                                <th class="px-4 py-3">Council Number</th>
+                                <th class="px-4 py-3">Name</th>
+                                <th class="px-4 py-3">UNIT MANAGER</th>
+                                <th class="px-4 py-3">FRATERNAL COUNSELOR</th>
+                                <th class="px-4 py-3">Council Established</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs">
+                            <?php
+                            $councilModel = new CouncilModel($conn);
+                            $councils     = $councilModel->getAllCouncil();
+
+                            if ($councils) {
+                                foreach ($councils as $council) {
+                                    $um_name = $councilModel->getUserNameById($council['unit_manager_id'], 'unit-manager');
+                                    $fc_name = $councilModel->getUserNameById($council['fraternal_counselor_id'], 'fraternal-counselor'); ?>
+
+                            <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
+                                <!-- <td class='px-4 py-3'><?php echo $council['council_id'] ?></td> -->
+                                <td class='px-4 py-3'><?php echo $council['council_number'] ?></td>
+                                <td class='px-4 py-3'><?php echo $council['council_name'] ?></td>
+                                <td class='px-4 py-3'><?php echo $um_name ?></td>
+                                <td class='px-4 py-3'><?php echo $fc_name ?></td>
+                                <td class='px-4 py-3'>
+                                    <?php echo date("F j, Y", strtotime($council['date_established'])); ?>
+                                </td>
+                                <!-- <td class='px-4 py-3'><?php echo date("F j, Y", strtotime($council['date_created'])); ?>
+                                        </td> -->
+                            </tr>
+                            <?php
+                                }
+                            } else {
+                                echo "<tr><td colspan='7' class='px-4 py-3 text-center'>No councils found.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fraternal Section -->
+    <div x-show="activeSection === 'fraternalbenefits'" class="space-y-6">
+        <header>
+            <h1 class="text-2xl font-bold text-gray-800">View list of Fraternal Benefits</h1>
+            <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
+        </header>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="p-4 rounded-lg dark:border-gray-700">
+                <section class="bg-gray-50 p-5 rounded shadow">
+                    <table id="myTable4" class="stripe hover w-full" style="width:100%">
+                        <thead class="bg-gray-800 text-white text-xs">
+                            <tr>
+                                <th scope="col" class="px-4 py-3">TYPE</th>
+                                <th scope="col" class="px-4 py-3">NAME</th>
+                                <!-- <th scope="col" class="px-4 py-3">FACE VALUE</th>
+                                <th scope="col" class="px-4 py-3">YEARS TO MATURITY</th>
+                                <th scope="col" class="px-4 py-3">YEARS OF PROTECTION</th> -->
+                                <th scope="col" class="px-4 py-3">CONTRIBUTION PERIOD</th>
+                                <th scope="col" class="px-4 py-3">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs">
+ <?php
+                            $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
+
+                            $fraternals = $fraternalBenefitsModel->getAllFraternalBenefits();
+                            if ($fraternals) {
+                            foreach ($fraternals as $fraternal) {?>
+                            <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <td class="px-4 py-3"><?php echo $fraternal['type']; ?></td>
+                                <td class="px-4 py-3"><?php echo $fraternal['name']; ?></td>
+                                <!-- <td class="px-4 py-3"><?php echo $fraternal['face_value']; ?></td>
+                                <td class="px-4 py-3"><?php echo $fraternal['years_to_maturity']; ?></td>
+                                <td class="px-4 py-3"><?php echo $fraternal['years_of_protection']; ?></td> -->
+                                <td class="px-4 py-3"><?php echo $fraternal['contribution_period']; ?></td>
+                                <td>
+                                    <a href="moreplandetails.php?id=<?= $fraternal['id'] ?>"
+                                        class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                        <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                            viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
+                                        More details
+                                    </a>
+                                </td>
+
+                            </tr>
+                            <?php }
+                                } else {
+                                    echo "No fraternal benefits found.";
+                                }
+                            ?>
+                        </tbody>
+                    </table>
+                </section>
             </div>
         </div>
     </div>
 </main>
+
+
 <script>
 function fetchApplicantData(userId) {
     fetch(`../../controllers/memberController/viewApplicant.php?id=${userId}`)
@@ -262,6 +380,30 @@ function closeModal() {
 <script>
 $(document).ready(function() {
     $('#myTable2').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        pageLength: 10, 
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    $('#myTable3').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        pageLength: 10, 
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    $('#myTable4').DataTable({
         responsive: true,
         dom: 'Bfrtip',
         buttons: [

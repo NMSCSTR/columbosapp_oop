@@ -260,7 +260,7 @@
                             </tr>
                             <?php }
                                 } else {
-                                    echo "No councils found.";
+                                    echo "No fraternal benefits found.";
                                 }
                             ?>
                         </tbody>
