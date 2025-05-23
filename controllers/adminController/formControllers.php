@@ -6,7 +6,7 @@ include '../../models/adminModel/FormsModel.php';
 
 $formsModel = new FormsModel($conn);
 
-// Handle File Upload
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $filename    = $_POST['filename'];
     $description = $_POST['description'];
@@ -21,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $originalName = basename($_FILES['file']['name']);
     $extension    = pathinfo($originalName, PATHINFO_EXTENSION);
     $uniqueName   = uniqid('form_', true) . '.' . $extension;
-    $newFilePath  = $uploadPath . $uniqueName;
-    $fileLocated  = BASE_URL . 'uploads/forms/' . $uniqueName;
+    $newFilePath  = $uploadPath . $originalName;
+    $fileLocated  = BASE_URL . 'uploads/forms/' . $originalName;
 
-    $uploadedOn = date("Y-m-d H:i:s"); // current timestamp
+    $uploadedOn = date("Y-m-d H:i:s");
 
     if (move_uploaded_file($_FILES['file']['tmp_name'], $newFilePath)) {
         $result = $formsModel->addForms($filename, $description, $fileLocated, $fileType, $userId, $uploadedOn);
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     exit;
 }
 
-// Handle File Deletion
+
 if (isset($_GET['delete'])) {
     $id   = $_GET['delete'];
     $form = mysqli_fetch_assoc($formsModel->getFormById($id));
@@ -52,7 +52,7 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-// Handle File Download
+
 if (isset($_GET['download'])) {
     $id   = $_GET['download'];
     $form = mysqli_fetch_assoc($formsModel->getFormById($id));

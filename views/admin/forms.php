@@ -121,6 +121,7 @@
 
 
 
+
 <div class="flex flex-col md:flex-row min-h-screen">
     <?php include '../../partials/sidebar.php' ?>
 
@@ -194,6 +195,7 @@
                         <tbody class="text-xs">
                             <?php while($row = mysqli_fetch_assoc($files)): ?>
                             <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
+                                <!-- <td contenteditable="true" class="filename"><?= htmlspecialchars($file['filename']) ?></td> -->
                                 <td class='px-4 py-3'><?= htmlspecialchars($row['filename']) ?></td>
                                 <td class='px-4 py-3'><?php echo $row['description'] ?></td>
                                 <td class='px-4 py-3'><?= htmlspecialchars($row['file_type']) ?></td>
@@ -209,9 +211,9 @@
                                     <a href="<?= BASE_URL ?>controllers/adminController/formControllers.php?download=<?= $row['id'] ?>"
                                         class="text-blue-600">Download</a> |
 
-                                    <a href="<?= BASE_URL ?>controllers/adminController/formControllers.php?delete=<?= $row['id'] ?>"
-                                        class="text-red-600"
-                                        onclick="return confirm('Are you sure you want to delete this file?')">Delete</a>
+                                    <a href="#" data-id="<?= $row['id'] ?>"
+                                        class="text-red-600 delete-btn"
+                                        >Delete</a>
 
                                 </td>
                             </tr>
@@ -224,6 +226,35 @@
         </div>
     </main>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const deleteLinks = document.querySelectorAll('.delete-btn');
+
+    deleteLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // prevent default link behavior
+            const fileId = this.getAttribute('data-id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This file will be deleted permanently.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect to delete URL
+                    window.location.href =
+                        `<?= BASE_URL ?>controllers/adminController/formControllers.php?delete=${fileId}`;
+                }
+            });
+        });
+    });
+});
+</script>
+
 
 <script>
 const fileInput = document.getElementById('file');
