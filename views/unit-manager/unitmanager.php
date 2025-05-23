@@ -18,10 +18,11 @@ $councilModel = new CouncilModel($conn);
 $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
 $applicationModel = new MemberApplicationModel($conn);
 $formsModel = new FormsModel($conn);
-$applicantData = $applicationModel->getApplicantByFraternalCounselor($_SESSION['user_id']);
+
+// $applicantData = $applicationModel->getApplicantByFraternalCounselor($_SESSION['user_id']);
 $totalApplicants = $applicationModel->countAllApplicants($_SESSION['user_id']);
-$fetchFraternalBenefits = $fraternalBenefitsModel->getFraternalBenefitById($applicantData['fraternal_benefits_id']);
-$fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
+// $fetchFraternalBenefits = $fraternalBenefitsModel->getFraternalBenefitById($applicantData['fraternal_benefits_id']);
+// $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
 $files = $formsModel->viewAllForms();
 // var_dump($applicantData);
 
@@ -74,7 +75,7 @@ $files = $formsModel->viewAllForms();
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold text-gray-700">Allocations</h2>
-                <p class="text-2xl font-bold text-blue-600"><?php echo $fetchFraternalBenefits['type']?></p>
+                <!-- <p class="text-2xl font-bold text-blue-600"><?php echo $fetchFraternalBenefits['type']?></p> -->
             </div>
         </div>
     </div>
@@ -90,83 +91,81 @@ $files = $formsModel->viewAllForms();
                 <thead class="bg-gray-800 text-white text-xs">
                     <tr>
                         <!-- <th class="px-4 py-3">Id</th> -->
-                        <th class="px-4 py-3">Council Name</th>
-                        <th class="px-4 py-3">Plan type</th>
-                        <th class="px-4 py-3">Plan name</th>
-                        <th class="px-4 py-3">Applicant name</th>
-                        <th class="px-4 py-3">Application Status</th>
-                        <th class="px-4 py-3">Application date</th>
-                        <th class="px-4 py-3">Actions</th>
+                        <th class="px-4 py-3">APPLICANT NAME</th>
+                        <th class="px-4 py-3">PLAN TYPE</th>
+                        <th class="px-4 py-3">PLAN NAME</th>
+                        <th class="px-4 py-3">FACE VALUE</th>
+                        <th class="px-4 py-3">YEARS TO MATURE</th>
+                        <th class="px-4 py-3">YEARS PROTECT</th>
+                        <th class="px-4 py-3">PAYMENT MODE</th>
+                        <th class="px-4 py-3">CONTRIBUTION AMOUNT</th>
+                        <th class="px-4 py-3">TOTAL CONTRIBUTION</th>
+                        <th class="px-4 py-3">INSURANCE COST</th>
+                        <th class="px-4 py-3">ADMIN FEE</th>
+                        <th class="px-4 py-3">SAVINGS FUND(ALLOCATIONS)</th>
+                        <th class="px-4 py-3">APPLICATION STATUS</th>
+                        <th class="px-4 py-3">ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody class="text-xs">
-                    <?php
-                            $councilModel = new CouncilModel($conn);
-                            $councils     = $councilModel->getAllCouncil();
+                    <?php 
+                            $councilModel           = new CouncilModel($conn);
+                            $applicationModel       = new MemberApplicationModel($conn);
+                            $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
+                            $fraternals             = $fraternalBenefitsModel->getAllFraternalBenefits();
+                            $councils               = $councilModel->getAllCouncil();
+                            $applicants             = $applicationModel->getAllApplicants();
 
-                            if ($councils) {
-                                foreach ($councils as $council) {
-                                    $um_name = $councilModel->getUserNameById($council['unit_manager_id'], 'unit-manager');
-                                    $fc_name = $councilModel->getUserNameById($council['fraternal_counselor_id'], 'fraternal-counselor'); ?>
+                            
 
-                    <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
-                        <td class='px-4 py-3'><?php echo $fetchCouncil["council_name"] ?></td>
-                        <td class='px-4 py-3'><?php echo $fetchFraternalBenefits['type'] ?></td>
-                        <td class='px-4 py-3'><?php echo $fetchFraternalBenefits['name'] ?></td>
-                        <td class='px-4 py-3'>
-                            <?php echo $applicantData['lastname'] . ' ' . $applicantData['firstname'] ?></td>
-                        <td class='px-4 py-3 font-bold'
-                            style="color: <?php echo $applicantData['application_status'] === 'Approved' ? 'green' : 'orange'; ?>">
-                            <?php echo $applicantData['application_status'] ?></td>
-                        <td class='px-4 py-3'>
-                            <?php echo date("F j, Y", strtotime($applicantData['created_at'])); ?>
+                            if ($applicants && is_array($applicants) && count($applicants) > 0) {
+                                foreach ($applicants as $applicant) {
+                                ?>
+                    <tr>
+                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['applicant_name'])?></td>
+                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_type'])?></td>
+                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_name'])?></td>
+                        <td class="px-4 py-3">
+                            ₱<?php echo htmlspecialchars(number_format($applicant['face_value'],2))?></td>
+                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_to_maturity'])?>
                         </td>
-                        <td class='px-4 py-3'>
-                            <div class="flex gap-2 justify-center">
-                                <?php if ($applicantData['application_status'] === 'Pending' || $applicantData['application_status'] === 'Dis-approved'): ?>
-                                <a href="../../controllers/fraternalCounselorController/applicationStatusController.php?id=<?= $applicantData['applicant_id'] ?>&action=approve"
-                                    class="px-2 py-1 text-xs font-medium text-center inline-flex items-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                    <svg class="w-4 h-4 text-white dark:text-white mr-1"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                        <path fill-rule="evenodd"
-                                            d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    Approve
-                                </a>
-                                <?php elseif ($applicantData['application_status'] === 'Approved'): ?>
-                                <a href="../../controllers/fraternalCounselorController/applicationStatusController.php?action=not_approve&id=<?= $applicantData['applicant_id'] ?>"
-                                    class="px-2 py-1 text-xs font-medium inline-flex items-center text-white bg-red-600 rounded-lg hover:bg-red-700">
-                                    <svg class="w-4 h-4 text-white mr-1" xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
-                                    </svg>
-                                    Disapprove
-                                </a>
-                                <?php endif; ?>
-                                <a href="javascript:void(0);"
-                                    onclick="fetchApplicantData(<?= $applicantData['user_id']; ?>)"
-                                    class="px-2 py-1 text-[10px] font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800">
-                                    <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                    View
-                                </a>
-
-                            </div>
+                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_of_protection'])?>
                         </td>
-
+                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['payment_mode'])?></td>
+                        <td class="px-4 py-3">₱<?php echo number_format($applicant['contribution_amount'], 2)?>
+                        </td>
+                        <td class="px-4 py-3">₱<?php echo number_format($applicant['total_contribution'], 2); ?>
+                        </td>
+                        <td class="px-4 py-3">₱<?php echo number_format($applicant['insurance_cost'], 2); ?>
+                        </td>
+                        <td class="px-4 py-3">₱<?php echo number_format($applicant['admin_fee'], 2); ?></td>
+                        <td class="px-4 py-3">₱<?php echo number_format($applicant['savings_fund'], 2); ?></td>
+                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['application_status'])?>
+                        </td>
+                        <td>
+                            <a href="moreapplicationdetails.php?id=<?= $applicant['applicant_id'] ?>&user_id=<?= $applicant['user_id'] ?>"
+                                class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                                More details
+                            </a>
+                        </td>
                     </tr>
                     <?php
                                 }
-                            } else {
-                                echo "<tr><td colspan='7' class='px-4 py-3 text-center'>No councils found.</td></tr>";
-                            }
+                                } else {
+
+                                    if (empty($councils) || empty($fraternals)) {
+                                        echo "<tr><td colspan='8' class='px-4 py-3 text-center'>No councils or fraternal benefits found.</td></tr>";
+                                    } else {
+                                        echo "<tr><td colspan='8' class='px-4 py-3 text-center'>No data available.</td></tr>";
+                                    }
+                                }
                             ?>
                 </tbody>
             </table>
@@ -301,7 +300,7 @@ $files = $formsModel->viewAllForms();
                             </tr>
                         </thead>
                         <tbody class="text-xs">
- <?php
+                            <?php
                             $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
 
                             $fraternals = $fraternalBenefitsModel->getAllFraternalBenefits();
@@ -386,7 +385,7 @@ $(document).ready(function() {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        pageLength: 10, 
+        pageLength: 10,
     });
 });
 </script>
@@ -398,7 +397,7 @@ $(document).ready(function() {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        pageLength: 10, 
+        pageLength: 10,
     });
 });
 </script>
@@ -410,7 +409,7 @@ $(document).ready(function() {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        pageLength: 10, 
+        pageLength: 10,
     });
 });
 </script>

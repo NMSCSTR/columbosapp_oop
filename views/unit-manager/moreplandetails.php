@@ -1,6 +1,6 @@
 <?php
     require_once '../../middleware/auth.php';
-    authorize(['admin', 'fraternal-counselor']);
+    authorize(['admin', 'fraternal-counselor','unit-manager']);
     include '../../includes/config.php';
     include '../../includes/header.php';
     include '../../includes/db.php';
@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div class="flex justify-between mt-6">
-                <a href="fraternalcounselor.php" class="text-blue-600 hover:underline">← Back to list</a>
+                <a href="unitmanager.php" class="text-blue-600 hover:underline">← Back to list</a>
             </div>
         </div>
     </div>
