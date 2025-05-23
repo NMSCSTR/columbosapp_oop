@@ -199,7 +199,11 @@
                                 <td class='px-4 py-3'><?= htmlspecialchars($row['file_type']) ?></td>
                                 <td class='px-4 py-3'><?= date("F j, Y", strtotime($row['uploaded_on'])) ?></td>
                                 <td>
-                                    <a href="https://docs.google.com/gview?url=<?= urlencode($row['file_located']) ?>&embedded=true"
+                                    <!-- if live -->
+                                    <!-- <a href="https://docs.google.com/gview?url=<?= urlencode($row['file_located']) ?>&embedded=true"
+                                        target="_blank" class="text-green-600">View</a> | -->
+
+                                    <a href="<?= BASE_URL ?>controllers/adminController/view_docx.php?path=uploads/forms/<?= basename($row['file_located']) ?>"
                                         target="_blank" class="text-green-600">View</a> |
 
                                     <a href="<?= BASE_URL ?>controllers/adminController/formControllers.php?download=<?= $row['id'] ?>"
