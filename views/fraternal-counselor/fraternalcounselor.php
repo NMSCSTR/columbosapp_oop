@@ -21,6 +21,7 @@ $applicantData = $applicationModel->getApplicantByFraternalCounselor($_SESSION['
 $totalApplicants = $applicationModel->countAllApplicants($_SESSION['user_id']);
 $fetchFraternalBenefits = $fraternalBenefitsModel->getFraternalBenefitById($applicantData['fraternal_benefits_id']);
 $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
+$totals = $applicationModel->calculateTotalAllocationsForAllApplicants();
 $files = $formsModel->viewAllForms();
 // var_dump($applicantData);
 
@@ -73,7 +74,7 @@ $files = $formsModel->viewAllForms();
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold text-gray-700">Allocations</h2>
-                <p class="text-2xl font-bold text-blue-600"><?php echo $fetchFraternalBenefits['type']?></p>
+                <p class="text-2xl font-bold text-blue-600"><?php echo number_format($totals['total_contribution'] ?? 0, 2)?></p>
             </div>
         </div>
     </div>
