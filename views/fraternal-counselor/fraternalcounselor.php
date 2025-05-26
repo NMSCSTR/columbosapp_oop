@@ -186,10 +186,10 @@ $files                  = $formsModel->viewAllForms();
         </header>
         <div class="bg-white p-4 rounded-lg shadow-md">
             <div class="p-4 rounded-lg dark:border-gray-700">
-                <section class="bg-gray-50 p-5 rounded shadow">
+                <section>
                     <?php foreach ($announcements as $index => $announcement): ?>
-                    <div class="flex items-start gap-3">
-                        <div class="flex-1 p-4 bg-gray-100 rounded-xl dark:bg-gray-700 relative shadow-sm border">
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="flex-1 p-4 bg-gray-100 rounded-xl dark:bg-gray-700 relative shadow-sm border  hover:bg-gray-200 dark:hover:bg-gray-700">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
                                     <span class="text-sm font-semibold text-gray-900 dark:text-white">Admin</span>
