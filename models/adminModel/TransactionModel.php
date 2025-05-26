@@ -21,12 +21,12 @@ class TransactionModel
         return $transactions;
     }
 
-    public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_date, $amount_paid, $currency, $next_due_date, $status)
-    {
-        $sql = "INSERT INTO transactions (applicant_id, user_id, plan_id, payment_date, amount_paid, currency, next_due_date, status)
-                VALUES ('$applicant_id', '$user_id', '$plan_id', '$payment_date', '$amount_paid', '$currency', '$next_due_date', '$status')";
-        return mysqli_query($this->conn, $sql);
-    }
+public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_date, $amount_paid, $currency, $next_due_date, $payment_timing_status)
+{
+    $sql = "INSERT INTO transactions (applicant_id, user_id, plan_id, payment_date, amount_paid, currency, next_due_date, payment_timing_status)
+            VALUES ('$applicant_id', '$user_id', '$plan_id', '$payment_date', '$amount_paid', '$currency', '$next_due_date', '$payment_timing_status')";
+    return mysqli_query($this->conn, $sql);
+}
 
     public function nextDueDateNotificationReminder()
     {
@@ -48,28 +48,27 @@ class TransactionModel
         }
     }
 
-public function getPaymentTransactionsByApplicant($user_id)
-{
-    $user_id = mysqli_real_escape_string($this->conn, $user_id);
-    $sql     = "SELECT t.*, u.firstname, u.lastname, p.fraternal_benefits_id
+    public function getPaymentTransactionsByApplicant($user_id)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+        $sql     = "SELECT t.*, u.firstname, u.lastname, p.fraternal_benefits_id
                 FROM transactions t
                 JOIN users u ON t.user_id = u.id
                 JOIN plans p ON t.plan_id = p.plan_id
                 WHERE t.user_id = '$user_id'
                 ORDER BY t.payment_date DESC";
 
-    $result = mysqli_query($this->conn, $sql);
+        $result = mysqli_query($this->conn, $sql);
 
-    $transactions = [];
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $transactions[] = $row;
+        $transactions = [];
+        if ($result && mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $transactions[] = $row;
+            }
         }
+
+        return $transactions;
     }
-
-    return $transactions;
-}
-
 
     public function fetchApplicantsByKeyword($keyword)
     {

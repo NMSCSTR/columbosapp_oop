@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $model  = new MemberApplicationModel($conn);
     $applicant_id = $model->insertApplicant(
-        $user_id, $fraternal_counselor_id, $lastname, $firstname, $middlename,
+        $user_id, $fraternal_counselor_id, $firstname, $lastname, $middlename,
         $birthdate, $birthplace, $age, $gender, $marital_status, $tin_sss, $nationality
     );
 
