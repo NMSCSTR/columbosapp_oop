@@ -46,8 +46,8 @@
                 <li>
                     <a href="#" @click.prevent="activeSection = 'forms'; openSidebar = false"
                         class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors"
-                        :class="{ 'bg-gray-100': activeSection === 'profile' }">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                        :class="{ 'bg-gray-100': activeSection === 'forms' }">
+                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M7 8v8a5 5 0 1 0 10 0V6.5a3.5 3.5 0 1 0-7 0V15a2 2 0 0 0 4 0V8" />
@@ -58,9 +58,23 @@
                     </a>
                 </li>
                 <li>
+                    <a href="#" @click.prevent="activeSection = 'announcement'; openSidebar = false"
+                        class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        :class="{ 'bg-gray-100': activeSection === 'announcement' }">
+                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2c-1.1 0-2 .9-2 2v3h-3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2h-3V4c0-1.1-.9-2-2-2Zm4 14H8v-2h8v2Zm-4-8H8V7h4v1Z" />
+                    </svg>
+                        <span
+                            :class="{ 'block opacity-100': openSidebar || window.innerWidth >= 768, 'hidden opacity-0': !openSidebar && window.innerWidth < 768 }"
+                            class="text-gray-700 transition-opacity duration-300">Announcements</span>
+                    </a>
+                </li>
+                <li>
                     <a href="#" @click.prevent="activeSection = 'council'; openSidebar = false"
                         class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors"
-                        :class="{ 'bg-gray-100': activeSection === 'profile' }">
+                        :class="{ 'bg-gray-100': activeSection === 'council' }">
                     <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
                         <path
@@ -76,7 +90,7 @@
                 <li>
                     <a href="#" @click.prevent="activeSection = 'fraternalbenefits'; openSidebar = false"
                         class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors"
-                        :class="{ 'bg-gray-100': activeSection === 'profile' }">
+                        :class="{ 'bg-gray-100': activeSection === 'fraternalbenefits' }">
                     <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 22">
                         <path

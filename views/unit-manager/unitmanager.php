@@ -34,7 +34,7 @@ $files = $formsModel->viewAllForms();
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-<?php include '../../partials/fcsidebar.php' ?>
+<?php include '../../partials/umsidebar.php' ?>
 
 <div id="viewModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 hidden items-center justify-center">
     <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full max-h-[80vh] overflow-y-auto p-6 relative">
@@ -279,6 +279,62 @@ $files = $formsModel->viewAllForms();
             </div>
         </div>
     </div>
+
+        <!-- Announcement Section -->
+    <div x-show="activeSection === 'announcement'" class="space-y-6">
+        <header>
+            <h1 class="text-2xl font-bold text-gray-800">List of anouncement</h1>
+            <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
+        </header>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="p-4 rounded-lg dark:border-gray-700">
+                <section class="bg-gray-50 p-5 rounded shadow">
+                    <table id="myTable3" class="stripe hover w-full" style="width:100%">
+                        <thead class="bg-gray-800 text-white text-xs">
+                            <tr>
+                                <!-- <th class="px-4 py-3">Id</th> -->
+                                <th class="px-4 py-3">Council Number</th>
+                                <th class="px-4 py-3">Name</th>
+                                <th class="px-4 py-3">UNIT MANAGER</th>
+                                <th class="px-4 py-3">FRATERNAL COUNSELOR</th>
+                                <th class="px-4 py-3">Council Established</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs">
+                            <?php
+                            $councilModel = new CouncilModel($conn);
+                            $councils     = $councilModel->getAllCouncil();
+
+                            if ($councils) {
+                                foreach ($councils as $council) {
+                                    $um_name = $councilModel->getUserNameById($council['unit_manager_id'], 'unit-manager');
+                                    $fc_name = $councilModel->getUserNameById($council['fraternal_counselor_id'], 'fraternal-counselor'); ?>
+
+                            <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
+                                <!-- <td class='px-4 py-3'><?php echo $council['council_id'] ?></td> -->
+                                <td class='px-4 py-3'><?php echo $council['council_number'] ?></td>
+                                <td class='px-4 py-3'><?php echo $council['council_name'] ?></td>
+                                <td class='px-4 py-3'><?php echo $um_name ?></td>
+                                <td class='px-4 py-3'><?php echo $fc_name ?></td>
+                                <td class='px-4 py-3'>
+                                    <?php echo date("F j, Y", strtotime($council['date_established'])); ?>
+                                </td>
+                                <!-- <td class='px-4 py-3'><?php echo date("F j, Y", strtotime($council['date_created'])); ?>
+                                        </td> -->
+                            </tr>
+                            <?php
+                                }
+                            } else {
+                                echo "<tr><td colspan='7' class='px-4 py-3 text-center'>No councils found.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Fraternal Section -->
     <div x-show="activeSection === 'fraternalbenefits'" class="space-y-6">
