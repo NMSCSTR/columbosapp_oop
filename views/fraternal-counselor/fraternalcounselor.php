@@ -9,20 +9,24 @@ include '../../models/adminModel/councilModel.php';
 include '../../models/adminModel/fraternalBenefitsModel.php';
 include '../../models/memberModel/memberApplicationModel.php';
 include '../../models/adminModel/FormsModel.php';
+include '../../models/adminModel/announcementModel.php';
+    
 
 
 
-
-$councilModel = new CouncilModel($conn);
+$announcementModel      = new announcementModel($conn);
+$councilModel           = new CouncilModel($conn);
 $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
-$applicationModel = new MemberApplicationModel($conn);
-$formsModel = new FormsModel($conn);
-$applicantData = $applicationModel->getApplicantByFraternalCounselor($_SESSION['user_id']);
-$totalApplicants = $applicationModel->countAllApplicants($_SESSION['user_id']);
+$applicationModel       = new MemberApplicationModel($conn);
+$formsModel             = new FormsModel($conn);
+$announcements          = $announcementModel->getAllAnnouncement();
+$applicantData          = $applicationModel->getApplicantByFraternalCounselor($_SESSION['user_id']);
+$totalApplicants        = $applicationModel->countAllApplicants($_SESSION['user_id']);
 $fetchFraternalBenefits = $fraternalBenefitsModel->getFraternalBenefitById($applicantData['fraternal_benefits_id']);
-$fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
-$totals = $applicationModel->calculateTotalAllocationsForAllApplicants();
-$files = $formsModel->viewAllForms();
+$fetchCouncil           = $councilModel->getCouncilById($applicantData['council_id']);
+$totals                 = $applicationModel->calculateTotalAllocationsForAllApplicants();
+$files                  = $formsModel->viewAllForms();
+
 // var_dump($applicantData);
 
 ?>
@@ -74,7 +78,8 @@ $files = $formsModel->viewAllForms();
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold text-gray-700">Allocations</h2>
-                <p class="text-2xl font-bold text-blue-600"><?php echo number_format($totals['total_contribution'] ?? 0, 2)?></p>
+                <p class="text-2xl font-bold text-blue-600">
+                    <?php echo number_format($totals['total_contribution'] ?? 0, 2)?></p>
             </div>
         </div>
     </div>
@@ -170,6 +175,40 @@ $files = $formsModel->viewAllForms();
                             ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- Announcement Section -->
+    <div x-show="activeSection === 'announcement'" class="space-y-6">
+        <header>
+            <h1 class="text-2xl font-bold text-gray-800">List of anouncements</h1>
+            <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
+        </header>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="p-4 rounded-lg dark:border-gray-700">
+                <section class="bg-gray-50 p-5 rounded shadow">
+                    <?php foreach ($announcements as $index => $announcement): ?>
+                    <div class="flex items-start gap-3">
+                        <div class="flex-1 p-4 bg-gray-100 rounded-xl dark:bg-gray-700 relative shadow-sm border">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-semibold text-gray-900 dark:text-white">Admin</span>
+                                    <span class="text-sm text-gray-500 dark:text-gray-300">
+                                        <?= date("M d, Y H:i", strtotime($announcement['date_posted'])) ?>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <p class="mt-3 text-sm text-gray-900 dark:text-white">
+                                <strong><?= htmlspecialchars($announcement['subject']) ?>:</strong>
+                                <?= nl2br(htmlspecialchars($announcement['content'])) ?>
+                            </p>
+                            <span class="block mt-2 text-sm text-gray-500 dark:text-gray-400">Delivered</span>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </section>
+            </div>
         </div>
     </div>
 
@@ -301,7 +340,7 @@ $files = $formsModel->viewAllForms();
                             </tr>
                         </thead>
                         <tbody class="text-xs">
- <?php
+                            <?php
                             $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
 
                             $fraternals = $fraternalBenefitsModel->getAllFraternalBenefits();
@@ -386,7 +425,7 @@ $(document).ready(function() {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        pageLength: 10, 
+        pageLength: 10,
     });
 });
 </script>
@@ -398,7 +437,7 @@ $(document).ready(function() {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        pageLength: 10, 
+        pageLength: 10,
     });
 });
 </script>
@@ -410,7 +449,7 @@ $(document).ready(function() {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        pageLength: 10, 
+        pageLength: 10,
     });
 });
 </script>
