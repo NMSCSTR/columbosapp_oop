@@ -342,6 +342,7 @@ class MemberApplicationModel
             $medicalHistory   = $this->fetchData("medical_history", $user_id);
             $familyHealth     = $this->fetchData("family_health", $user_id);
             $physician        = $this->fetchData("physician", $user_id);
+            $transactions     = $this->fetchData("transactions", $user_id);
 
             return [
                 'applicantData'    => $applicantData,
@@ -353,6 +354,7 @@ class MemberApplicationModel
                 'medicalHistory'   => $medicalHistory,
                 'familyHealth'     => $familyHealth,
                 'physician'        => $physician,
+                'transactions'     => $transactions
             ];
         } else {
             return "No applicant found with the provided ID.";

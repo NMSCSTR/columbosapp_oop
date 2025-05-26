@@ -48,6 +48,29 @@ class TransactionModel
         }
     }
 
+public function getPaymentTransactionsByApplicant($user_id)
+{
+    $user_id = mysqli_real_escape_string($this->conn, $user_id);
+    $sql     = "SELECT t.*, u.firstname, u.lastname, p.fraternal_benefits_id
+                FROM transactions t
+                JOIN users u ON t.user_id = u.id
+                JOIN plans p ON t.plan_id = p.plan_id
+                WHERE t.user_id = '$user_id'
+                ORDER BY t.payment_date DESC";
+
+    $result = mysqli_query($this->conn, $sql);
+
+    $transactions = [];
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $transactions[] = $row;
+        }
+    }
+
+    return $transactions;
+}
+
+
     public function fetchApplicantsByKeyword($keyword)
     {
         $keyword = mysqli_real_escape_string($this->conn, $keyword);

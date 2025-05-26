@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2025 at 07:54 AM
+-- Generation Time: May 26, 2025 at 01:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,7 +39,6 @@ CREATE TABLE `announcements` (
 --
 
 INSERT INTO `announcements` (`id`, `subject`, `content`, `date_posted`) VALUES
-(3, 'Meeting Officers Part 2', 'Mag meeting ta nenyo mga gwapo ug gwapa', '2025-05-02 20:50:10'),
 (4, 'Meeting Officers Part 3', 'This is an announcement to be use when sending all to phone.', '2025-05-02 21:02:39'),
 (5, 'Boardinghouse Meeting', 'Please be reminded that we will have our meeting tonight', '2025-05-02 21:05:52'),
 (6, 'Meeting Ta', 'Please be reminded that we will have our meeting tonight.', '2025-05-03 08:09:10');
@@ -241,6 +240,29 @@ INSERT INTO `family_health` (`health_id`, `applicant_id`, `user_id`, `father_liv
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `files`
+--
+
+CREATE TABLE `files` (
+  `id` int(11) NOT NULL,
+  `filename` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `uploaded_on` timestamp NOT NULL DEFAULT current_timestamp(),
+  `uploaded_by` int(11) DEFAULT NULL,
+  `file_located` varchar(255) DEFAULT NULL,
+  `file_type` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `files`
+--
+
+INSERT INTO `files` (`id`, `filename`, `description`, `uploaded_on`, `uploaded_by`, `file_located`, `file_type`) VALUES
+(6, 'Questionaire 1', 'This is a sample description for this file', '2025-05-22 19:14:02', 9, 'http://localhost/app/uploads/forms/questionnaire.docx', 'Questionnaire');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fraternal_benefits`
 --
 
@@ -264,7 +286,8 @@ CREATE TABLE `fraternal_benefits` (
 --
 
 INSERT INTO `fraternal_benefits` (`id`, `type`, `name`, `about`, `face_value`, `years_to_maturity`, `years_of_protection`, `benefits`, `contribution_period`, `image`, `created_at`, `updated_at`) VALUES
-(5, 'Retirement Plan', 'Retirement Plan Name', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic ipsa dolores, nobis expedita laboriosam ab voluptatum blanditiis possimus facere voluptas?', 100000, 15, 10, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, aut quisquam doloribus facere consectetur optio? Blanditiis, vitae nobis, distinctio rerum et in veritatis perferendis provident facere animi ab id? A!', '5', 'uploads/fraternalBenefitsUpload/RetirementPlanImage_1746123658.jpg', '2025-05-01 18:20:58', '2025-05-13 02:39:24');
+(5, 'Retirement Plan', 'Retirement Plan Name', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic ipsa dolores, nobis expedita laboriosam ab voluptatum blanditiis possimus facere voluptas?', 100000, 15, 10, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, aut quisquam doloribus facere consectetur optio? Blanditiis, vitae nobis, distinctio rerum et in veritatis perferendis provident facere animi ab id? A!', '5', 'uploads/fraternalBenefitsUpload/RetirementPlanImage_1746123658.jpg', '2025-05-01 18:20:58', '2025-05-13 02:39:24'),
+(6, 'Protection Plan', 'GIO Defender', 'Permanent life insurance plan that provides family benefit protection and guaranteed living benefits during the  lifetime of the Assured. This fraternal benefit plan can be offered to applicants whose issues ages ate within the age group 18-49', 500000, 20, 10, 'Upon reaching the maturity date at age 100, the plan will provide a cash maturity equal to 100% of the face value. The family benefits is equal to 100% of the face value given to the beneficiaries in case of the BC Holder\'s untimely demise during the protection period.', '15', 'uploads/fraternalBenefitsUpload/ProtectionPlanImage_1747618064.jpg', '2025-05-19 01:27:44', '2025-05-19 01:29:01');
 
 -- --------------------------------------------------------
 
@@ -402,7 +425,7 @@ CREATE TABLE `plans` (
   `fraternal_benefits_id` int(11) DEFAULT NULL,
   `council_id` int(11) NOT NULL,
   `payment_mode` varchar(50) DEFAULT NULL,
-  `contribution_amount` decimal(12,2) DEFAULT NULL,
+  `contribution_amount` double DEFAULT NULL,
   `currency` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -411,7 +434,26 @@ CREATE TABLE `plans` (
 --
 
 INSERT INTO `plans` (`plan_id`, `applicant_id`, `user_id`, `fraternal_benefits_id`, `council_id`, `payment_mode`, `contribution_amount`, `currency`) VALUES
-(15, 17, 13, 5, 6, 'semi-annually', 16.00, 'PHP');
+(15, 17, 13, 5, 6, 'quarterly', 1000, 'PHP');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `transaction_id` int(11) NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `plan_id` int(11) NOT NULL,
+  `payment_date` date NOT NULL,
+  `amount_paid` double NOT NULL,
+  `currency` varchar(10) DEFAULT 'PHP',
+  `next_due_date` date DEFAULT NULL,
+  `status` varchar(50) DEFAULT 'Paid',
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -438,7 +480,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `kcfapicode`, `email`, `phone_number`, `role`, `password`, `status`, `created_at`) VALUES
 (9, 'Rodrigo', 'Duterte', 'ROACODE', 'rodrigoroa@gmail.com', '09105200970', 'admin', '$2y$10$JDN36eEv6KaqtL8EPjKnAOAymSmK6f8TSF2ZghJ4S22sFGLKmkZyW', 'approved', '2025-04-29 02:37:07'),
-(10, 'Bong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09363816243', 'unit-manager', '$2y$10$Zao9HR5toa9Lo/X2sHbvVeo5mhuBRpopN4jIPnsbeqCdBizZkBqTu', 'disabled', '2025-04-29 03:12:25'),
+(10, 'Bong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09363816243', 'unit-manager', '$2y$10$Zao9HR5toa9Lo/X2sHbvVeo5mhuBRpopN4jIPnsbeqCdBizZkBqTu', 'approved', '2025-04-29 03:12:25'),
 (11, 'Sarah', 'Duterte', 'SARAHCODE', 'sarahduterte@gmail.com', '09683013329', 'fraternal-counselor', '$2y$10$Mz8F/Ya25UUr5dstBEZ2N.VJuxuLq0hi5IeK3y1CwC8LMvoX2ERIm', 'approved', '2025-04-29 03:17:08'),
 (12, 'Kitty', 'Duterte', 'KITTYCODE', 'kittyduterte@gmail.com', '09105200973', 'family-member', '$2y$10$kM2uW5S8ehCbpfI/7sqWS.oLhsYZNuYB69YBXPBCkTI9PbPgnAycC', 'disabled', '2025-04-29 03:18:54'),
 (13, 'Sandro', 'Marcos', 'SANDROCODE', 'sandromarcos@gmail.com', '09105200974', 'member', '$2y$10$9t/uW.w9GTrU7HsdBQjck.W3VQcNAkz71N6eZ7yPCm3aSNcdKnJCm', 'approved', '2025-04-29 03:19:36');
@@ -510,6 +552,13 @@ ALTER TABLE `family_health`
   ADD KEY `fam_health_user_id_FK` (`user_id`);
 
 --
+-- Indexes for table `files`
+--
+ALTER TABLE `files`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_uploadedby_userid` (`uploaded_by`);
+
+--
 -- Indexes for table `fraternal_benefits`
 --
 ALTER TABLE `fraternal_benefits`
@@ -565,6 +614,15 @@ ALTER TABLE `plans`
   ADD KEY `fk_fraternal_benefits_id` (`fraternal_benefits_id`),
   ADD KEY `plans_user_id_FK` (`user_id`),
   ADD KEY `plans_council_id_FK` (`council_id`);
+
+--
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`transaction_id`),
+  ADD KEY `user_id_fk` (`user_id`),
+  ADD KEY `applicant_id_fk` (`applicant_id`),
+  ADD KEY `plan_id_fk` (`plan_id`);
 
 --
 -- Indexes for table `users`
@@ -626,10 +684,16 @@ ALTER TABLE `family_health`
   MODIFY `health_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT for table `files`
+--
+ALTER TABLE `files`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `fraternal_benefits`
 --
 ALTER TABLE `fraternal_benefits`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `health_questions`
@@ -666,6 +730,12 @@ ALTER TABLE `physician`
 --
 ALTER TABLE `plans`
   MODIFY `plan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -728,6 +798,12 @@ ALTER TABLE `family_health`
   ADD CONSTRAINT `family_health_ibfk_1` FOREIGN KEY (`applicant_id`) REFERENCES `applicants` (`applicant_id`);
 
 --
+-- Constraints for table `files`
+--
+ALTER TABLE `files`
+  ADD CONSTRAINT `fk_uploadedby_userid` FOREIGN KEY (`uploaded_by`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `health_questions`
 --
 ALTER TABLE `health_questions`
@@ -771,6 +847,14 @@ ALTER TABLE `plans`
   ADD CONSTRAINT `plans_council_id_FK` FOREIGN KEY (`council_id`) REFERENCES `council` (`council_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `plans_ibfk_1` FOREIGN KEY (`applicant_id`) REFERENCES `applicants` (`applicant_id`),
   ADD CONSTRAINT `plans_user_id_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD CONSTRAINT `applicant_id_fk` FOREIGN KEY (`applicant_id`) REFERENCES `applicants` (`applicant_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `plan_id_fk` FOREIGN KEY (`plan_id`) REFERENCES `plans` (`plan_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
