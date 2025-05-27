@@ -34,17 +34,17 @@
                                   class="text-gray-700 transition-opacity duration-300">Application</span>
                         </a>
                     </li>
-                    <!-- <li>
-                        <a href="#" @click.prevent="activeSection = 'profile'; openSidebar = false" 
+                    <li>
+                        <a href="applicant.php" 
                            class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors" 
                            :class="{ 'bg-gray-100': activeSection === 'profile' }">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                             <span :class="{ 'block opacity-100': openSidebar || window.innerWidth >= 768, 'hidden opacity-0': !openSidebar && window.innerWidth < 768 }" 
-                                  class="text-gray-700 transition-opacity duration-300">Profile</span>
+                                  class="text-gray-700 transition-opacity duration-300">Form View</span>
                         </a>
-                    </li> -->
+                    </li>
                     <li>
                     <a href="#" id="logoutBtn"
                         class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors"
