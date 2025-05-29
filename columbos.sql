@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2025 at 01:19 AM
+-- Generation Time: May 28, 2025 at 02:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,8 @@ CREATE TABLE `announcements` (
 INSERT INTO `announcements` (`id`, `subject`, `content`, `date_posted`) VALUES
 (4, 'Meeting Officers Part 3', 'This is an announcement to be use when sending all to phone.', '2025-05-02 21:02:39'),
 (5, 'Boardinghouse Meeting', 'Please be reminded that we will have our meeting tonight', '2025-05-02 21:05:52'),
-(6, 'Meeting Ta', 'Please be reminded that we will have our meeting tonight.', '2025-05-03 08:09:10');
+(6, 'Meeting Ta', 'Please be reminded that we will have our meeting tonight.', '2025-05-03 08:09:10'),
+(7, 'Urgent Meeting', 'Please be informed that we will have our meeting this evening.', '2025-05-26 14:48:00');
 
 -- --------------------------------------------------------
 
@@ -73,7 +74,7 @@ CREATE TABLE `applicants` (
 --
 
 INSERT INTO `applicants` (`applicant_id`, `user_id`, `fraternal_counselor_id`, `lastname`, `firstname`, `middlename`, `age`, `birthdate`, `birthplace`, `gender`, `marital_status`, `tin_sss`, `nationality`, `status`, `application_status`, `created_at`) VALUES
-(17, 13, 11, 'Sandro', 'Marcos', 'Lysandra Dyer', 2002, '0000-00-00', '28', 'Female', 'Single', 'Sapiente dolorum per', 'Id praesentium anim', 'Active', 'Dis-approved', '2025-05-08 11:35:23');
+(17, 13, 11, 'Sandro', 'Marcos', 'Lysandra Dyer', 2002, '0000-00-00', '28', 'Female', 'Single', 'Sapiente dolorum per', 'Id praesentium anim', 'Active', 'Approved', '2025-05-08 11:35:23');
 
 -- --------------------------------------------------------
 
@@ -452,8 +453,18 @@ CREATE TABLE `transactions` (
   `currency` varchar(10) DEFAULT 'PHP',
   `next_due_date` date DEFAULT NULL,
   `status` varchar(50) DEFAULT 'Paid',
+  `payment_timing_status` varchar(20) DEFAULT '''On-Time''',
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`transaction_id`, `applicant_id`, `user_id`, `plan_id`, `payment_date`, `amount_paid`, `currency`, `next_due_date`, `status`, `payment_timing_status`, `created_at`) VALUES
+(1, 17, 13, 15, '2025-05-26', 1000, 'PHP', '2025-06-26', 'Paid', 'On-Time', '2025-05-26 08:39:26'),
+(2, 17, 13, 15, '2025-06-28', 1000, 'PHP', '2025-07-26', 'Paid', 'Late', '2025-05-26 10:11:54'),
+(4, 17, 13, 15, '2025-07-26', 1000, 'PHP', '2025-08-26', 'Paid', 'On-Time', '2025-05-26 13:19:28');
 
 -- --------------------------------------------------------
 
@@ -480,7 +491,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `kcfapicode`, `email`, `phone_number`, `role`, `password`, `status`, `created_at`) VALUES
 (9, 'Rodrigo', 'Duterte', 'ROACODE', 'rodrigoroa@gmail.com', '09105200970', 'admin', '$2y$10$JDN36eEv6KaqtL8EPjKnAOAymSmK6f8TSF2ZghJ4S22sFGLKmkZyW', 'approved', '2025-04-29 02:37:07'),
-(10, 'Bong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09363816243', 'unit-manager', '$2y$10$Zao9HR5toa9Lo/X2sHbvVeo5mhuBRpopN4jIPnsbeqCdBizZkBqTu', 'approved', '2025-04-29 03:12:25'),
+(10, 'Bong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09639600553', 'unit-manager', '$2y$10$Zao9HR5toa9Lo/X2sHbvVeo5mhuBRpopN4jIPnsbeqCdBizZkBqTu', 'approved', '2025-04-29 03:12:25'),
 (11, 'Sarah', 'Duterte', 'SARAHCODE', 'sarahduterte@gmail.com', '09683013329', 'fraternal-counselor', '$2y$10$Mz8F/Ya25UUr5dstBEZ2N.VJuxuLq0hi5IeK3y1CwC8LMvoX2ERIm', 'approved', '2025-04-29 03:17:08'),
 (12, 'Kitty', 'Duterte', 'KITTYCODE', 'kittyduterte@gmail.com', '09105200973', 'family-member', '$2y$10$kM2uW5S8ehCbpfI/7sqWS.oLhsYZNuYB69YBXPBCkTI9PbPgnAycC', 'disabled', '2025-04-29 03:18:54'),
 (13, 'Sandro', 'Marcos', 'SANDROCODE', 'sandromarcos@gmail.com', '09105200974', 'member', '$2y$10$9t/uW.w9GTrU7HsdBQjck.W3VQcNAkz71N6eZ7yPCm3aSNcdKnJCm', 'approved', '2025-04-29 03:19:36');
@@ -639,7 +650,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `applicants`
@@ -735,7 +746,7 @@ ALTER TABLE `plans`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -147,7 +147,7 @@ class MemberApplicationModel
 
         return null;
     }
-
+    
     public function calculateTotalAllocationsForAllApplicants()
     {
         $applicants = $this->getAllApplicants();
@@ -354,7 +354,7 @@ class MemberApplicationModel
                 'medicalHistory'   => $medicalHistory,
                 'familyHealth'     => $familyHealth,
                 'physician'        => $physician,
-                'transactions'     => $transactions
+                'transactions'     => $transactions,
             ];
         } else {
             return "No applicant found with the provided ID.";
@@ -1061,6 +1061,90 @@ class MemberApplicationModel
         }
 
         return true;
+    }
+
+    public function updateField($userId, $fieldName, $value)
+    {
+        try {
+            // Determine which table to update based on the field name
+            $table = $this->determineTable($fieldName);
+
+            // Build and execute the update query
+            $sql  = "UPDATE $table SET $fieldName = ? WHERE user_id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('si', $value, $userId);
+
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error updating field: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function determineTable($fieldName)
+    {
+        // Map fields to their respective tables
+        $tableMap = [
+            // Applicant table fields
+            'firstname'              => 'applicants',
+            'lastname'               => 'applicants',
+            'middlename'             => 'applicants',
+            'age'                    => 'applicants',
+            'birthdate'              => 'applicants',
+            'birthplace'             => 'applicants',
+            'gender'                 => 'applicants',
+            'marital_status'         => 'applicants',
+            'tin_sss'                => 'applicants',
+            'nationality'            => 'applicants',
+
+            // Contact info fields
+            'mobile_number'          => 'contact_info',
+            'email_address'          => 'contact_info',
+            'street'                 => 'contact_info',
+            'barangay'               => 'contact_info',
+            'city_province'          => 'contact_info',
+
+            // Employment fields
+            'occupation'             => 'employment',
+            'employment_status'      => 'employment',
+            'duties'                 => 'employment',
+            'employer'               => 'employment',
+            'nature_business'        => 'employment',
+            'employer_mobile_number' => 'employment',
+            'employer_email_address' => 'employment',
+            'monthly_income'         => 'employment',
+
+            // Plans fields
+            'fraternal_benefits_id'  => 'plans',
+            'council_id'             => 'plans',
+            'payment_mode'           => 'plans',
+            'contribution_amount'    => 'plans',
+            'currency'               => 'plans',
+
+            // Beneficiary fields
+            'benefit_type'           => 'beneficiaries',
+            'benefit_name'           => 'beneficiaries',
+            'benefit_birthdate'      => 'beneficiaries',
+            'benefit_relationship'   => 'beneficiaries',
+
+            // Family background fields
+            'father_lastname'        => 'family_background',
+            'father_firstname'       => 'family_background',
+            'father_mi'              => 'family_background',
+            'mother_lastname'        => 'family_background',
+            'mother_firstname'       => 'family_background',
+            'mother_mi'              => 'family_background',
+            'siblings_living'        => 'family_background',
+            'siblings_deceased'      => 'family_background',
+            'children_living'        => 'family_background',
+            'children_deceased'      => 'family_background',
+
+            // Medical history fields
+            'medical_history'        => 'medical_history',
+            'current_medication'     => 'medical_history',
+        ];
+
+        return $tableMap[$fieldName] ?? 'applicants'; // Default to applicants table if field not found
     }
 
 }

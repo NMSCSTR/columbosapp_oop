@@ -181,42 +181,35 @@
                         </button>
                     </div>
 
-                    <table id="myTable" class="stripe hover w-full" style="width:100%">
-                        <thead class="bg-gray-800 text-white text-xs">
+                    <table id="myTable" class="min-w-full divide-y divide-gray-200 shadow-sm rounded-lg overflow-hidden">
+                        <thead class="bg-white text-gray-500">
                             <tr>
-                                <!-- <th class="px-4 py-3">Id</th> -->
-                                <th class="px-4 py-3">FILENAME</th>
-                                <th class="px-4 py-3">DESCRIPTION</th>
-                                <th class="px-4 py-3">TYPE</th>
-                                <th class="px-4 py-3">UPLOADED</th>
-                                <th class="px-4 py-3">Actions</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">FILENAME</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">DESCRIPTION</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">TYPE</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">UPLOADED</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ACTIONS</th>
                             </tr>
                         </thead>
-                        <tbody class="text-xs">
-                            <?php while($row = mysqli_fetch_assoc($files)): ?>
-                            <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
-                                <!-- <td contenteditable="true" class="filename"><?= htmlspecialchars($file['filename']) ?></td> -->
-                                <td class='px-4 py-3'><?= htmlspecialchars($row['filename']) ?></td>
-                                <td class='px-4 py-3'><?php echo $row['description'] ?></td>
-                                <td class='px-4 py-3'><?= htmlspecialchars($row['file_type']) ?></td>
-                                <td class='px-4 py-3'><?= date("F j, Y", strtotime($row['uploaded_on'])) ?></td>
-                                <td>
-                                    <!-- if live -->
-                                    <!-- <a href="https://docs.google.com/gview?url=<?= urlencode($row['file_located']) ?>&embedded=true"
-                                        target="_blank" class="text-green-600">View</a> | -->
-
-                                    <a href="<?= BASE_URL ?>controllers/adminController/view_docx.php?path=uploads/forms/<?= basename($row['file_located']) ?>"
-                                        target="_blank" class="text-green-600">View</a> |
-
-                                    <a href="<?= BASE_URL ?>controllers/adminController/formControllers.php?download=<?= $row['id'] ?>"
-                                        class="text-blue-600">Download</a> |
-
-                                    <a href="#" data-id="<?= $row['id'] ?>"
-                                        class="text-red-600 delete-btn"
-                                        >Delete</a>
-
-                                </td>
-                            </tr>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <?php while ($row = mysqli_fetch_assoc($files)) : ?>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= htmlspecialchars($row['filename']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($row['description']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($row['file_type']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date("F j, Y", strtotime($row['uploaded_on'])) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
+                                        <a href="#" class="text-green-600 hover:text-green-800 view-btn" data-filename="<?= htmlspecialchars($row['filename']) ?>" data-path="<?= BASE_URL ?>controllers/adminController/view_docx.php?path=uploads/forms/<?= basename($row['file_located']) ?>">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <a href="<?= BASE_URL ?>controllers/adminController/formControllers.php?download=<?= $row['id'] ?>" class="text-blue-600 hover:text-blue-800">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                        <a href="#" data-id="<?= $row['id'] ?>" class="text-red-600 hover:text-red-800 delete-btn">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>
                             <?php endwhile; ?>
                         </tbody>
                     </table>
@@ -228,6 +221,7 @@
 </div>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    // Delete functionality
     const deleteLinks = document.querySelectorAll('.delete-btn');
 
     deleteLinks.forEach(link => {
@@ -251,8 +245,52 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     });
+
+    // View functionality
+    const viewButtons = document.querySelectorAll('.view-btn');
+    
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const path = this.getAttribute('data-path');
+            const filename = this.getAttribute('data-filename');
+            
+            Swal.fire({
+                title: filename,
+                width: '80%',
+                height: '80%',
+                showCloseButton: true,
+                showConfirmButton: false,
+                html: `<iframe src="${path}" frameborder="0" style="width: 100%; height: 80vh;"></iframe>`,
+                customClass: {
+                    container: 'swal-height'
+                }
+            });
+        });
+    });
 });
 </script>
+
+<style>
+.swal-height {
+    height: 90vh;
+}
+
+.swal2-popup {
+    padding: 0;
+}
+
+.swal2-content {
+    padding: 0;
+    margin: 0;
+}
+
+.swal2-title {
+    padding: 1rem;
+    margin: 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+</style>
 
 
 <script>

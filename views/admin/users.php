@@ -6,6 +6,7 @@
     include '../../includes/db.php';
     include '../../models/adminModel/userModel.php';
     include '../../includes/alert2.php';
+    include '../../partials/breadcrumb.php';
 ?>
 
 <!-- Main modal -->
@@ -104,44 +105,15 @@
     <!-- Main Content -->
     <main class="flex-1">
         <div class="p-4 sm:ml-64">
+            <?php
+            $breadcrumbItems = [
+                ['title' => 'Admin', 'url' => 'dashboard.php'],
+                ['title' => 'User Management']
+            ];
+            renderBreadcrumb($breadcrumbItems);
+            ?>
+
             <div class="p-4 rounded-lg dark:border-gray-700">
-                <nav class="flex" aria-label="Breadcrumb">
-                    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                        <li class="inline-flex items-center">
-                            <a href="#"
-                                class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                                <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
-                                </svg>
-                                Home
-                            </a>
-                        </li>
-                        <li>
-                            <div class="flex items-center">
-                                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m1 9 4-4-4-4" />
-                                </svg>
-                                <a href="#"
-                                    class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Admin</a>
-                            </div>
-                        </li>
-                        <li aria-current="page">
-                            <div class="flex items-center">
-                                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m1 9 4-4-4-4" />
-                                </svg>
-                                <span
-                                    class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Users</span>
-                            </div>
-                        </li>
-                    </ol>
-                </nav>
                 <section class="mt-4">
                     <!-- <div class="flex justify-end mb-2">
                         <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
@@ -186,30 +158,48 @@
                                     <?php echo htmlspecialchars($user['status']); ?>
                                 </td>
                                 <td>
-                                <?php if ($user['status'] === 'pending' || $user['status'] === 'disabled'): ?>
-                                    <?php if ($user['status'] === 'pending' || $user['status'] === 'disabled'): ?>
-                                        <a href="../../controllers/adminController/userStatusController.php?id=<?= $user['id'] ?>&action=approve"
-                                            class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                            <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clip-rule="evenodd"/>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="view-user-btn text-blue-600 hover:text-blue-800"
+                                            data-id="<?= $user['id'] ?>"
+                                            data-firstname="<?= htmlspecialchars($user['firstname']) ?>"
+                                            data-lastname="<?= htmlspecialchars($user['lastname']) ?>"
+                                            data-email="<?= htmlspecialchars($user['email']) ?>"
+                                            data-phone="<?= htmlspecialchars($user['phone_number']) ?>"
+                                            data-kcfapi="<?= htmlspecialchars($user['kcfapicode']) ?>"
+                                            data-role="<?= htmlspecialchars($user['role']) ?>"
+                                            data-status="<?= htmlspecialchars($user['status']) ?>">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                             </svg>
-                                            Approved
-                                        </a>
-                                    <?php endif; ?>
+                                        </button>
 
+                                        <button class="reset-password-btn text-yellow-600 hover:text-yellow-800"
+                                            data-id="<?= $user['id'] ?>"
+                                            data-name="<?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>"
+                                            data-phone="<?= htmlspecialchars($user['phone_number']) ?>">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                                            </svg>
+                                        </button>
+
+                                        <?php if ($user['status'] === 'pending' || $user['status'] === 'disabled'): ?>
+                                            <button class="status-btn approve-btn bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300"
+                                                data-id="<?= $user['id'] ?>"
+                                                data-action="approve"
+                                                data-name="<?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>">
+                                                Approve
+                                            </button>
+                                        <?php elseif ($user['status'] === 'approved'): ?>
+                                            <button class="status-btn disable-btn bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300"
+                                                data-id="<?= $user['id'] ?>"
+                                                data-action="disable"
+                                                data-name="<?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>">
+                                                Disable
+                                            </button>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
-                                <?php elseif ($user['status'] === 'approved'): ?>
-                                    <a href="../../controllers/adminController/userStatusController.php?action=disable&id=<?= $user['id'] ?>"
-                                        class="px-3 py-2 text-xs font-medium inline-flex items-center text-white bg-red-600 rounded-lg hover:bg-red-700">
-                                        <svg class="w-4 h-4 text-white mr-1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                            <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
-                                        </svg>
-                                        Disable
-                                    </a>
-
-
-                                <?php endif; ?>
-
                             </tr>
                             <?php }
                                 } else {
@@ -222,6 +212,175 @@
             </div>
     </main>
 </div>
+
+<!-- User Details Modal -->
+<div id="userDetailsModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">User Details</h3>
+                <button id="closeUserModal" class="text-gray-400 hover:text-gray-500">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-4">
+                <div class="user-info space-y-3">
+                    <!-- User details will be populated here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Status button click handler
+    document.querySelectorAll('.status-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const action = this.dataset.action;
+            const userId = this.dataset.id;
+            const userName = this.dataset.name;
+            
+            let title, text, icon, confirmButtonText, confirmButtonColor;
+            
+            if (action === 'approve') {
+                title = 'Approve User?';
+                text = `Are you sure you want to approve ${userName}?`;
+                icon = 'question';
+                confirmButtonText = 'Yes, approve';
+                confirmButtonColor = '#4CAF50';
+            } else {
+                title = 'Disable User?';
+                text = `Are you sure you want to disable ${userName}?`;
+                icon = 'warning';
+                confirmButtonText = 'Yes, disable';
+                confirmButtonColor = '#d33';
+            }
+            
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+                showCancelButton: true,
+                confirmButtonColor: confirmButtonColor,
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: confirmButtonText
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `../../controllers/adminController/userStatusController.php?action=${action}&id=${userId}`;
+                }
+            });
+        });
+    });
+
+    // View user details
+    const modal = document.getElementById('userDetailsModal');
+    const closeBtn = document.getElementById('closeUserModal');
+    
+    document.querySelectorAll('.view-user-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const userData = this.dataset;
+            const userInfo = document.querySelector('.user-info');
+            
+            userInfo.innerHTML = `
+                <div class="grid grid-cols-3 gap-4 text-sm">
+                    <div class="font-medium text-gray-500">Name:</div>
+                    <div class="col-span-2">${userData.firstname} ${userData.lastname}</div>
+                    
+                    <div class="font-medium text-gray-500">Email:</div>
+                    <div class="col-span-2">${userData.email}</div>
+                    
+                    <div class="font-medium text-gray-500">Phone:</div>
+                    <div class="col-span-2">${userData.phone}</div>
+                    
+                    <div class="font-medium text-gray-500">KCFAPI Code:</div>
+                    <div class="col-span-2">${userData.kcfapi}</div>
+                    
+                    <div class="font-medium text-gray-500">Role:</div>
+                    <div class="col-span-2">${userData.role}</div>
+                    
+                    <div class="font-medium text-gray-500">Status:</div>
+                    <div class="col-span-2">
+                        <span class="px-2 py-1 text-xs font-medium rounded-full 
+                            ${userData.status === 'approved' ? 'bg-green-100 text-green-800' : 
+                            userData.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                            'bg-red-100 text-red-800'}">
+                            ${userData.status}
+                        </span>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        });
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+    
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    // Reset Password functionality
+    document.querySelectorAll('.reset-password-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.dataset.id;
+            const userName = this.dataset.name;
+            const userPhone = this.dataset.phone;
+            
+            Swal.fire({
+                title: 'Reset Password?',
+                html: `Are you sure you want to reset the password for <br><strong>${userName}</strong>?<br><br>A new temporary password will be sent via SMS to:<br><strong>${userPhone}</strong>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#fbbf24',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, reset password',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch(`../../controllers/adminController/resetPasswordController.php?id=${userId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed: ${error}`
+                            )
+                        })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if(result.value.success) {
+                        Swal.fire({
+                            title: 'Password Reset!',
+                            text: 'A new temporary password has been sent via SMS.',
+                            icon: 'success',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: result.value.message || 'Failed to reset password.',
+                            icon: 'error',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    }
+                }
+            });
+        });
+    });
+});
+</script>
 
 <?php
 include '../../includes/footer.php';

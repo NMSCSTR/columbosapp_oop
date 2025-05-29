@@ -69,394 +69,285 @@
                     </ol>
                 </nav>
                 <div class="min-h-screen">
-                    <div class="relative overflow-x-auto mt-4">
-                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead
-                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">Field</th>
-                                    <th scope="col" class="px-6 py-3">Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Personal Info -->
-                                <th scope="col" class="px-6 py-3">Personal Info</th>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Firstname</th>
-                                    <td class="px-6 py-4"><?= $applicantData['firstname'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Lastname
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['lastname'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Middlename</th>
-                                    <td class="px-6 py-4"><?= $applicantData['middlename'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Age
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['age'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Birthdate</th>
-                                    <td class="px-6 py-4"><?= $applicantData['birthdate'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Gender
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['gender'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Marital Status</th>
-                                    <td class="px-6 py-4"><?= $applicantData['marital_status'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">TIN/SSS
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['tin_sss'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Nationality
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['nationality'] ?></td>
-                                </tr>
-                                <!-- Emergency Contact Details -->
-                                <th scope="col" class="px-6 py-3">Emergency Contact Details</th>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Mobile
-                                        Number
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['mobile_number'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Email
-                                        Address
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['email_address'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Barangay
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['barangay'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        City/Province
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['city_province'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Street
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['street'] ?></td>
-                                </tr>
-                                <!-- Employment details -->
-                                <th scope="col" class="px-6 py-3">Employment details</th>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Occupation
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['occupation'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Employment Status
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['employment_status'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Duties
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['duties'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Employer
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['employer'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Nature
-                                        of businness
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['nature_business'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Employer
-                                        Mobile Number
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['employer_mobile_number'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Employer
-                                        Email Address
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['employer_email_address'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Monthlly
-                                        Income
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['monthly_income'] ?></td>
-                                </tr>
-                                <!-- Plan details -->
-                                <th scope="col" class="px-6 py-3">Plan details</th>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Fraternal Benefits
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['fraternal_benefits_id'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Council
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['council_id'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Payment
-                                        Mode
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['payment_mode'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Contribution Amount
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['contribution_amount'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">Currency
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['currency'] ?></td>
-                                </tr>
-                                <!-- Beneficiaries -->
-                                <th scope="col" class="px-6 py-3">Beneficiaries</th>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Beneficiaries Type
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['benefit_type'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Beneficiary Name
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['benefit_name'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Beneficiary Birthday
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['benefit_birthdate'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Relationship
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['benefit_relationship'] ?></td>
-                                </tr>
-                                <!-- Family Background -->
-                                <th scope="col" class="px-6 py-3">Family Background</th>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Father lastname
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['father_lastname'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Father firstname
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['father_firstname'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Father MI
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['father_mi'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Mother lastname
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['mother_lastname'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        >Mother firstname
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['mother_firstname'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Mother MI
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['mother_mi'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Siblings Living
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['siblings_living'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Sibling Deceased
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['siblings_deceased'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Children living
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['children_living'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Children Deceased
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['children_deceased'] ?></td>
-                                </tr>
-                                <!-- Medical and Family health history -->
-                                <th scope="col" class="px-6 py-3">Medical history</th>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Past Illness
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['past_illness'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Current Medication
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['current_medication'] ?></td>
-                                </tr>
-                                <!-- Family health history -->
-                                <th scope="col" class="px-6 py-3">Family health history</th>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Father living age
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['father_living_age'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Father health
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['father_health'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Mother living age
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['mother_living_age'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Mother health
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['mother_health'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Siblings living age
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['siblings_living_age'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Siblings health
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['siblings_health'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Children living age
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['children_living_age'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Children health
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['children_health'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Father death age
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['father_death_age'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Father cause of death
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['father_cause'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Mother death age
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['mother_death_age'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Mother cause of death
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['mother_cause'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Sbiling death age
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['siblings_death_age'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Sibling cause of death
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['siblings_cause'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Children death age
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['children_death_age'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Children cause of death
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['children_cause'] ?></td>
-                                </tr>
-                                <!--  Physician Details -->
-                                <th scope="col" class="px-6 py-3">Physician Details</th>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Physician Name
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['physician_name'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Contact Number
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['contact_number'] ?></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                        Address
-                                    </th>
-                                    <td class="px-6 py-4"><?= $applicantData['physician_address'] ?></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="grid gap-6 mb-6">
+                        <!-- Personal Information Card -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Personal Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Firstname</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['firstname'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Lastname</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['lastname'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Middlename</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['middlename'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Age</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['age'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Birthdate</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['birthdate'] ?></span>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Gender</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['gender'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Marital Status</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['marital_status'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">TIN/SSS</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['tin_sss'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Nationality</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['nationality'] ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information Card -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Mobile Number</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['mobile_number'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Email Address</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['email_address'] ?></span>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Address</span>
+                                        <span class="text-base text-gray-900 dark:text-white">
+                                            <?= $applicantData['street'] ?>, <?= $applicantData['barangay'] ?>, <?= $applicantData['city_province'] ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Employment Information Card -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Employment Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Occupation</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['occupation'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Employment Status</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['employment_status'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Duties</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['duties'] ?></span>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Employer</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['employer'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Nature of Business</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['nature_business'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Monthly Income</span>
+                                        <span class="text-base text-gray-900 dark:text-white">₱<?= number_format($applicantData['monthly_income'], 2) ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plan Information Card -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Plan Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Fraternal Benefits</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['fraternal_benefits_id'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Council</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['council_id'] ?></span>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Payment Mode</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['payment_mode'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Contribution Amount</span>
+                                        <span class="text-base text-gray-900 dark:text-white">₱<?= number_format($applicantData['contribution_amount'], 2) ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Beneficiary Information Card -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Beneficiary Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Beneficiary Type</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['benefit_type'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Beneficiary Name</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['benefit_name'] ?></span>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Birthday</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['benefit_birthdate'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Relationship</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['benefit_relationship'] ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Family Background Card -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Family Background</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Father's Name</span>
+                                        <span class="text-base text-gray-900 dark:text-white">
+                                            <?= $applicantData['father_lastname'] ?>, <?= $applicantData['father_firstname'] ?> <?= $applicantData['father_mi'] ?>
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Mother's Name</span>
+                                        <span class="text-base text-gray-900 dark:text-white">
+                                            <?= $applicantData['mother_lastname'] ?>, <?= $applicantData['mother_firstname'] ?> <?= $applicantData['mother_mi'] ?>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Siblings</span>
+                                        <span class="text-base text-gray-900 dark:text-white">
+                                            Living: <?= $applicantData['siblings_living'] ?>, Deceased: <?= $applicantData['siblings_deceased'] ?>
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Children</span>
+                                        <span class="text-base text-gray-900 dark:text-white">
+                                            Living: <?= $applicantData['children_living'] ?>, Deceased: <?= $applicantData['children_deceased'] ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical History Card -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Medical History</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Past Illness</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['past_illness'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Current Medication</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['current_medication'] ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Family Health History Card -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Family Health History</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Father's Health</span>
+                                        <span class="text-base text-gray-900 dark:text-white">
+                                            <?= $applicantData['father_living_age'] ? 'Living (Age: ' . $applicantData['father_living_age'] . ')' : 'Deceased (Age: ' . $applicantData['father_death_age'] . ')' ?>
+                                            <?= $applicantData['father_health'] ? ' - ' . $applicantData['father_health'] : '' ?>
+                                            <?= $applicantData['father_cause'] ? ' - Cause: ' . $applicantData['father_cause'] : '' ?>
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Mother's Health</span>
+                                        <span class="text-base text-gray-900 dark:text-white">
+                                            <?= $applicantData['mother_living_age'] ? 'Living (Age: ' . $applicantData['mother_living_age'] . ')' : 'Deceased (Age: ' . $applicantData['mother_death_age'] . ')' ?>
+                                            <?= $applicantData['mother_health'] ? ' - ' . $applicantData['mother_health'] : '' ?>
+                                            <?= $applicantData['mother_cause'] ? ' - Cause: ' . $applicantData['mother_cause'] : '' ?>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Siblings' Health</span>
+                                        <span class="text-base text-gray-900 dark:text-white">
+                                            <?= $applicantData['siblings_living_age'] ? 'Living (Age: ' . $applicantData['siblings_living_age'] . ')' : 'Deceased (Age: ' . $applicantData['siblings_death_age'] . ')' ?>
+                                            <?= $applicantData['siblings_health'] ? ' - ' . $applicantData['siblings_health'] : '' ?>
+                                            <?= $applicantData['siblings_cause'] ? ' - Cause: ' . $applicantData['siblings_cause'] : '' ?>
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Children's Health</span>
+                                        <span class="text-base text-gray-900 dark:text-white">
+                                            <?= $applicantData['children_living_age'] ? 'Living (Age: ' . $applicantData['children_living_age'] . ')' : 'Deceased (Age: ' . $applicantData['children_death_age'] . ')' ?>
+                                            <?= $applicantData['children_health'] ? ' - ' . $applicantData['children_health'] : '' ?>
+                                            <?= $applicantData['children_cause'] ? ' - Cause: ' . $applicantData['children_cause'] : '' ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Physician Information Card -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Physician Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Physician Name</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['physician_name'] ?></span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Contact Number</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['contact_number'] ?></span>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Address</span>
+                                        <span class="text-base text-gray-900 dark:text-white"><?= $applicantData['physician_address'] ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

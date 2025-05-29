@@ -48,7 +48,7 @@
 
 
 <!-- Main Content -->
-<main class="flex-1 p-4 md:p-6 overflow-y-auto">
+<main class="flex-1 p-4 md:p-6 overflow-y-auto bg-gray-100">
     <!-- Mobile Menu Toggle -->
     <div class="md:hidden flex justify-between items-center mb-4">
         <h1 class="text-xl font-bold text-gray-800">COLUMBOS</h1>
@@ -67,16 +67,16 @@
                 <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['lastname'] ?>!</h1>
             <p class="text-gray-600">Here's what's happening with your account today.</p>
         </header>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="bg-white p-4 rounded-lg shadow-md">
-                <h2 class="text-lg font-semibold text-gray-700">Total Applicant</h2>
-                <p class="text-2xl font-bold text-green-600"><?php echo $totalApplicants ?></p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1">
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Total Applicant</h2>
+                <p class="text-3xl font-bold text-green-600"><?= $totalApplicants ?></p>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1">
                 <h2 class="text-lg font-semibold text-gray-700">Pending applications</h2>
                 <p class="text-2xl font-bold text-yellow-600">3</p>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1">
                 <h2 class="text-lg font-semibold text-gray-700">Allocations</h2>
                 <p class="text-2xl font-bold text-blue-600">
                     <?php echo number_format($totals['total_contribution'] ?? 0, 2) ?></p>
@@ -90,9 +90,9 @@
             <h1 class="text-2xl font-bold text-gray-800">List of applicant</h1>
             <p class="text-gray-600">View and manage your applicants.</p>
         </header>
-        <div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
-            <table id="myTable" class="stripe hover w-full" style="width:100%">
-                <thead class="bg-gray-800 text-white text-xs">
+        <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+            <table id="myTable" class="stripe hover w-full border-collapse" style="width:100%">
+                <thead class="bg-gray-800 text-white text-xs uppercase">
                     <tr>
                         <!-- <th class="px-4 py-3">Id</th> -->
                         <th class="px-4 py-3">APPLICANT NAME</th>
@@ -123,27 +123,20 @@
                         if ($applicants && is_array($applicants) && count($applicants) > 0) {
                             foreach ($applicants as $applicant) {
                             ?>
-                    <tr>
-                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['applicant_name']) ?></td>
-                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_type']) ?></td>
-                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['plan_name']) ?></td>
-                        <td class="px-4 py-3">
-                            ₱<?php echo htmlspecialchars(number_format($applicant['face_value'], 2)) ?></td>
-                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_to_maturity']) ?>
-                        </td>
-                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['years_of_protection']) ?>
-                        </td>
-                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['payment_mode']) ?></td>
-                        <td class="px-4 py-3">₱<?php echo number_format($applicant['contribution_amount'], 2) ?>
-                        </td>
-                        <td class="px-4 py-3">₱<?php echo number_format($applicant['total_contribution'], 2); ?>
-                        </td>
-                        <td class="px-4 py-3">₱<?php echo number_format($applicant['insurance_cost'], 2); ?>
-                        </td>
-                        <td class="px-4 py-3">₱<?php echo number_format($applicant['admin_fee'], 2); ?></td>
-                        <td class="px-4 py-3">₱<?php echo number_format($applicant['savings_fund'], 2); ?></td>
-                        <td class="px-4 py-3"><?php echo htmlspecialchars($applicant['application_status']) ?>
-                        </td>
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="px-4 py-3 text-gray-700"><?php echo htmlspecialchars($applicant['applicant_name']) ?></td>
+                        <td class="px-4 py-3 text-gray-700"><?php echo htmlspecialchars($applicant['plan_type']) ?></td>
+                        <td class="px-4 py-3 text-gray-700"><?php echo htmlspecialchars($applicant['plan_name']) ?></td>
+                        <td class="px-4 py-3 text-gray-700">₱<?php echo htmlspecialchars(number_format($applicant['face_value'], 2)) ?></td>
+                        <td class="px-4 py-3 text-gray-700"><?php echo htmlspecialchars($applicant['years_to_maturity']) ?></td>
+                        <td class="px-4 py-3 text-gray-700"><?php echo htmlspecialchars($applicant['years_of_protection']) ?></td>
+                        <td class="px-4 py-3 text-gray-700"><?php echo htmlspecialchars($applicant['payment_mode']) ?></td>
+                        <td class="px-4 py-3 text-gray-700">₱<?php echo number_format($applicant['contribution_amount'], 2) ?></td>
+                        <td class="px-4 py-3 text-gray-700">₱<?php echo number_format($applicant['total_contribution'], 2); ?></td>
+                        <td class="px-4 py-3 text-gray-700">₱<?php echo number_format($applicant['insurance_cost'], 2); ?></td>
+                        <td class="px-4 py-3 text-gray-700">₱<?php echo number_format($applicant['admin_fee'], 2); ?></td>
+                        <td class="px-4 py-3 text-gray-700">₱<?php echo number_format($applicant['savings_fund'], 2); ?></td>
+                        <td class="px-4 py-3 text-gray-700"><?php echo htmlspecialchars($applicant['application_status']) ?></td>
                         <td>
                             <a href="moreapplicationdetails.php?id=<?php echo $applicant['applicant_id']?>&user_id=<?php echo $applicant['user_id']?>"
                                 class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
@@ -180,9 +173,9 @@
             <h1 class="text-2xl font-bold text-gray-800">View list of forms</h1>
             <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
         </header>
-        <div class="bg-white p-4 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="p-4 rounded-lg dark:border-gray-700">
-                <section class="bg-gray-50 p-5 rounded shadow">
+                <section class="bg-gray-50 p-6 rounded shadow">
                     <table id="myTable2" class="stripe hover w-full" style="width:100%">
                         <thead class="bg-gray-800 text-white text-xs">
                             <tr>
@@ -198,10 +191,10 @@
                             <?php while ($row = mysqli_fetch_assoc($files)): ?>
                             <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
                                 <!-- <td contenteditable="true" class="filename"><?php echo htmlspecialchars($file['filename'])?></td> -->
-                                <td class='px-4 py-3'><?php echo htmlspecialchars($row['filename'])?></td>
-                                <td class='px-4 py-3'><?php echo $row['description'] ?></td>
-                                <td class='px-4 py-3'><?php echo htmlspecialchars($row['file_type'])?></td>
-                                <td class='px-4 py-3'><?php echo date("F j, Y", strtotime($row['uploaded_on']))?></td>
+                                <td class='px-4 py-3 text-gray-700'><?php echo htmlspecialchars($row['filename'])?></td>
+                                <td class='px-4 py-3 text-gray-700'><?php echo $row['description'] ?></td>
+                                <td class='px-4 py-3 text-gray-700'><?php echo htmlspecialchars($row['file_type'])?></td>
+                                <td class='px-4 py-3 text-gray-700'><?php echo date("F j, Y", strtotime($row['uploaded_on']))?></td>
                                 <td>
                                     <!-- if live -->
                                     <!-- <a href="https://docs.google.com/gview?url=<?php echo urlencode($row['file_located'])?>&embedded=true"
@@ -231,9 +224,9 @@
             <h1 class="text-2xl font-bold text-gray-800">View list of Councils</h1>
             <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
         </header>
-        <div class="bg-white p-4 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="p-4 rounded-lg dark:border-gray-700">
-                <section class="bg-gray-50 p-5 rounded shadow">
+                <section class="bg-gray-50 p-6 rounded shadow">
                     <table id="myTable3" class="stripe hover w-full" style="width:100%">
                         <thead class="bg-gray-800 text-white text-xs">
                             <tr>
@@ -257,11 +250,11 @@
 
                             <tr class='border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'>
                                 <!-- <td class='px-4 py-3'><?php echo $council['council_id'] ?></td> -->
-                                <td class='px-4 py-3'><?php echo $council['council_number'] ?></td>
-                                <td class='px-4 py-3'><?php echo $council['council_name'] ?></td>
-                                <td class='px-4 py-3'><?php echo $um_name ?></td>
-                                <td class='px-4 py-3'><?php echo $fc_name ?></td>
-                                <td class='px-4 py-3'>
+                                <td class='px-4 py-3 text-gray-700'><?php echo $council['council_number'] ?></td>
+                                <td class='px-4 py-3 text-gray-700'><?php echo $council['council_name'] ?></td>
+                                <td class='px-4 py-3 text-gray-700'><?php echo $um_name ?></td>
+                                <td class='px-4 py-3 text-gray-700'><?php echo $fc_name ?></td>
+                                <td class='px-4 py-3 text-gray-700'>
                                     <?php echo date("F j, Y", strtotime($council['date_established'])); ?>
                                 </td>
                                 <!-- <td class='px-4 py-3'><?php echo date("F j, Y", strtotime($council['date_created'])); ?>
@@ -286,26 +279,26 @@
             <h1 class="text-2xl font-bold text-gray-800">List of anouncements</h1>
             <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
         </header>
-        <div class="bg-white p-4 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="p-4 rounded-lg dark:border-gray-700">
                 <section>
                     <?php foreach ($announcements as $index => $announcement): ?>
-                    <div class="flex items-start gap-3 mb-3">
-                        <div class="flex-1 p-4 bg-gray-100 rounded-xl dark:bg-gray-700 relative shadow-sm border hover:bg-gray-200 dark:hover:bg-gray-700">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-2">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-1 p-5 bg-gray-100 rounded-xl dark:bg-gray-700 relative shadow-sm border hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
                                     <span class="text-sm font-semibold text-gray-900 dark:text-white">Admin</span>
-                                    <span class="text-sm text-gray-500 dark:text-gray-300">
+                                    <span class="text-xs text-gray-500 dark:text-gray-300">
                                         <?= date("M d, Y H:i", strtotime($announcement['date_posted'])) ?>
                                     </span>
                                 </div>
                             </div>
 
-                            <p class="mt-3 text-sm text-gray-900 dark:text-white">
-                                <strong><?= htmlspecialchars($announcement['subject']) ?>:</strong>
+                            <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2"><?= htmlspecialchars($announcement['subject']) ?></h3>
+                            <p class="mt-1 text-sm text-gray-700 dark:text-gray-200">
                                 <?= nl2br(htmlspecialchars($announcement['content'])) ?>
                             </p>
-                            <span class="block mt-2 text-sm text-gray-500 dark:text-gray-400">Delivered</span>
+                            <span class="block mt-3 text-xs text-gray-500 dark:text-gray-400">Delivered</span>
                         </div>
                     </div>
                     <?php endforeach; ?>
@@ -321,9 +314,9 @@
             <h1 class="text-2xl font-bold text-gray-800">View list of Fraternal Benefits</h1>
             <!-- <p class="text-gray-600">Update your personal information and settings.</p> -->
         </header>
-        <div class="bg-white p-4 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="p-4 rounded-lg dark:border-gray-700">
-                <section class="bg-gray-50 p-5 rounded shadow">
+                <section class="bg-gray-50 p-6 rounded shadow">
                     <table id="myTable4" class="stripe hover w-full" style="width:100%">
                         <thead class="bg-gray-800 text-white text-xs">
                             <tr>

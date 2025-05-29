@@ -98,10 +98,10 @@ public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_d
     {
         $ch         = curl_init();
         $parameters = [
-            'apikey'     => '188409cd13edfb2bc206f4183a7624bb',
+            'apikey'     => '5bf90b2585f02b48d22e01d79503e591',
             'number'     => $number,
             'message'    => $message,
-            'sendername' => 'SalnPlatfrm',
+            'sendername' => 'semaphore',
         ];
 
         curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');

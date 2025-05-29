@@ -12,122 +12,138 @@
 <aside id="default-sidebar"
     class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
     aria-label="Sidebar">
-    <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-        <ul class="space-y-2 font-medium mt-8">
+    <div class="h-full px-3 py-4 overflow-y-auto bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border-r border-gray-200 dark:border-gray-700">
+        <!-- Logo and Brand -->
+        <div class="flex items-center justify-center mb-8 mt-4">
+            <img src="https://www.kcfapi.com/wp-content/uploads/2022/10/kclogoshine_rs.jpg" alt="Logo" class="h-20 w-auto">
+            
+        </div>
+
+        <!-- Navigation Links -->
+        <ul class="space-y-2 font-medium">
+            <!-- Profile Section -->
+            <li class="pb-4 mb-4 border-b border-gray-200 dark:border-gray-700">
+                <a href="<?php echo BASE_URL?>views/admin/profile.php"
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
+                    <div class="p-2 bg-blue-100 rounded-lg dark:bg-blue-900/50">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1 ms-3">
+                        <p class="text-sm font-semibold">Admin Profile</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">View and edit profile</p>
+                    </div>
+                </a>
+            </li>
+
+            <!-- Main Navigation -->
             <li>
-                <a href="<?php echo BASE_URL?>views/admin/admin.php"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
-                        <path
-                            d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                        <path
-                            d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                    </svg>
+                <a href="<?php echo BASE_URL?>views/admin/dashboard.php"
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
+                    <div class="p-2 bg-indigo-100 rounded-lg dark:bg-indigo-900/50">
+                        <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                        </svg>
+                    </div>
                     <span class="ms-3">Dashboard</span>
                 </a>
             </li>
+
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/council.php"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <!-- Councils Icon -->
-                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                        viewBox="0 0 24 24">
-                        <path fill-rule="evenodd"
-                            d="M12 6a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm-1.5 8a4 4 0 0 0-4 4 2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-3Zm6.82-3.096a5.51 5.51 0 0 0-2.797-6.293 3.5 3.5 0 1 1 2.796 6.292ZM19.5 18h.5a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-1.1a5.503 5.503 0 0 1-.471.762A5.998 5.998 0 0 1 19.5 18ZM4 7.5a3.5 3.5 0 0 1 5.477-2.889 5.5 5.5 0 0 0-2.796 6.293A3.501 3.501 0 0 1 4 7.5ZM7.1 12H6a4 4 0 0 0-4 4 2 2 0 0 0 2 2h.5a5.998 5.998 0 0 1 3.071-5.238A5.505 5.505 0 0 1 7.1 12Z"
-                            clip-rule="evenodd" />
-                    </svg>
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Councils</span>
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
+                    <div class="p-2 bg-purple-100 rounded-lg dark:bg-purple-900/50">
+                        <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M12 6a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm-1.5 8a4 4 0 0 0-4 4 2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-3Z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <span class="ms-3">Councils</span>
                 </a>
             </li>
+
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/fraternalbenefits.php"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <!-- Fraternal Benefits Icon -->
-                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 22">
-                        <path
-                            d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8Zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Fraternal Benifits</span>
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
+                    <div class="p-2 bg-green-100 rounded-lg dark:bg-green-900/50">
+                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                        </svg>
+                    </div>
+                    <span class="ms-3">Fraternal Benefits</span>
                 </a>
             </li>
+
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/users.php"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <!-- Users Icon -->
-                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-3.31 0-6 2.69-6 6v2h12v-2c0-3.31-2.69-6-6-6Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
+                    <div class="p-2 bg-yellow-100 rounded-lg dark:bg-yellow-900/50">
+                        <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <span class="ms-3">Users</span>
                 </a>
             </li>
+
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/forms.php"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <!-- Users Icon -->
-                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                        viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 8v8a5 5 0 1 0 10 0V6.5a3.5 3.5 0 1 0-7 0V15a2 2 0 0 0 4 0V8" />
-                    </svg>
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Forms</span>
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
+                    <div class="p-2 bg-pink-100 rounded-lg dark:bg-pink-900/50">
+                        <svg class="w-5 h-5 text-pink-600 dark:text-pink-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                    </div>
+                    <span class="ms-3">Forms</span>
                 </a>
             </li>
+
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/announcements.php"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <!-- Meetings Icon -->
-                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2c-1.1 0-2 .9-2 2v3h-3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2h-3V4c0-1.1-.9-2-2-2Zm4 14H8v-2h8v2Zm-4-8H8V7h4v1Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Announcements</span>
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
+                    <div class="p-2 bg-orange-100 rounded-lg dark:bg-orange-900/50">
+                        <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
+                        </svg>
+                    </div>
+                    <span class="ms-3">Announcements</span>
                 </a>
             </li>
+
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/application.php"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <!-- Applications Icon -->
-                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M19 3H5c-1.1 0-1.99.89-1.99 1.99L3 19c0 1.1.89 1.99 1.99 1.99H19c1.1 0 1.99-.89 1.99-1.99L21 5c0-1.1-.89-1.99-1.99-1.99ZM12 16l-4-4h3V9h2v3h3l-4 4Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Applications</span>
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
+                    <div class="p-2 bg-teal-100 rounded-lg dark:bg-teal-900/50">
+                        <svg class="w-5 h-5 text-teal-600 dark:text-teal-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                        </svg>
+                    </div>
+                    <span class="ms-3">Applications</span>
                 </a>
             </li>
+
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/transactions.php"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <!-- Applications Icon -->
-                    <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M4 19v2c0 .5523.44772 1 1 1h14c.5523 0 1-.4477 1-1v-2H4Z" />
-                        <path fill="currentColor" fill-rule="evenodd"
-                            d="M9 3c0-.55228.44772-1 1-1h8c.5523 0 1 .44772 1 1v3c0 .55228-.4477 1-1 1h-2v1h2c.5096 0 .9376.38314.9939.88957L19.8951 17H4.10498l.90116-8.11043C5.06241 8.38314 5.49047 8 6.00002 8H12V7h-2c-.55228 0-1-.44772-1-1V3Zm1.01 8H8.00002v2.01H10.01V11Zm.99 0h2.01v2.01H11V11Zm5.01 0H14v2.01h2.01V11Zm-8.00998 3H10.01v2.01H8.00002V14ZM13.01 14H11v2.01h2.01V14Zm.99 0h2.01v2.01H14V14ZM11 4h6v1h-6V4Z"
-                            clip-rule="evenodd" />
-                    </svg>
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Transactions</span>
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
+                    <div class="p-2 bg-cyan-100 rounded-lg dark:bg-cyan-900/50">
+                        <svg class="w-5 h-5 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                        </svg>
+                    </div>
+                    <span class="ms-3">Transactions</span>
                 </a>
             </li>
-            <li>
+
+            <!-- Logout Section -->
+            <li class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
                 <a href="#" id="logoutBtn"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <svg class="shrink-0 w-5 h-5 text-red-600 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap text-red-600">Sign out</span>
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-50 dark:hover:bg-red-900/50 group transition-all duration-200">
+                    <div class="p-2 bg-red-100 rounded-lg dark:bg-red-900/50">
+                        <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                    </div>
+                    <span class="ms-3 text-red-600 dark:text-red-400 font-medium">Sign Out</span>
                 </a>
             </li>
         </ul>

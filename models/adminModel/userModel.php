@@ -125,4 +125,37 @@ class UserModel
         return mysqli_query($this->conn, $sql);
     }
 
+    public function getUserById($userId) {
+        $userId = mysqli_real_escape_string($this->conn, $userId);
+        $query = "SELECT * FROM users WHERE id = '$userId'";
+        $result = mysqli_query($this->conn, $query);
+        
+        if ($result && mysqli_num_rows($result) > 0) {
+            return mysqli_fetch_assoc($result);
+        }
+        return null;
+    }
+
+    public function updatePassword($userId, $hashedPassword) {
+        $userId = mysqli_real_escape_string($this->conn, $userId);
+        $hashedPassword = mysqli_real_escape_string($this->conn, $hashedPassword);
+        
+        $query = "UPDATE users SET password = '$hashedPassword' WHERE id = '$userId'";
+        return mysqli_query($this->conn, $query);
+    }
+
+    public function updateProfile($userId, $data)
+    {
+        $userId = mysqli_real_escape_string($this->conn, $userId);
+        
+        $updateFields = [];
+        foreach ($data as $key => $value) {
+            $value = mysqli_real_escape_string($this->conn, $value);
+            $updateFields[] = "`$key` = '$value'";
+        }
+        
+        $updateQuery = "UPDATE users SET " . implode(', ', $updateFields) . " WHERE id = '$userId'";
+        return mysqli_query($this->conn, $updateQuery);
+    }
+
 }

@@ -154,117 +154,105 @@
     <main class="flex-1">
         <div class="p-4 sm:ml-64">
             <div class="p-4 rounded-lg dark:border-gray-700">
-                <nav class="flex" aria-label="Breadcrumb">
+                <!-- Breadcrumb -->
+                <nav class="flex mb-8" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                         <li class="inline-flex items-center">
-                            <a href="#"
-                                class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                                <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                            <a href="<?php echo BASE_URL?>views/admin/dashboard.php" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                                <svg class="w-4 h-4 me-2.5 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
                                 </svg>
-                                Home
+                                Dashboard
                             </a>
                         </li>
                         <li>
                             <div class="flex items-center">
-                                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m1 9 4-4-4-4" />
+                                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                 </svg>
-                                <a href="#"
-                                    class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Admin</a>
+                                <a href="#" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Admin</a>
                             </div>
                         </li>
                         <li aria-current="page">
                             <div class="flex items-center">
-                                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m1 9 4-4-4-4" />
+                                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                 </svg>
-                                <span
-                                    class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Fraternal Benefits</span>
+                                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Fraternal Benefits</span>
                             </div>
                         </li>
                     </ol>
                 </nav>
-                <section class="mt-4">
-                    <div class="flex justify-end mb-2">
-                        <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
-                            class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
-                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path clip-rule="evenodd" fill-rule="evenodd"
-                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                            </svg>
-                            Add new plan
-                        </button>
+                <section class="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+                    <!-- Header with Add Button -->
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Fraternal Benefits</h2>
+                            <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
+                                class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 transition-colors duration-200">
+                                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                </svg>
+                                Add new plan
+                            </button>
+                        </div>
                     </div>
 
-                    <table id="myTable" class="stripe hover w-full" style="width:100%">
-                        <thead class="bg-gray-800 text-white text-xs">
-                            <tr>
-                                <th scope="col" class="px-4 py-3">TYPE</th>
-                                <th scope="col" class="px-4 py-3">NAME</th>
-                                <!-- <th scope="col" class="px-4 py-3">FACE VALUE</th>
-                                <th scope="col" class="px-4 py-3">YEARS TO MATURITY</th>
-                                <th scope="col" class="px-4 py-3">YEARS OF PROTECTION</th> -->
-                                <th scope="col" class="px-4 py-3">CONTRIBUTION PERIOD</th>
-                                <th scope="col" class="px-4 py-3">ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-xs">
-
-                            <?php
-                            $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
-
-                            $fraternals = $fraternalBenefitsModel->getAllFraternalBenefits();
-                            if ($fraternals) {
-                            foreach ($fraternals as $fraternal) {?>
-                            <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <td class="px-4 py-3"><?php echo $fraternal['type']; ?></td>
-                                <td class="px-4 py-3"><?php echo $fraternal['name']; ?></td>
-                                <!-- <td class="px-4 py-3"><?php echo $fraternal['face_value']; ?></td>
-                                <td class="px-4 py-3"><?php echo $fraternal['years_to_maturity']; ?></td>
-                                <td class="px-4 py-3"><?php echo $fraternal['years_of_protection']; ?></td> -->
-                                <td class="px-4 py-3"><?php echo $fraternal['contribution_period']; ?></td>
-                                <td>
-                                    <a href="moreplandetails.php?id=<?= $fraternal['id'] ?>"
-                                        class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                        <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                        </svg>
-                                        More details
-                                    </a>
-                                    <a href="#"
-                                        class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 delete-plan"
-                                        data-id="<?= $fraternal['id'] ?>">
-                                        <svg class="w-4 h-4 text-white dark:text-white" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                        </svg>
-                                        Delete
-                                    </a>
-                                </td>
-
-                            </tr>
-                            <?php }
-                                } else {
-                                    echo "No fraternal benefits found.";
-                                }
-                            ?>
-                        </tbody>
-                    </table>
+                    <!-- Table Section -->
+                    <div class="overflow-x-auto">
+                        <table id="myTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-4">Type</th>
+                                    <th scope="col" class="px-6 py-4">Name</th>
+                                    <th scope="col" class="px-6 py-4">Contribution Period</th>
+                                    <th scope="col" class="px-6 py-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
+                                $fraternals = $fraternalBenefitsModel->getAllFraternalBenefits();
+                                
+                                if ($fraternals) {
+                                    foreach ($fraternals as $fraternal) {?>
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                            <td class="px-6 py-4 font-medium"><?php echo $fraternal['type']; ?></td>
+                                            <td class="px-6 py-4"><?php echo $fraternal['name']; ?></td>
+                                            <td class="px-6 py-4"><?php echo $fraternal['contribution_period']; ?></td>
+                                            <td class="px-6 py-4 space-x-2">
+                                                <a href="moreplandetails.php?id=<?= $fraternal['id'] ?>"
+                                                    class="inline-flex items-center px-3 py-2 text-xs font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-200">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    View Details
+                                                </a>
+                                                <button type="button"
+                                                    class="inline-flex items-center px-3 py-2 text-xs font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 transition-colors duration-200 delete-plan"
+                                                    data-id="<?= $fraternal['id'] ?>">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php }
+                                } else { ?>
+                                    <tr class="bg-white dark:bg-gray-800">
+                                        <td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                            No fraternal benefits found
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </section>
             </div>
     </main>
