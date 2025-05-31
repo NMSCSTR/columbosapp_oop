@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['firstname'] = $user['firstname'];
             $_SESSION['lastname'] = $user['lastname'];
             $_SESSION['role'] = $user['role'];
+            $_SESSION['email'] = $user['email'];
 
             header('Location: ' . BASE_URL . 'middleware/role_redirect.php');
             exit;

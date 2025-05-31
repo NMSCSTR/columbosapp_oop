@@ -1,0 +1,37 @@
+[31-May-2025 07:31:44 Europe/Berlin] PHP Warning:  Constant BASE_URL already defined in C:\xampp\htdocs\app\includes\config.php on line 7
+[31-May-2025 07:31:44 Europe/Berlin] PHP Warning:  Constant DB_HOST already defined in C:\xampp\htdocs\app\includes\config.php on line 10
+[31-May-2025 07:31:44 Europe/Berlin] PHP Warning:  Constant DB_USER already defined in C:\xampp\htdocs\app\includes\config.php on line 11
+[31-May-2025 07:31:44 Europe/Berlin] PHP Warning:  Constant DB_PASS already defined in C:\xampp\htdocs\app\includes\config.php on line 12
+[31-May-2025 07:31:44 Europe/Berlin] PHP Warning:  Constant DB_NAME already defined in C:\xampp\htdocs\app\includes\config.php on line 13
+[31-May-2025 07:31:46 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown database 'app' in C:\xampp\htdocs\app\includes\db.php:4
+Stack trace:
+#0 C:\xampp\htdocs\app\includes\db.php(4): mysqli_connect('localhost', 'root', Object(SensitiveParameterValue), 'app')
+#1 C:\xampp\htdocs\app\controllers\auth\forgot_password.php(4): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\app\includes\db.php on line 4
+[31-May-2025 07:33:08 Europe/Berlin] Password reset requested for email: inesphilip72@gmail.com
+[31-May-2025 07:33:08 Europe/Berlin] Invalidated existing tokens for email: inesphilip72@gmail.com
+[31-May-2025 07:33:08 Europe/Berlin] Generated new token for email: inesphilip72@gmail.com
+[31-May-2025 07:33:08 Europe/Berlin] Token expiry time: 2025-05-31 08:33:08
+[31-May-2025 07:33:08 Europe/Berlin] Token stored in database successfully
+[31-May-2025 07:33:08 Europe/Berlin] Token verified in database
+[31-May-2025 07:33:08 Europe/Berlin] Reset link generated: http://localhost/app/controllers/auth/views/reset-password.php?token=57d876368e553aa22757ad4f4e6578bb722709ef82825073b7a01169ce5cbdbe
+[31-May-2025 07:33:08 Europe/Berlin] Attempting to send password reset email to: inesphilip72@gmail.com
+[31-May-2025 07:33:08 Europe/Berlin] Attempting to send email to: inesphilip72@gmail.com
+[31-May-2025 07:33:08 Europe/Berlin] Subject: Password Reset Request
+[31-May-2025 07:33:11 Europe/Berlin] Email sent successfully to: inesphilip72@gmail.com
+[31-May-2025 07:33:11 Europe/Berlin] Password reset email sent successfully to: inesphilip72@gmail.com
+[31-May-2025 07:33:11 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\app\vendor\phpmailer\src\SMTP.php:288) in C:\xampp\htdocs\app\controllers\auth\forgot_password.php on line 84
+[31-May-2025 07:35:32 Europe/Berlin] Password reset requested for email: inesphilip72@gmail.com
+[31-May-2025 07:35:32 Europe/Berlin] Invalidated existing tokens for email: inesphilip72@gmail.com
+[31-May-2025 07:35:32 Europe/Berlin] Generated new token for email: inesphilip72@gmail.com
+[31-May-2025 07:35:32 Europe/Berlin] Token expiry time: 2025-05-31 08:35:32
+[31-May-2025 07:35:32 Europe/Berlin] Token stored in database successfully
+[31-May-2025 07:35:32 Europe/Berlin] Token verified in database
+[31-May-2025 07:35:32 Europe/Berlin] Reset link generated: http://localhost/app/controllers/auth/views/reset-password.php?token=56c9ae52920d2a38d65b9aa88bcc406c41bec8c4cca10781ffbe1c701b3931a6
+[31-May-2025 07:35:32 Europe/Berlin] Attempting to send password reset email to: inesphilip72@gmail.com
+[31-May-2025 07:35:32 Europe/Berlin] Attempting to send email to: inesphilip72@gmail.com
+[31-May-2025 07:35:32 Europe/Berlin] Subject: Password Reset Request
+[31-May-2025 07:35:36 Europe/Berlin] Email sent successfully to: inesphilip72@gmail.com
+[31-May-2025 07:35:36 Europe/Berlin] Password reset email sent successfully to: inesphilip72@gmail.com
+[31-May-2025 07:35:36 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\app\vendor\phpmailer\src\SMTP.php:288) in C:\xampp\htdocs\app\controllers\auth\forgot_password.php on line 84

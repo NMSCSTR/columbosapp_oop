@@ -376,10 +376,22 @@ class MemberApplicationModel
 
     public function fetchAllApplicantById($user_id)
     {
-        $user_id = mysqli_real_escape_string($this->conn, $user_id);
-
-        $sql = "
-        SELECT a.*, c.*, e.*, p.*, b.*, f.*, m.*, fh.*, ph.*
+        $sql = "SELECT 
+            a.*,
+            c.*,
+            e.*,
+            p.*,
+            b.*,
+            f.*,
+            m.*,
+            fh.*,
+            ph.*,
+            fb.type AS plan_type,
+            fb.name AS plan_name,
+            fb.face_value,
+            fb.years_to_maturity,
+            fb.years_of_protection,
+            fb.contribution_period
         FROM applicants a
         LEFT JOIN contact_info c ON a.applicant_id = c.applicant_id
         LEFT JOIN employment e ON a.applicant_id = e.applicant_id
@@ -389,16 +401,31 @@ class MemberApplicationModel
         LEFT JOIN medical_history m ON a.applicant_id = m.applicant_id
         LEFT JOIN family_health fh ON a.applicant_id = fh.applicant_id
         LEFT JOIN physician ph ON a.applicant_id = ph.applicant_id
-        WHERE a.user_id = '$user_id'
-    ";
+        LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+        WHERE a.user_id = ?";
 
-        $result = mysqli_query($this->conn, $sql);
+        $stmt = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $user_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
-        if ($result) {
-            return mysqli_fetch_assoc($result);
-        } else {
-            return "Error fetching applicant: " . mysqli_error($this->conn);
+        if ($result && mysqli_num_rows($result) > 0) {
+            $applicantData = mysqli_fetch_assoc($result);
+            
+            // Calculate financial details
+            $total_contribution = $this->calculateTotalContributions($applicantData);
+            $allocations = $this->calculateContributionAllocations($total_contribution);
+
+            // Add financial details to the applicant data
+            $applicantData['total_contribution'] = $total_contribution;
+            $applicantData['insurance_cost'] = $allocations['insurance_cost'];
+            $applicantData['admin_fee'] = $allocations['admin_fee'];
+            $applicantData['savings_fund'] = $allocations['savings_fund'];
+
+            return $applicantData;
         }
+
+        return null;
     }
 
     private function fetchData($table, $user_id)

@@ -47,6 +47,20 @@ $(document).ready(function() {
 });
 </script>
 
+<script>
+$(document).ready(function() {
+    $('#myTables').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        pageLength: 10, 
+    });
+});
+</script>
+
+
 
 <!-- DeleteCouncil -->
 <script>

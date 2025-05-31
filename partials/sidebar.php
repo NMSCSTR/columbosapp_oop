@@ -39,7 +39,7 @@
 
             <!-- Main Navigation -->
             <li>
-                <a href="<?php echo BASE_URL?>views/admin/dashboard.php"
+                <a href="<?php echo BASE_URL?>views/admin/admin.php"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
                     <div class="p-2 bg-indigo-100 rounded-lg dark:bg-indigo-900/50">
                         <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
