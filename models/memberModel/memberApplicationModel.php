@@ -438,6 +438,7 @@ class MemberApplicationModel
         return null;
     }
 
+    
     public function fetchAllApplicants()
     {
 
