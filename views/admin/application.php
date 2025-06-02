@@ -16,6 +16,15 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
+<!-- Add DataTables Buttons and JSZip -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+<!-- Add SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     .application-card {
         transition: all 0.3s ease;
@@ -68,11 +77,11 @@
         @apply w-full overflow-x-auto;
         min-width: 100%;
         margin: 0;
+        padding: 1rem;
     }
-    #myTable {
+    #myTable2s {
         @apply w-full !important;
         margin: 0 !important;
-        white-space: nowrap;
     }
     .dataTables_filter input,
     .dataTables_length select {
@@ -85,26 +94,29 @@
     .table-container {
         @apply w-full overflow-x-auto;
         -webkit-overflow-scrolling: touch;
-        max-width: 100vw;
+        max-width: 100%;
         margin: 0;
         padding: 0;
     }
     .table-cell-wrap {
         white-space: normal;
-        min-width: 150px;
-        max-width: 200px;
+        min-width: 120px;
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .table-cell-number {
         white-space: nowrap;
         text-align: right;
+        min-width: 100px;
     }
     .table-cell-status {
         white-space: nowrap;
-        min-width: 100px;
+        min-width: 90px;
     }
     .table-cell-actions {
         white-space: nowrap;
-        min-width: 120px;
+        min-width: 110px;
     }
     /* Ensure the table header stays fixed */
     .dataTables_scrollHead {
@@ -113,11 +125,48 @@
     /* Adjust padding for better mobile view */
     @media (max-width: 768px) {
         .table-container {
-            margin: 0 -1rem;
+            margin: 0;
+            padding: 0;
         }
         .dataTables_wrapper {
-            padding: 0 1rem;
+            padding: 0.5rem;
         }
+        .table-cell-wrap {
+            min-width: 100px;
+            max-width: 150px;
+        }
+    }
+
+    /* Add horizontal scroll indicator */
+    .table-scroll-indicator {
+        position: relative;
+        width: 100%;
+        height: 2px;
+        background-color: #e5e7eb;
+        margin-top: -2px;
+        display: none;
+    }
+    
+    .table-scroll-indicator::after {
+        content: '';
+        position: absolute;
+        height: 100%;
+        width: 33.33%;
+        background-color: #3b82f6;
+        left: 0;
+        transform-origin: left;
+        transition: transform 0.3s ease;
+    }
+    
+    @media (max-width: 1024px) {
+        .table-scroll-indicator {
+            display: block;
+        }
+    }
+
+    /* Hide the default DataTables Buttons */
+    .dt-buttons {
+        display: none !important;
     }
 </style>
 
@@ -187,23 +236,16 @@
                 </div>
 
                 <!-- Table Section -->
-                <div class="overflow-x-auto p-6">
+                <div class="overflow-hidden">
                     <div class="table-container">
-                        <table id="myTable2s" class="w-full text-sm text-left text-gray-500 dark:text-gray-400 stripe hover" style="width:100%">
+                        <div class="table-scroll-indicator"></div>
+                        <table id="myTable2s" class="w-full text-sm text-left text-gray-500 dark:text-gray-400 stripe hover">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-4 py-3 font-semibold table-cell-wrap">Applicant</th>
                                     <th scope="col" class="px-4 py-3 font-semibold">Plan Type</th>
                                     <th scope="col" class="px-4 py-3 font-semibold table-cell-wrap">Plan</th>
                                     <th scope="col" class="px-4 py-3 font-semibold table-cell-number">Face Value</th>
-                                    <th scope="col" class="px-4 py-3 font-semibold text-center">Years to Mature</th>
-                                    <th scope="col" class="px-4 py-3 font-semibold text-center">Years Protect</th>
-                                    <th scope="col" class="px-4 py-3 font-semibold">Payment Mode</th>
-                                    <th scope="col" class="px-4 py-3 font-semibold table-cell-number">Contribution Amt.</th>
-                                    <th scope="col" class="px-4 py-3 font-semibold table-cell-number">Total Contribution</th>
-                                    <th scope="col" class="px-4 py-3 font-semibold table-cell-number">Insurance Cost</th>
-                                    <th scope="col" class="px-4 py-3 font-semibold table-cell-number">Admin Fee</th>
-                                    <th scope="col" class="px-4 py-3 font-semibold table-cell-number">Savings Fund</th>
                                     <th scope="col" class="px-4 py-3 font-semibold table-cell-status">Status</th>
                                     <th scope="col" class="px-4 py-3 font-semibold table-cell-actions">Actions</th>
                                 </tr>
@@ -247,14 +289,6 @@
                                         </td>
                                         <td class="px-6 py-4"><?= htmlspecialchars($applicant['plan_name']) ?></td>
                                         <td class="px-6 py-4 text-right">₱<?= number_format($applicant['face_value'], 2) ?></td>
-                                        <td class="px-6 py-4 text-center"><?= htmlspecialchars($applicant['years_to_maturity']) ?></td>
-                                        <td class="px-6 py-4 text-center"><?= htmlspecialchars($applicant['years_of_protection']) ?></td>
-                                        <td class="px-6 py-4"><?= htmlspecialchars($applicant['payment_mode']) ?></td>
-                                        <td class="px-6 py-4 text-right">₱<?= number_format($applicant['contribution_amount'], 2) ?></td>
-                                        <td class="px-6 py-4 text-right">₱<?= number_format($applicant['total_contribution'], 2) ?></td>
-                                        <td class="px-6 py-4 text-right">₱<?= number_format($applicant['insurance_cost'], 2) ?></td>
-                                        <td class="px-6 py-4 text-right">₱<?= number_format($applicant['admin_fee'], 2) ?></td>
-                                        <td class="px-6 py-4 text-right">₱<?= number_format($applicant['savings_fund'], 2) ?></td>
                                         <td class="px-6 py-4">
                                             <span class="badge <?php
                                                 switch(strtolower($applicant['application_status'])) {
@@ -284,6 +318,22 @@
                                                     </svg>
                                                     View Details
                                                 </a>
+                                                <?php if (strtolower($applicant['application_status']) === 'pending'): ?>
+                                                    <button onclick="updateStatus(<?= $applicant['applicant_id'] ?>, 'Approved')"
+                                                        class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-2 focus:ring-green-300 transition-colors duration-200">
+                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                        </svg>
+                                                        Approve
+                                                    </button>
+                                                    <button onclick="updateStatus(<?= $applicant['applicant_id'] ?>, 'Rejected')"
+                                                        class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-2 focus:ring-red-300 transition-colors duration-200">
+                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                        </svg>
+                                                        Reject
+                                                    </button>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
                                     </tr>
@@ -291,7 +341,7 @@
                                     }
                                 } else { ?>
                                     <tr>
-                                        <td colspan="14" class="px-6 py-4 text-center text-gray-500">
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
                                             <div class="flex flex-col items-center justify-center py-8">
                                                 <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -325,50 +375,82 @@ $(document).ready(function() {
         autoWidth: false,
         pageLength: 10,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        dom: '<"flex flex-col md:flex-row justify-between items-center mb-4"<"flex items-center space-x-2"l<"ml-2">><"flex items-center space-x-2"f>>rtip',
+        dom: '<"flex flex-col md:flex-row justify-between items-start md:items-center mb-4"<"flex items-center space-x-2"l<"ml-2">><"flex items-center space-x-2"f>>rtip',
         language: {
             search: "",
             searchPlaceholder: "Search applications...",
             processing: '<div class="flex justify-center items-center space-x-2"><div class="animate-spin h-5 w-5 border-2 border-blue-500 rounded-full border-t-transparent"></div><span>Processing...</span></div>'
         },
-        columnDefs: [
-            { className: "table-cell-wrap", targets: [0, 2] },
-            { className: "table-cell-number", targets: [3, 7, 8, 9, 10, 11] },
-            { className: "table-cell-status", targets: [12] },
-            { className: "table-cell-actions", targets: [13] }
-        ],
-        initComplete: function() {
-            // Add custom export buttons
-            $('#exportExcel').on('click', function() {
-                table.button('.buttons-excel').trigger();
-            });
-            
-            $('#printTable').on('click', function() {
-                table.button('.buttons-print').trigger();
-            });
-        },
         buttons: [
             {
                 extend: 'excel',
                 className: 'hidden',
+                title: 'Member Applications',
+                filename: 'Member_Applications_' + new Date().toISOString().slice(0,10),
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                    columns: [0, 1, 2, 3, 4] // Export all columns except Actions
                 }
             },
             {
                 extend: 'print',
                 className: 'hidden',
+                title: 'Member Applications',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                    columns: [0, 1, 2, 3, 4] // Print all columns except Actions
                 },
                 customize: function(win) {
-                    $(win.document.body).css('font-size', '10pt');
+                    $(win.document.body)
+                        .css('font-size', '10pt')
+                        .prepend(
+                            '<div class="text-center mb-4">' +
+                                '<h1 style="font-size: 18pt; font-weight: bold; margin-bottom: 10px;">Member Applications</h1>' +
+                                '<p style="font-size: 10pt; margin-bottom: 20px;">Generated on: ' + new Date().toLocaleDateString() + '</p>' +
+                            '</div>'
+                        );
+
                     $(win.document.body).find('table')
                         .addClass('compact')
-                        .css('font-size', 'inherit');
+                        .css('font-size', 'inherit')
+                        .css('border-collapse', 'collapse')
+                        .css('width', '100%');
+
+                    $(win.document.body).find('table th, table td')
+                        .css('border', '1px solid #ddd')
+                        .css('padding', '8px')
+                        .css('text-align', 'left');
+
+                    $(win.document.body).find('table th')
+                        .css('background-color', '#f8f9fa');
                 }
             }
-        ]
+        ],
+        columnDefs: [
+            { className: "table-cell-wrap", targets: [0, 2] },
+            { className: "table-cell-number", targets: [3] },
+            { className: "table-cell-status", targets: [4] },
+            { className: "table-cell-actions", targets: [5] }
+        ],
+        drawCallback: function() {
+            // Update scroll indicator position
+            var tableWrapper = $('.table-container');
+            var scrollPercentage = (tableWrapper.scrollLeft() / (tableWrapper[0].scrollWidth - tableWrapper.width())) * 100;
+            $('.table-scroll-indicator::after').css('transform', `translateX(${scrollPercentage}%)`);
+        }
+    });
+
+    // Handle custom export buttons
+    $('#exportExcel').on('click', function() {
+        table.button('.buttons-excel').trigger();
+    });
+
+    $('#printTable').on('click', function() {
+        table.button('.buttons-print').trigger();
+    });
+
+    // Handle horizontal scroll indicator
+    $('.table-container').on('scroll', function() {
+        var scrollPercentage = ($(this).scrollLeft() / (this[0].scrollWidth - $(this).width())) * 100;
+        $('.table-scroll-indicator::after').css('transform', `translateX(${scrollPercentage}%)`);
     });
 
     // Make the table responsive to window resizing
@@ -379,6 +461,72 @@ $(document).ready(function() {
     // Initial adjustment
     table.columns.adjust().draw();
 });
+
+function updateStatus(applicantId, status) {
+    // Show loading state
+    Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait while we update the application status.',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Prepare the form data
+    const formData = new FormData();
+    formData.append('applicant_id', applicantId);
+    formData.append('status', status);
+
+    // Make the AJAX request
+    $.ajax({
+        url: '../../controllers/admin/updateApplicationStatus.php',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            try {
+                const result = (typeof response === 'string') ? JSON.parse(response) : response;
+                
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: `Application has been ${status.toLowerCase()} successfully.`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: result.message || 'Failed to update application status. Please try again.',
+                    });
+                }
+            } catch (error) {
+                console.error('Error parsing response:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while processing the response.',
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', {xhr, status, error});
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred while updating the status. Please try again.',
+                footer: `Error details: ${error}`
+            });
+        }
+    });
+}
 </script>
 
 <?php include '../../includes/footer.php'; ?>

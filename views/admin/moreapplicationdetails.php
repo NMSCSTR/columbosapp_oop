@@ -295,11 +295,25 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <div class="p-4 bg-gray-50 rounded-lg mb-4">
-                                    <label class="text-sm font-medium text-gray-500">Contribution Amount</label>
+                                    <label class="text-sm font-medium text-gray-500">Monthly Base Amount</label>
                                     <p class="text-xl font-bold text-gray-900">₱<?= number_format($applicantData['contribution_amount'], 2) ?></p>
-                                    <p class="text-sm text-gray-500"><?= ucfirst($applicantData['payment_mode']) ?> payment</p>
                                 </div>
                                 <div class="p-4 bg-gray-50 rounded-lg">
+                                    <?php
+                                        $months_per_payment = match(strtolower($applicantData['payment_mode'])) {
+                                            'monthly' => 1,
+                                            'quarterly' => 3,
+                                            'semi-annually' => 6,
+                                            'annually' => 12,
+                                            default => 1
+                                        };
+                                        $actual_payment = $applicantData['contribution_amount'] * $months_per_payment;
+                                    ?>
+                                    <label class="text-sm font-medium text-gray-500"><?= ucfirst($applicantData['payment_mode']) ?> Payment Amount</label>
+                                    <p class="text-xl font-bold text-gray-900">₱<?= number_format($actual_payment, 2) ?></p>
+                                    <p class="text-sm text-gray-500"><?= $months_per_payment ?> month<?= $months_per_payment > 1 ? 's' : '' ?> contribution</p>
+                                </div>
+                                <div class="p-4 bg-blue-50 rounded-lg mt-4">
                                     <label class="text-sm font-medium text-gray-500">Total Contribution</label>
                                     <p class="text-xl font-bold text-gray-900">₱<?= number_format($applicantData['total_contribution'], 2) ?></p>
                                     <p class="text-sm text-gray-500">Over <?= $applicantData['contribution_period'] ?> years</p>
@@ -307,16 +321,53 @@
                             </div>
                             <div class="space-y-4">
                                 <div class="p-4 bg-blue-50 rounded-lg">
-                                    <label class="text-sm font-medium text-blue-700">Insurance Cost (10%)</label>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label class="text-sm font-medium text-blue-700">Insurance Cost (10%)</label>
+                                        <span class="inline-flex items-center justify-center w-5 h-5 bg-blue-100 rounded-full">
+                                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </span>
+                                    </div>
                                     <p class="text-lg font-semibold text-blue-900">₱<?= number_format($applicantData['insurance_cost'], 2) ?></p>
+                                    <p class="mt-2 text-sm text-blue-600">This portion (10%) of your contribution goes towards your insurance coverage. It ensures financial protection for your beneficiaries in case of unforeseen events.</p>
                                 </div>
+
                                 <div class="p-4 bg-green-50 rounded-lg">
-                                    <label class="text-sm font-medium text-green-700">Admin Fee (5%)</label>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label class="text-sm font-medium text-green-700">Admin Fee (5%)</label>
+                                        <span class="inline-flex items-center justify-center w-5 h-5 bg-green-100 rounded-full">
+                                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </span>
+                                    </div>
                                     <p class="text-lg font-semibold text-green-900">₱<?= number_format($applicantData['admin_fee'], 2) ?></p>
+                                    <p class="mt-2 text-sm text-green-600">This fee (5%) covers operational costs including policy maintenance, customer service, and administrative expenses to manage your account effectively.</p>
                                 </div>
+
                                 <div class="p-4 bg-purple-50 rounded-lg">
-                                    <label class="text-sm font-medium text-purple-700">Savings Fund (85%)</label>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label class="text-sm font-medium text-purple-700">Savings Fund (85%)</label>
+                                        <span class="inline-flex items-center justify-center w-5 h-5 bg-purple-100 rounded-full">
+                                            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </span>
+                                    </div>
                                     <p class="text-lg font-semibold text-purple-900">₱<?= number_format($applicantData['savings_fund'], 2) ?></p>
+                                    <p class="mt-2 text-sm text-purple-600">The majority (85%) of your contribution is allocated to your savings fund. This amount grows over time and becomes available upon plan maturity, helping you build long-term financial security.</p>
+                                </div>
+
+                                <!-- Allocation Summary -->
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-2">How Your Contribution is Allocated</h4>
+                                    <p class="text-sm text-gray-600">Your total contribution is strategically divided to provide both protection and savings benefits:</p>
+                                    <ul class="mt-2 space-y-1 text-sm text-gray-600">
+                                        <li>• 85% builds your long-term savings</li>
+                                        <li>• 10% provides insurance protection</li>
+                                        <li>• 5% maintains account services</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -349,6 +400,205 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Signature Card -->
+                    <div class="bg-white rounded-lg shadow-sm p-6 card-hover info-section" style="animation-delay: 0.7s">
+                        <div class="flex items-center mb-4">
+                            <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                            <h3 class="text-lg font-semibold text-gray-900">Applicant's Signature</h3>
+                        </div>
+                        <div class="flex justify-center p-4 bg-gray-50 rounded-lg">
+                            <?php if (!empty($applicantData['signature_file'])): ?>
+                                <img src="<?= $applicantData['signature_file'] ?>" alt="Applicant's Signature" class="max-h-32 object-contain">
+                            <?php else: ?>
+                                <p class="text-gray-500 italic">No signature available</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical History Card -->
+            <div class="mt-6 bg-white rounded-lg shadow-sm p-6 card-hover info-section" style="animation-delay: 0.8s">
+                <div class="flex items-center mb-4">
+                    <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900">Medical History</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">Past Illnesses</label>
+                            <p class="text-base text-gray-900 mt-1"><?= !empty($applicantData['past_illness']) ? nl2br($applicantData['past_illness']) : 'None reported' ?></p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">Current Medications</label>
+                            <p class="text-base text-gray-900 mt-1"><?= !empty($applicantData['current_medication']) ? nl2br($applicantData['current_medication']) : 'None reported' ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family Health Card -->
+            <div class="mt-6 bg-white rounded-lg shadow-sm p-6 card-hover info-section" style="animation-delay: 0.8s">
+                <div class="flex items-center mb-4">
+                    <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900">Family Health History</h3>
+                </div>
+                <div class="space-y-6">
+                    <!-- Living Family Members -->
+                    <div>
+                        <h4 class="text-md font-medium text-gray-700 mb-3">Living Family Members</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <?php if (!empty($applicantData['father_living_age']) || !empty($applicantData['father_health'])): ?>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h5 class="font-medium text-gray-900">Father</h5>
+                                <p class="text-sm text-gray-600">Age: <?= $applicantData['father_living_age'] ?? 'Not specified' ?></p>
+                                <p class="text-sm text-gray-600">Health Status: <?= $applicantData['father_health'] ?? 'Not specified' ?></p>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($applicantData['mother_living_age']) || !empty($applicantData['mother_health'])): ?>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h5 class="font-medium text-gray-900">Mother</h5>
+                                <p class="text-sm text-gray-600">Age: <?= $applicantData['mother_living_age'] ?? 'Not specified' ?></p>
+                                <p class="text-sm text-gray-600">Health Status: <?= $applicantData['mother_health'] ?? 'Not specified' ?></p>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($applicantData['siblings_living_age']) || !empty($applicantData['siblings_health'])): ?>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h5 class="font-medium text-gray-900">Siblings</h5>
+                                <p class="text-sm text-gray-600">Age Range: <?= $applicantData['siblings_living_age'] ?? 'Not specified' ?></p>
+                                <p class="text-sm text-gray-600">Health Status: <?= $applicantData['siblings_health'] ?? 'Not specified' ?></p>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($applicantData['children_living_age']) || !empty($applicantData['children_health'])): ?>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h5 class="font-medium text-gray-900">Children</h5>
+                                <p class="text-sm text-gray-600">Age Range: <?= $applicantData['children_living_age'] ?? 'Not specified' ?></p>
+                                <p class="text-sm text-gray-600">Health Status: <?= $applicantData['children_health'] ?? 'Not specified' ?></p>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Deceased Family Members -->
+                    <div>
+                        <h4 class="text-md font-medium text-gray-700 mb-3">Deceased Family Members</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <?php if (!empty($applicantData['father_death_age']) || !empty($applicantData['father_cause'])): ?>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h5 class="font-medium text-gray-900">Father</h5>
+                                <p class="text-sm text-gray-600">Age at Death: <?= $applicantData['father_death_age'] ?? 'Not specified' ?></p>
+                                <p class="text-sm text-gray-600">Cause: <?= $applicantData['father_cause'] ?? 'Not specified' ?></p>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($applicantData['mother_death_age']) || !empty($applicantData['mother_cause'])): ?>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h5 class="font-medium text-gray-900">Mother</h5>
+                                <p class="text-sm text-gray-600">Age at Death: <?= $applicantData['mother_death_age'] ?? 'Not specified' ?></p>
+                                <p class="text-sm text-gray-600">Cause: <?= $applicantData['mother_cause'] ?? 'Not specified' ?></p>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($applicantData['siblings_death_age']) || !empty($applicantData['siblings_cause'])): ?>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h5 class="font-medium text-gray-900">Siblings</h5>
+                                <p class="text-sm text-gray-600">Age at Death: <?= $applicantData['siblings_death_age'] ?? 'Not specified' ?></p>
+                                <p class="text-sm text-gray-600">Cause: <?= $applicantData['siblings_cause'] ?? 'Not specified' ?></p>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($applicantData['children_death_age']) || !empty($applicantData['children_cause'])): ?>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h5 class="font-medium text-gray-900">Children</h5>
+                                <p class="text-sm text-gray-600">Age at Death: <?= $applicantData['children_death_age'] ?? 'Not specified' ?></p>
+                                <p class="text-sm text-gray-600">Cause: <?= $applicantData['children_cause'] ?? 'Not specified' ?></p>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Questions Card -->
+            <div class="mt-6 bg-white rounded-lg shadow-sm p-6 card-hover info-section" style="animation-delay: 0.8s">
+                <div class="flex items-center mb-4">
+                    <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900">Health Questions</h3>
+                </div>
+                <div class="space-y-4">
+                    <?php
+                    if (!empty($applicantData['health_questions'])) {
+                        $questions = [
+                            'q1' => 'Have you ever had or been treated for cancer or tumor of any kind?',
+                            'q2' => 'Have you ever had or been treated for diabetes, thyroid or other endocrine disorders?',
+                            'q3' => 'Have you ever had or been treated for high blood pressure, chest pain, heart attack, or other heart disorders?',
+                            'q4' => 'Have you ever had or been treated for asthma, tuberculosis, or other respiratory disorders?',
+                            'q5' => 'Have you ever had or been treated for ulcer, hepatitis, or other digestive disorders?',
+                            'q6' => 'Have you ever had or been treated for kidney disorders or urinary disorders?',
+                            'q7' => 'Have you ever had or been treated for back disorders, arthritis, or other musculoskeletal disorders?',
+                            'q8' => 'Have you ever had or been treated for epilepsy, depression, or other nervous system disorders?',
+                            'q9' => 'Have you ever had or been treated for eye, ear, nose, or throat disorders?',
+                            'q10a' => 'Have you ever been tested for AIDS or HIV antibodies?',
+                            'q10b' => 'Have you ever had any sexually transmitted diseases?',
+                            'q11' => 'Have you ever had any other illness, injury, operation, or physical disorder not mentioned above?',
+                            'q12' => 'Are you currently taking any medication?'
+                        ];
+                        
+                        $health_data = explode('|', $applicantData['health_questions']);
+                        $answers = [];
+                        foreach ($health_data as $item) {
+                            list($code, $response, $details) = explode(':', $item);
+                            $answers[$code] = ['response' => $response, 'details' => $details];
+                        }
+                        
+                        foreach ($questions as $code => $question) {
+                            if (isset($answers[$code])) {
+                                $response = $answers[$code]['response'];
+                                $details = $answers[$code]['details'];
+                                $bgColor = $response === 'Yes' ? 'bg-yellow-50' : 'bg-gray-50';
+                                ?>
+                                <div class="p-4 <?= $bgColor ?> rounded-lg">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 mt-1">
+                                            <?php if ($response === 'Yes'): ?>
+                                                <span class="inline-block w-2 h-2 bg-yellow-400 rounded-full"></span>
+                                            <?php else: ?>
+                                                <span class="inline-block w-2 h-2 bg-green-400 rounded-full"></span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="ml-3 flex-grow">
+                                            <p class="text-sm font-medium text-gray-900"><?= $question ?></p>
+                                            <p class="mt-1 text-sm text-gray-600">
+                                                Answer: <span class="font-medium"><?= $response ?></span>
+                                                <?php if ($response === 'Yes' && !empty($details)): ?>
+                                                    <br>
+                                                    <span class="text-sm text-gray-500">Details: <?= $details ?></span>
+                                                <?php endif; ?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                        }
+                    } else {
+                        echo '<p class="text-gray-500 italic text-center">No health questions data available</p>';
+                    }
+                    ?>
                 </div>
             </div>
 

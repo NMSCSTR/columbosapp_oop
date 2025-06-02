@@ -386,12 +386,18 @@ class MemberApplicationModel
             m.*,
             fh.*,
             ph.*,
+            pd.signature_file,
             fb.type AS plan_type,
             fb.name AS plan_name,
             fb.face_value,
             fb.years_to_maturity,
             fb.years_of_protection,
-            fb.contribution_period
+            fb.contribution_period,
+            GROUP_CONCAT(
+                CONCAT(hq.question_code, ':', hq.response, ':', IFNULL(hq.yes_details, ''))
+                ORDER BY hq.question_code
+                SEPARATOR '|'
+            ) as health_questions
         FROM applicants a
         LEFT JOIN contact_info c ON a.applicant_id = c.applicant_id
         LEFT JOIN employment e ON a.applicant_id = e.applicant_id
@@ -401,8 +407,11 @@ class MemberApplicationModel
         LEFT JOIN medical_history m ON a.applicant_id = m.applicant_id
         LEFT JOIN family_health fh ON a.applicant_id = fh.applicant_id
         LEFT JOIN physician ph ON a.applicant_id = ph.applicant_id
+        LEFT JOIN personal_details pd ON a.applicant_id = pd.applicant_id
+        LEFT JOIN health_questions hq ON a.applicant_id = hq.applicant_id
         LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
-        WHERE a.user_id = ?";
+        WHERE a.user_id = ?
+        GROUP BY a.applicant_id";
 
         $stmt = mysqli_prepare($this->conn, $sql);
         mysqli_stmt_bind_param($stmt, "i", $user_id);
@@ -1173,6 +1182,23 @@ class MemberApplicationModel
         ];
 
         return $tableMap[$fieldName] ?? 'applicants'; // Default to applicants table if field not found
+    }
+
+    public function updateApplicationStatus($applicant_id, $status)
+    {
+        try {
+            $sql = "UPDATE applicants SET application_status = ? WHERE applicant_id = ?";
+            $stmt = mysqli_prepare($this->conn, $sql);
+            mysqli_stmt_bind_param($stmt, "si", $status, $applicant_id);
+            
+            if (mysqli_stmt_execute($stmt)) {
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            error_log("Error updating application status: " . $e->getMessage());
+            return false;
+        }
     }
 
 }

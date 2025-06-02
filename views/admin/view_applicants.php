@@ -241,6 +241,21 @@
                                                 <?= htmlspecialchars($txn['currency']) ?></p>
                                         </div>
                                     </div>
+                                    <!-- Add allocation details -->
+                                    <div class="mt-4 grid grid-cols-3 gap-4">
+                                        <div class="bg-blue-50 rounded-lg p-3">
+                                            <p class="text-xs text-blue-600 font-medium">Insurance Cost (10%)</p>
+                                            <p class="text-sm font-semibold text-blue-900">₱<?= number_format($txn['amount_paid'] * 0.10, 2) ?></p>
+                                        </div>
+                                        <div class="bg-green-50 rounded-lg p-3">
+                                            <p class="text-xs text-green-600 font-medium">Admin Fee (5%)</p>
+                                            <p class="text-sm font-semibold text-green-900">₱<?= number_format($txn['amount_paid'] * 0.05, 2) ?></p>
+                                        </div>
+                                        <div class="bg-purple-50 rounded-lg p-3">
+                                            <p class="text-xs text-purple-600 font-medium">Savings Fund (85%)</p>
+                                            <p class="text-sm font-semibold text-purple-900">₱<?= number_format($txn['amount_paid'] * 0.85, 2) ?></p>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="border-t px-6 py-4 bg-gray-50 text-sm text-gray-700">
                                     Next Due:
