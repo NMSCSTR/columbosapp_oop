@@ -80,7 +80,7 @@
                         <h1 class="text-3xl font-bold text-gray-800">Welcome back, <?php echo ucfirst($_SESSION['role'])?></h1>
                         <p class="text-gray-600 mt-1"><?php echo date('l, F j, Y')?></p>
                     </div>
-                    <div class="flex space-x-3">
+                    <!-- <div class="flex space-x-3">
                         <button onclick="window.location.href='new-application.php'" class="quick-action-btn flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -93,7 +93,7 @@
                             </svg>
                             Generate Report
                         </button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -185,34 +185,6 @@
                                 <span class="text-sm font-medium text-gray-700">Settings</span>
                             </button>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Role Distribution Chart -->
-                <div class="chart-card p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg font-semibold text-gray-800">User Role Distribution</h3>
-                        <div class="relative">
-                            <button onclick="toggleExportMenu()" class="text-sm text-blue-600 hover:text-blue-800 flex items-center focus:outline-none">
-                                <i class="fas fa-download mr-1"></i> Export
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="exportMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10">
-                                <div class="py-1">
-                                    <button onclick="exportToCSV()" class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                        <i class="fas fa-file-csv mr-2"></i> Export as CSV
-                                    </button>
-                                    <button onclick="exportToPDF()" class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                        <i class="fas fa-file-pdf mr-2"></i> Export as PDF
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="height: 300px;">
-                        <canvas id="roleChart"></canvas>
                     </div>
                 </div>
             </div>
