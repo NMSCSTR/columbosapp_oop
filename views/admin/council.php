@@ -131,7 +131,7 @@ include '../../includes/alert2.php';
                                 required>
                                 <option selected disabled value="">Select Unit Manager</option>
                                 <?php
-                                $fetch_unit_managers = mysqli_query($conn, "SELECT * FROM users WHERE role = 'unit-manager' AND status = 'active'");
+                                $fetch_unit_managers = mysqli_query($conn, "SELECT * FROM users WHERE role = 'unit-manager' AND status = 'approved'");
                                 while ($manager = mysqli_fetch_assoc($fetch_unit_managers)) { ?>
                                 <option value="<?php echo $manager['id']; ?>">
                                     <?php echo htmlspecialchars($manager['firstname'] . ' ' . $manager['lastname']); ?>
@@ -147,7 +147,7 @@ include '../../includes/alert2.php';
                                 required>
                                 <option selected disabled value="">Select Counselor</option>
                                 <?php
-                                $fetch_fraternal_counselor = mysqli_query($conn, "SELECT * FROM users WHERE role = 'fraternal-counselor' AND status = 'active'");
+                                $fetch_fraternal_counselor = mysqli_query($conn, "SELECT * FROM users WHERE role = 'fraternal-counselor' AND status = 'approved'");
                                 while ($fraternal = mysqli_fetch_assoc($fetch_fraternal_counselor)) { ?>
                                 <option value="<?php echo $fraternal['id']; ?>">
                                     <?php echo htmlspecialchars($fraternal['firstname'] . ' ' . $fraternal['lastname']); ?>
