@@ -9,6 +9,11 @@
     include '../../partials/breadcrumb.php';
 ?>
 
+<!-- Add this right after the header include -->
+<script>
+    const BASE_URL = '<?php echo rtrim(dirname(dirname(dirname($_SERVER['PHP_SELF']))), '/') . '/'; ?>';
+</script>
+
 <!-- Import DataTables CSS and JS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
@@ -354,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `${BASE_URL}controllers/adminController/userController.php?${action}=${userId}`;
+                    window.location.href = BASE_URL + `controllers/adminController/userStatusController.php?id=${userId}&action=${action}`;
                 }
             });
         });
@@ -384,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `${BASE_URL}controllers/adminController/userController.php?reset=${userId}`;
+                    window.location.href = BASE_URL + `controllers/adminController/userController.php?reset=${userId}`;
                 }
             });
         });
@@ -469,7 +474,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     <div class="flex justify-end space-x-3 mt-2">
                         <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-yellow-700 bg-yellow-100 rounded-lg hover:bg-yellow-200 focus:ring-2 focus:ring-yellow-300 transition-colors duration-200"
-                            onclick="document.querySelector('.reset-password-btn[data-id=\\'${userData.id}\\']').click()">
+                            onclick="handleUserAction('reset', '${userData.id}')">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                             </svg>
@@ -477,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </button>
                         ${userData.status === 'pending' || userData.status === 'disabled' ?
                             `<button class="inline-flex items-center px-4 py-2 text-sm font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-2 focus:ring-green-300 transition-colors duration-200"
-                                onclick="document.querySelector('.approve-btn[data-id=\\'${userData.id}\\']').click()">
+                                onclick="handleUserAction('approve', '${userData.id}')">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
@@ -485,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </button>` :
                             userData.status === 'approved' ?
                             `<button class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-2 focus:ring-red-300 transition-colors duration-200"
-                                onclick="document.querySelector('.disable-btn[data-id=\\'${userData.id}\\']').click()">
+                                onclick="handleUserAction('disable', '${userData.id}')">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
                                 </svg>
@@ -525,6 +530,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         }
     });
+
+    // Define handleUserAction function for the modal
+    function handleUserAction(action, userId) {
+        if (action === 'reset') {
+            window.location.href = BASE_URL + `controllers/adminController/userController.php?reset=${userId}`;
+        } else {
+            window.location.href = BASE_URL + `controllers/adminController/userStatusController.php?id=${userId}&action=${action}`;
+        }
+    }
 });
 </script>
 
