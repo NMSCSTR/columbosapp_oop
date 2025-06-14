@@ -47,7 +47,7 @@ class announcementModel
             'apikey'     => '5bf90b2585f02b48d22e01d79503e591',
             'number'     => $number,
             'message'    => $message,
-            'sendername' => 'SEMAPHORE',
+            'sendername' => 'KCFAPI',
         ];
 
         curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');

@@ -101,7 +101,7 @@ public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_d
             'apikey'     => '5bf90b2585f02b48d22e01d79503e591',
             'number'     => $number,
             'message'    => $message,
-            'sendername' => 'semaphore',
+            'sendername' => 'KCFAPI',
         ];
 
         curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
