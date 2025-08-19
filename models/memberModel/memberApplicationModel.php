@@ -376,8 +376,14 @@ class MemberApplicationModel
 
     }
 
-    public function fetchApplicantByCouncil(){
-        
+    public function fetchPendingApplicantByCouncil($council_id, $applicant_id){
+        $council_id = mysqli_real_escape_string($this->conn, $council_id);
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+
+        $sql = "SELECT * FROM plans WHERE `applicant_id` = '$applicant_id' AND `council_id` = '$council_id'";
+        $result = mysqli_query($this->conn, $sql);
+
+        return $result ? true : false;
     }
 
     public function fetchAllApplicantById($user_id)
