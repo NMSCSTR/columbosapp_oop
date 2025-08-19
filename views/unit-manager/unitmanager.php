@@ -340,16 +340,16 @@
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm text-gray-500">
-    <svg class="w-4 h-4 <?php echo ($growth >= 0) ? 'text-green-500' : 'text-red-500'; ?> mr-1" 
-         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="<?php echo ($growth >= 0) ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' : 'M11 17h-8m0 0v-8m0 8l8-8 4 4 6-6'; ?>" />
-    </svg>
-    <span>
-        <?php echo number_format(abs($growth), 2); ?>% 
-        <?php echo ($growth >= 0) ? 'increase' : 'decrease'; ?> from last month
-    </span>
-</div>
+                    <svg class="w-4 h-4 <?php echo ($growth >= 0) ? 'text-green-500' : 'text-red-500'; ?> mr-1"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="<?php echo ($growth >= 0) ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' : 'M11 17h-8m0 0v-8m0 8l8-8 4 4 6-6'; ?>" />
+                    </svg>
+                    <span>
+                        <?php echo number_format(abs($growth), 2); ?>%
+                        <?php echo ($growth >= 0) ? 'increase' : 'decrease'; ?> from last month
+                    </span>
+                </div>
 
             </div>
         </div>
