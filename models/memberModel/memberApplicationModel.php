@@ -150,6 +150,8 @@ class MemberApplicationModel
         return null;
     }
     
+
+
     public function calculateTotalAllocationsForAllApplicants()
     {
         $applicants = $this->getAllApplicants();
@@ -168,9 +170,41 @@ class MemberApplicationModel
                 $totals['total_contribution'] += $applicant['total_contribution'] ?? 0;
             }
         }
-
         return $totals;
     }
+
+    
+
+    public function calculateMonthlyAllocationsByCouncil($council_id, $year, $month)
+    {
+        $council_id = mysqli_real_escape_string($this->conn, $council_id);
+
+        $sql = "SELECT
+                    a.applicant_id,
+                    p.contribution_amount,
+                    a.application_status
+                FROM applicants a
+                LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+                WHERE p.council_id = '$council_id'
+                AND a.application_status = 'Approved'
+                AND YEAR(a.created_at) = '$year'
+                AND MONTH(a.created_at) = '$month'";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        $total = 0;
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $total_contribution = $this->calculateTotalContributions($row);
+                $total += $total_contribution;
+            }
+        }
+
+        return $total;
+    }
+
+
 
     // public function calculateTotalContributions($applicant)
     // {
@@ -376,15 +410,25 @@ class MemberApplicationModel
 
     }
 
-    public function fetchPendingApplicantByCouncil($council_id, $applicant_id){
+    public function fetchPendingApplicantByCouncil($council_id){
         $council_id = mysqli_real_escape_string($this->conn, $council_id);
-        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
 
-        $sql = "SELECT * FROM plans WHERE `applicant_id` = '$applicant_id' AND `council_id` = '$council_id'";
+        $sql = "SELECT COUNT(*) AS total_pending
+                FROM plans p
+                INNER JOIN applicants a ON p.applicant_id = a.applicant_id
+                WHERE p.council_id = '$council_id'
+                AND a.application_status = 'Pending'";
+
         $result = mysqli_query($this->conn, $sql);
 
-        return $result ? true : false;
+        if($result){
+            $row = mysqli_fetch_assoc($result);
+            return $row['total_pending'];
+        }
+        return 0;
     }
+
+
 
     public function fetchAllApplicantById($user_id)
     {
