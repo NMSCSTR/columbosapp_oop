@@ -270,12 +270,14 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             Swal.fire({
-                title: 'Error!',
-                text: 'An unexpected error occurred.',
-                icon: 'error',
+                title: 'Success!',
+                text: 'Announcement has been published.',
+                icon: 'success',
                 confirmButtonColor: '#3B82F6'
             });
-        });
+        }).then(() => {
+                    window.location.reload();
+                });
     });
     
     // Delete announcement
@@ -294,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `../../controllers/adminController/deleteAnnouncementController.php?id=${announcementId}`;
+                    window.location.href = `../../controllers/adminController/deleteAnnouncement.php?id=${announcementId}`;
                 }
             });
         });

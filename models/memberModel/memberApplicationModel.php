@@ -25,6 +25,8 @@ class MemberApplicationModel
         return 0;
     }
 
+
+
     public function getAllApplicantsOlderVer()
     {
         $sql = "SELECT
@@ -372,6 +374,10 @@ class MemberApplicationModel
 
         return $result ? true : false;
 
+    }
+
+    public function fetchApplicantByCouncil(){
+        
     }
 
     public function fetchAllApplicantById($user_id)

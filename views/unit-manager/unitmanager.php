@@ -24,7 +24,7 @@
     $applicationModel       = new MemberApplicationModel($conn);
     $formsModel             = new FormsModel($conn);
     $announcementModel      = new announcementModel($conn);
-
+    
     $announcements   = $announcementModel->getAllAnnouncement();
     $totalApplicants = $applicationModel->countAllApplicants($_SESSION['user_id']);
     $totals          = $applicationModel->calculateTotalAllocationsForAllApplicants();

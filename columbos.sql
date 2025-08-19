@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2025 at 09:10 AM
+-- Generation Time: Jun 19, 2025 at 10:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -144,7 +144,8 @@ CREATE TABLE `council` (
 --
 
 INSERT INTO `council` (`council_id`, `council_number`, `council_name`, `unit_manager_id`, `fraternal_counselor_id`, `date_established`, `date_created`) VALUES
-(6, '122', 'St.Vincents', 10, 11, '2025-04-17 00:00:00.000000', '2025-04-29 10:54:06');
+(6, '122', 'St.Vincents', 10, 11, '2025-04-17 00:00:00.000000', '2025-04-29 10:54:06'),
+(7, 'Z678', 'St. Michael', 14, 15, '2025-03-01 00:00:00.000000', '2025-06-03 13:53:03');
 
 -- --------------------------------------------------------
 
@@ -392,6 +393,13 @@ CREATE TABLE `membership_roster` (
   `exm` char(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `membership_roster`
+--
+
+INSERT INTO `membership_roster` (`member_number`, `council_id`, `member_name`, `street_address`, `city_state_zip`, `first_degree`, `second_degree`, `third_degree`, `reentry_date`, `yrs_svc`, `birth_date`, `mbr_type`, `mbr_cls`, `assy`, `exm`) VALUES
+('5350618', 6, 'ABANG, STEPHEN JHON PONTEJON', 'Sumalig, Tambulig Zamboanga Del Sur', 'Tambulig 7214', '2025-03-09', NULL, NULL, NULL, 1, '2004-10-08', 'A', 'A', NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -495,6 +503,21 @@ INSERT INTO `plans` (`plan_id`, `applicant_id`, `user_id`, `fraternal_benefits_i
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `qouta`
+--
+
+CREATE TABLE `qouta` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `qouta` bigint(20) NOT NULL,
+  `current_amount` bigint(20) NOT NULL,
+  `duration` date NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `transactions`
 --
 
@@ -549,7 +572,9 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `kcfapicode`, `email`, `phon
 (10, 'Bongbong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09105200970', 'unit-manager', '$2y$10$G1aYlnjTwpxPLAq5BDQKheY1yf/icbbXQ0N6DSTuMINpHNNkcf7uS', 'approved', '2025-04-29 03:12:25'),
 (11, 'Sarah', 'Duterte', 'SARAHCODE', 'sarahduterte@gmail.com', '09105200970', 'fraternal-counselor', '$2y$10$Mz8F/Ya25UUr5dstBEZ2N.VJuxuLq0hi5IeK3y1CwC8LMvoX2ERIm', 'approved', '2025-04-29 03:17:08'),
 (12, 'Kitty', 'Duterte', 'KITTYCODE', 'inesphilip72@gmail.com', '09105200973', 'family-member', '$2y$10$kM2uW5S8ehCbpfI/7sqWS.oLhsYZNuYB69YBXPBCkTI9PbPgnAycC', 'disabled', '2025-04-29 03:18:54'),
-(13, 'Sandro', 'Marcos', 'SANDROCODE', 'sandromarcos@gmail.com', '09105200974', 'member', '$2y$10$9t/uW.w9GTrU7HsdBQjck.W3VQcNAkz71N6eZ7yPCm3aSNcdKnJCm', 'approved', '2025-04-29 03:19:36');
+(13, 'Sandro', 'Marcos', 'SANDROCODE', 'sandromarcos@gmail.com', '09105200974', 'member', '$2y$10$9t/uW.w9GTrU7HsdBQjck.W3VQcNAkz71N6eZ7yPCm3aSNcdKnJCm', 'approved', '2025-04-29 03:19:36'),
+(14, 'Baste', 'Duterte', 'BasteCode', 'basteduterte@gmail.com', '09090909011', 'unit-manager', '$2y$10$4vI/eo6dVFgMVPGizOhmJucuWURLGo5foZFTDu8mGQWO7Mb0z3Fia', 'approved', '2025-06-03 11:15:44'),
+(15, 'Pulong', 'Duterte', 'PULONGCODE', 'pulongduterte@gmail.com', '09123456788', 'fraternal-counselor', '$2y$10$P/xBZFYm/UWrCbQehQwOG.htLrTU.xufcvbBop9vJAzUrI8xdoGYO', 'pending', '2025-06-03 11:52:12');
 
 --
 -- Indexes for dumped tables
@@ -697,6 +722,13 @@ ALTER TABLE `plans`
   ADD KEY `plans_council_id_FK` (`council_id`);
 
 --
+-- Indexes for table `qouta`
+--
+ALTER TABLE `qouta`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `qouta_user_id` (`user_id`);
+
+--
 -- Indexes for table `transactions`
 --
 ALTER TABLE `transactions`
@@ -744,7 +776,7 @@ ALTER TABLE `contact_info`
 -- AUTO_INCREMENT for table `council`
 --
 ALTER TABLE `council`
-  MODIFY `council_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `council_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `employment`
@@ -819,6 +851,12 @@ ALTER TABLE `plans`
   MODIFY `plan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
+-- AUTO_INCREMENT for table `qouta`
+--
+ALTER TABLE `qouta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
@@ -828,7 +866,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables
@@ -940,6 +978,12 @@ ALTER TABLE `plans`
   ADD CONSTRAINT `plans_council_id_FK` FOREIGN KEY (`council_id`) REFERENCES `council` (`council_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `plans_ibfk_1` FOREIGN KEY (`applicant_id`) REFERENCES `applicants` (`applicant_id`),
   ADD CONSTRAINT `plans_user_id_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `qouta`
+--
+ALTER TABLE `qouta`
+  ADD CONSTRAINT `qouta_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `transactions`

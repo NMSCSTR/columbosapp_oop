@@ -584,7 +584,7 @@ $files           = $formsModel->viewAllForms();
     <div class="relative overflow-hidden bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl p-8 text-white mb-8">
         <div class="relative z-10">
             <h1 class="text-4xl text-green-700 font-bold mb-2">Announcements 📢</h1>
-            <p class="text-yellow-500 text-lg">Stay updated with the latest news and updates.</p>
+            <p class="text-yellow-500 text-lg">Stay updated with the latest announcements and updates.</p>
         </div>
         <div class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-yellow-400 opacity-20 transform rotate-12"></div>
     </div>
