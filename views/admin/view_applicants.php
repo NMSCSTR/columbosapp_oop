@@ -41,7 +41,7 @@
             <div
                 class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    MAKE PAYMENT
+                    Make Payment
                 </h3>
                 <button type="button"
                     class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -198,10 +198,10 @@
                                         <a data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" href="#" class="text-blue-600 hover:text-blue-800">
                                             <i class="fas fa-money-bill-wave"></i> PAY
                                         </a>
-                                        <span class="text-gray-400">|</span>
+                                        <!-- <span class="text-gray-400">|</span>
                                         <button @click="open = true" class="text-green-600 hover:text-green-800">
                                             <i class="fas fa-eye"></i> VIEW
-                                        </button>
+                                        </button> -->
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -281,4 +281,3 @@
 include '../../includes/footer.php';
 ?>
 
-    <!--AP 17 ui 13 fb 5 ci 6 -->
