@@ -146,7 +146,7 @@
         margin-top: -2px;
         display: none;
     }
-    
+
     .table-scroll-indicator::after {
         content: '';
         position: absolute;
@@ -157,7 +157,7 @@
         transform-origin: left;
         transition: transform 0.3s ease;
     }
-    
+
     @media (max-width: 1024px) {
         .table-scroll-indicator {
             display: block;
@@ -180,7 +180,7 @@
             <nav class="flex mb-8" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                     <li class="inline-flex items-center">
-                        <a href="<?php echo BASE_URL?>views/admin/dashboard.php"
+                        <a href="<?php echo BASE_URL ?>views/admin/dashboard.php"
                             class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                             <svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor" viewBox="0 0 20 20">
@@ -251,66 +251,66 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php 
-                                $applicationModel = new MemberApplicationModel($conn);
-                                $applicants = $applicationModel->getAllApplicants();
+                                <?php
+                                    $applicationModel = new MemberApplicationModel($conn);
+                                    $applicants       = $applicationModel->getAllApplicants();
 
-                                if ($applicants && is_array($applicants) && count($applicants) > 0) {
-                                    foreach ($applicants as $applicant) {
-                                    ?>
+                                    if ($applicants && is_array($applicants) && count($applicants) > 0) {
+                                        foreach ($applicants as $applicant) {
+                                        ?>
                                     <tr class="table-row bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <td class="px-6 py-4">
-                                            <div class="font-medium text-gray-900"><?= htmlspecialchars($applicant['applicant_name']) ?></div>
+                                            <div class="font-medium text-gray-900"><?php echo htmlspecialchars($applicant['applicant_name'])?></div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <span class="badge <?php
-                                                switch(strtolower(str_replace(' ', '', $applicant['plan_type']))) {
-                                                    case 'investmentplan':
-                                                        echo 'badge-investment';
-                                                        break;
-                                                    case 'retirementplan':
-                                                        echo 'badge-retirement';
-                                                        break;
-                                                    case 'educationalplan':
-                                                        echo 'badge-educational';
-                                                        break;
-                                                    case 'protectionplan':
-                                                        echo 'badge-protection';
-                                                        break;
-                                                    case 'termplan':
-                                                        echo 'badge-term';
-                                                        break;
-                                                    default:
-                                                        echo 'bg-gray-100 text-gray-800';
-                                                }
-                                            ?>">
-                                                <?= htmlspecialchars($applicant['plan_type']) ?>
+                                            <span class="badge                                                               <?php
+                                                                   switch (strtolower(str_replace(' ', '', $applicant['plan_type']))) {
+                                                                               case 'investmentplan':
+                                                                                   echo 'badge-investment';
+                                                                                   break;
+                                                                               case 'retirementplan':
+                                                                                   echo 'badge-retirement';
+                                                                                   break;
+                                                                               case 'educationalplan':
+                                                                                   echo 'badge-educational';
+                                                                                   break;
+                                                                               case 'protectionplan':
+                                                                                   echo 'badge-protection';
+                                                                                   break;
+                                                                               case 'termplan':
+                                                                                   echo 'badge-term';
+                                                                                   break;
+                                                                               default:
+                                                                                   echo 'bg-gray-100 text-gray-800';
+                                                                       }
+                                                                       ?>">
+                                                <?php echo htmlspecialchars($applicant['plan_type'])?>
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4"><?= htmlspecialchars($applicant['plan_name']) ?></td>
-                                        <td class="px-6 py-4 text-right">₱<?= number_format($applicant['face_value'], 2) ?></td>
+                                        <td class="px-6 py-4"><?php echo htmlspecialchars($applicant['plan_name'])?></td>
+                                        <td class="px-6 py-4 text-right">₱<?php echo number_format($applicant['face_value'], 2)?></td>
                                         <td class="px-6 py-4">
-                                            <span class="badge <?php
-                                                switch(strtolower($applicant['application_status'])) {
-                                                    case 'approved':
-                                                        echo 'badge-approved';
-                                                        break;
-                                                    case 'pending':
-                                                        echo 'badge-pending';
-                                                        break;
-                                                    case 'rejected':
-                                                        echo 'badge-rejected';
-                                                        break;
-                                                    default:
-                                                        echo 'bg-gray-100 text-gray-800';
-                                                }
-                                            ?>">
-                                                <?= ucfirst(htmlspecialchars($applicant['application_status'])) ?>
+                                            <span class="badge                                                               <?php
+                                                                   switch (strtolower($applicant['application_status'])) {
+                                                                               case 'approved':
+                                                                                   echo 'badge-approved';
+                                                                                   break;
+                                                                               case 'pending':
+                                                                                   echo 'badge-pending';
+                                                                                   break;
+                                                                               case 'rejected':
+                                                                                   echo 'badge-rejected';
+                                                                                   break;
+                                                                               default:
+                                                                                   echo 'bg-gray-100 text-gray-800';
+                                                                       }
+                                                                       ?>">
+                                                <?php echo ucfirst(htmlspecialchars($applicant['application_status']))?>
                                             </span>
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="flex items-center space-x-3">
-                                                <a href="moreapplicationdetails.php?id=<?= $applicant['applicant_id'] ?>&user_id=<?= $applicant['user_id'] ?>"
+                                                <a href="moreapplicationdetails.php?id=<?php echo $applicant['applicant_id']?>&user_id=<?php echo $applicant['user_id']?>"
                                                     class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 focus:ring-2 focus:ring-blue-300 transition-colors duration-200">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -318,15 +318,22 @@
                                                     </svg>
                                                     View Details
                                                 </a>
+                                                <button onclick="openSmsModal(<?php echo $applicant['applicant_id']?>, '<?php echo htmlspecialchars(addslashes($applicant['applicant_name']))?>')"
+													class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-purple-700 bg-purple-100 rounded-lg hover:bg-purple-200 focus:ring-2 focus:ring-purple-300 transition-colors duration-200">
+													<svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+														<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h9.79M21 12.79a2 2 0 01-.59 1.41l-3.7 3.7a2 2 0 01-1.41.59H8l-4 4V7a2 2 0 012-2h12a2 2 0 012 2v5.79z" />
+													</svg>
+													Send SMS
+												</button>
                                                 <?php if (strtolower($applicant['application_status']) === 'pending'): ?>
-                                                    <button onclick="updateStatus(<?= $applicant['applicant_id'] ?>, 'Approved')"
+                                                    <button onclick="updateStatus(<?php echo $applicant['applicant_id']?>, 'Approved')"
                                                         class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-2 focus:ring-green-300 transition-colors duration-200">
                                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                                         </svg>
                                                         Approve
                                                     </button>
-                                                    <button onclick="updateStatus(<?= $applicant['applicant_id'] ?>, 'Rejected')"
+                                                    <button onclick="updateStatus(<?php echo $applicant['applicant_id']?>, 'Rejected')"
                                                         class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-2 focus:ring-red-300 transition-colors duration-200">
                                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -339,7 +346,7 @@
                                     </tr>
                                 <?php
                                     }
-                                } else { ?>
+                                } else {?>
                                     <tr>
                                         <td colspan="6" class="px-6 py-4 text-center text-gray-500">
                                             <div class="flex flex-col items-center justify-center py-8">
@@ -351,7 +358,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                <?php } ?>
+                                <?php }?>
                             </tbody>
                         </table>
                     </div>
@@ -367,7 +374,7 @@ $(document).ready(function() {
     if ($.fn.DataTable.isDataTable('#myTable2s')) {
         $('#myTable2s').DataTable().destroy();
     }
-    
+
     var table = $('#myTable2s').DataTable({
         responsive: true,
         scrollX: true,
@@ -489,7 +496,7 @@ function updateStatus(applicantId, status) {
         success: function(response) {
             try {
                 const result = (typeof response === 'string') ? JSON.parse(response) : response;
-                
+
                 if (result.success) {
                     Swal.fire({
                         icon: 'success',
@@ -526,6 +533,207 @@ function updateStatus(applicantId, status) {
             });
         }
     });
+}
+
+function openSmsModal(applicantId, applicantName) {
+	function isUnicode(str) {
+		return /[^\u0000-\u007F]/.test(str);
+	}
+	function computeSegments(text) {
+		const unicode = isUnicode(text);
+		const single = unicode ? 70 : 160;
+		const concat = unicode ? 67 : 153;
+		if (text.length === 0) return { chars: 0, segments: 0, limit: single };
+		if (text.length <= single) return { chars: text.length, segments: 1, limit: single };
+		return { chars: text.length, segments: Math.ceil(text.length / concat), limit: concat };
+	}
+	function fmtDate(dStr) {
+		if (!dStr) return '';
+		const d = new Date(dStr + 'T00:00:00');
+		return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+	}
+
+	const modalHtml = '' +
+		'<div class="space-y-3 text-left">' +
+			'<div class="flex items-center justify-between">' +
+				'<div class="flex items-center space-x-2">' +
+					'<span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 text-purple-800">' +
+						'<svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h9.79M21 12.79a2 2 0 01-.59 1.41l-3.7 3.7a2 2 0 01-1.41.59H8l-4 4V7a2 2 0 012-2h12a2 2 0 012 2v5.79z"/></svg>' +
+						'Send to' +
+					'</span>' +
+					'<span class="font-medium text-gray-900">' + applicantName.replace(/"/g, '&quot;') + '</span>' +
+				'</div>' +
+			'</div>' +
+
+			'<div>' +
+				'<label class="block text-sm font-medium text-gray-700 mb-1">Template</label>' +
+				'<select id="sms_template" class="swal2-select" style="width:100%">' +
+					'<option value="">Custom</option>' +
+					'<option value="approved">Approval notice</option>' +
+					'<option value="rejected">Rejection notice</option>' +
+					'<option value="reminder">Reminder</option>' +
+					'<option value="payment_due">Payment due date</option>' +
+				'</select>' +
+			'</div>' +
+
+			'<div id="due_date_wrapper" style="display:none">' +
+				'<label class="block text-sm font-medium text-gray-700 mb-1">Due date</label>' +
+				'<input type="date" id="sms_due_date" class="swal2-input" style="width:100%" />' +
+			'</div>' +
+
+			'<div>' +
+				'<label class="block text-sm font-medium text-gray-700 mb-1">Subject</label>' +
+				'<input type="text" id="sms_subject" class="swal2-input" style="width:100%" placeholder="Enter subject" />' +
+			'</div>' +
+
+			'<div>' +
+				'<label class="block text-sm font-medium text-gray-700 mb-1">Message</label>' +
+				'<textarea id="sms_content" class="swal2-textarea" placeholder="Type your message..." rows="5" style="width:100%"></textarea>' +
+				'<div class="mt-2 text-xs text-gray-500">' +
+					'<span id="sms_char_count">Characters: 0</span>' +
+					'<span class="mx-2">|</span>' +
+					'<span id="sms_segment_count">Segments: 0</span>' +
+					'<span class="mx-2">|</span>' +
+					'<span id="sms_limit">Limit: 160</span>' +
+				'</div>' +
+			'</div>' +
+
+			'<div class="mt-3">' +
+				'<label class="block text-sm font-medium text-gray-700 mb-1">Preview</label>' +
+				'<pre id="sms_preview" class="bg-gray-50 border border-gray-200 rounded-md p-3 whitespace-pre-wrap text-sm" style="max-height:160px; overflow:auto"></pre>' +
+			'</div>' +
+		'</div>';
+
+	Swal.fire({
+		title: 'Send SMS',
+		html: modalHtml,
+		width: '700px',
+		focusConfirm: false,
+		showCancelButton: true,
+		confirmButtonText: 'Send',
+		didOpen: () => {
+			const $subject = document.getElementById('sms_subject');
+			const $content = document.getElementById('sms_content');
+			const $char = document.getElementById('sms_char_count');
+			const $seg = document.getElementById('sms_segment_count');
+			const $lim = document.getElementById('sms_limit');
+			const $prev = document.getElementById('sms_preview');
+			const $tmpl = document.getElementById('sms_template');
+			const $dueWrap = document.getElementById('due_date_wrapper');
+			const $dueDate = document.getElementById('sms_due_date');
+
+			function update() {
+				const preview = ($subject.value ? $subject.value + '\n\n' : '') + $content.value;
+				const meta = computeSegments(preview);
+				$char.textContent = 'Characters: ' + meta.chars;
+				$seg.textContent = 'Segments: ' + meta.segments;
+				$lim.textContent = 'Limit: ' + (meta.limit);
+				$prev.textContent = preview;
+			}
+
+			function ensureDueDateDefault() {
+				if (!$dueDate.value) {
+					const now = new Date();
+					now.setDate(now.getDate() + 7);
+					const y = now.getFullYear();
+					const m = String(now.getMonth() + 1).padStart(2, '0');
+					const d = String(now.getDate()).padStart(2, '0');
+					$dueDate.value = `${y}-${m}-${d}`;
+				}
+			}
+
+			$subject.addEventListener('input', update);
+			$content.addEventListener('input', update);
+			$tmpl.addEventListener('change', () => {
+				if ($tmpl.value === 'approved') {
+					$dueWrap.style.display = 'none';
+					$subject.value = 'Application Approved';
+					$content.value = 'Hi ' + applicantName + ', your application has been approved. Thank you.';
+				} else if ($tmpl.value === 'rejected') {
+					$dueWrap.style.display = 'none';
+					$subject.value = 'Application Update';
+					$content.value = 'Hi ' + applicantName + ', we regret to inform you that your application was not approved.';
+				} else if ($tmpl.value === 'reminder') {
+					$dueWrap.style.display = 'none';
+					$subject.value = 'Reminder';
+					$content.value = 'Hi ' + applicantName + ', this is a friendly reminder about your application. Please contact us if you have questions.';
+				} else if ($tmpl.value === 'payment_due') {
+					$dueWrap.style.display = 'block';
+					$subject.value = 'Payment Due Reminder';
+					ensureDueDateDefault();
+					$content.value = 'Hi ' + applicantName + ', your payment is due on ' + fmtDate($dueDate.value) + '. Please complete your payment to avoid interruption.';
+				} else {
+					$dueWrap.style.display = 'none';
+					$subject.value = '';
+					$content.value = '';
+				}
+				update();
+			});
+			$dueDate.addEventListener('change', () => {
+				if ($tmpl.value === 'payment_due') {
+					$content.value = 'Hi ' + applicantName + ', your payment is due on ' + fmtDate($dueDate.value) + '. Please complete your payment to avoid interruption.';
+					update();
+				}
+			});
+
+			update();
+		},
+		preConfirm: () => {
+			const subject = document.getElementById('sms_subject').value.trim();
+			const content = document.getElementById('sms_content').value.trim();
+			if (!subject || !content) {
+				Swal.showValidationMessage('Subject and message are required');
+				return false;
+			}
+			return { subject, content };
+		}
+	}).then((result) => {
+		if (result.isConfirmed) {
+			sendSms(applicantId, result.value.subject, result.value.content);
+		}
+	});
+}
+
+function sendSms(applicantId, subject, content) {
+	Swal.fire({
+		title: 'Sending...',
+		text: 'Please wait while we send the SMS.',
+		allowOutsideClick: false,
+		showConfirmButton: false,
+		willOpen: () => { Swal.showLoading(); }
+	});
+
+	const formData = new FormData();
+	formData.append('applicant_id', applicantId);
+	formData.append('subject', subject);
+	formData.append('content', content);
+	const tmpl = document.getElementById('sms_template');
+	const dueDate = document.getElementById('sms_due_date');
+	if (tmpl) formData.append('template', tmpl.value || '');
+	if (dueDate) formData.append('due_date', (dueDate.value || ''));
+
+	$.ajax({
+		url: '../../controllers/admin/sendSmsToApplicant.php',
+		type: 'POST',
+		data: formData,
+		processData: false,
+		contentType: false,
+		success: function(response) {
+			try {
+				const res = (typeof response === 'string') ? JSON.parse(response) : response;
+				if (res.success) {
+					Swal.fire({ icon: 'success', title: 'Sent!', text: 'SMS sent successfully.' });
+				} else {
+					Swal.fire({ icon: 'error', title: 'Failed', text: res.message || 'Failed to send SMS.' });
+				}
+			} catch(e) {
+				Swal.fire({ icon: 'error', title: 'Error', text: 'Invalid server response.' });
+			}
+		},
+		error: function() {
+			Swal.fire({ icon: 'error', title: 'Error', text: 'Network or server error.' });
+		}
+	});
 }
 </script>
 

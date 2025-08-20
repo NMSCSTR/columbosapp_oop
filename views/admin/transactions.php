@@ -16,9 +16,6 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
 
-
-
-
 <div class="flex flex-col md:flex-row min-h-screen">
     <?php include '../../partials/sidebar.php' ?>
 
@@ -70,7 +67,7 @@
                         <div
                             class="relative isolate overflow-hidden bg-white px-6 py-20 text-center sm:px-16 sm:shadow-sm">
                             <p class="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                                Search applicant to make payments and see details!
+                                Search applicant to make payments
                             </p>
                             <form action="<?= BASE_URL?>controllers/adminController/searchController.php" method="get">
                                 <label
