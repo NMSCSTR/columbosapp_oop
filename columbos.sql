@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 19, 2025 at 10:07 AM
+-- Generation Time: Aug 21, 2025 at 04:26 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,7 +42,14 @@ INSERT INTO `announcements` (`id`, `subject`, `content`, `date_posted`) VALUES
 (6, 'Meeting Ta', 'Please be reminded that we will have our meeting tonight.', '2025-05-03 08:09:10'),
 (7, 'Urgent Meeting', 'Please be informed that we will have our meeting this evening.', '2025-05-26 14:48:00'),
 (8, 'Meeting Test', 'Naa tay meeting unya mga unit manager ug fraternal counselor alas 8 sa gabie.', '2025-05-29 00:09:55'),
-(9, 'Importanti kaayo', 'Please be informed that we will have our meeting this evening.\r\n\r\n Naa tay meeting unya mga unit manager ug fraternal counselor alas 8 sa gabie.', '2025-05-29 00:15:09');
+(9, 'Importanti kaayo', 'Please be informed that we will have our meeting this evening.\r\n\r\n Naa tay meeting unya mga unit manager ug fraternal counselor alas 8 sa gabie.', '2025-05-29 00:15:09'),
+(11, 'Check SMS', 'Check SMS Notification if being receive.', '2025-06-19 16:14:28'),
+(12, 'Second attempt SMS', 'Checking SMS integration on announcements', '2025-06-19 16:18:19'),
+(13, 'Third Attempt SMS', 'Another attempt on Checking SMS integration on announcements', '2025-06-19 16:23:48'),
+(15, 'Fourth Attempt SMS', 'Another fourth attempt on Checking SMS integration on announcements', '2025-06-19 16:25:13'),
+(16, 'Meeting Officers Part97', 'Naa tay meeting unya mga unit manager ug fraternal counselor alas 8 sa gabie.', '2025-06-19 16:25:59'),
+(17, 'Meeting Officers Part98', 'Please be informed that we will have our meeting this evening.', '2025-06-19 16:28:09'),
+(18, 'RHU-ANNOUNCEMENT', 'KARUN ANG SCHED SA EMUNG PRENATAL', '2025-06-25 15:34:29');
 
 -- --------------------------------------------------------
 
@@ -74,7 +81,7 @@ CREATE TABLE `applicants` (
 --
 
 INSERT INTO `applicants` (`applicant_id`, `user_id`, `fraternal_counselor_id`, `lastname`, `firstname`, `middlename`, `age`, `birthdate`, `birthplace`, `gender`, `marital_status`, `tin_sss`, `nationality`, `status`, `application_status`, `created_at`) VALUES
-(17, 13, 11, 'Marcoses', 'Sandra', 'Bangag', 2002, '0000-00-00', '28', 'Female', 'Single', 'Sapiente dolorum per', 'Id praesentium anim', 'Active', 'Approved', '2025-05-08 11:35:23');
+(17, 13, 11, 'Marcoses', 'Sandras', 'Bangag', 2002, '1999-02-11', '28', 'Female', 'Single', 'Sapiente dolorum per', 'Id praesentium anim', 'Active', 'Approved', '2025-05-08 11:35:23');
 
 -- --------------------------------------------------------
 
@@ -121,7 +128,7 @@ CREATE TABLE `contact_info` (
 --
 
 INSERT INTO `contact_info` (`contact_id`, `applicant_id`, `user_id`, `street`, `barangay`, `city_province`, `mobile_number`, `email_address`) VALUES
-(17, 17, 13, 'In occaecat itaque e', 'Elit accusantium id', 'Voluptatem amet at', '09123456789', 'jrfernandez.com');
+(17, 17, 13, 'In occaecat itaque e', 'Elit accusantium id', 'Voluptatem amet at', '09105200970', 'jrfernandez.com');
 
 -- --------------------------------------------------------
 
@@ -398,7 +405,8 @@ CREATE TABLE `membership_roster` (
 --
 
 INSERT INTO `membership_roster` (`member_number`, `council_id`, `member_name`, `street_address`, `city_state_zip`, `first_degree`, `second_degree`, `third_degree`, `reentry_date`, `yrs_svc`, `birth_date`, `mbr_type`, `mbr_cls`, `assy`, `exm`) VALUES
-('5350618', 6, 'ABANG, STEPHEN JHON PONTEJON', 'Sumalig, Tambulig Zamboanga Del Sur', 'Tambulig 7214', '2025-03-09', NULL, NULL, NULL, 1, '2004-10-08', 'A', 'A', NULL, NULL);
+('5350618', 6, 'ABANG, STEPHEN JHON PONTEJON', 'Tambulig Zamboanga Del Sur', 'Tambulig 7214', '2025-03-09', NULL, NULL, NULL, 1, '2004-10-08', 'R', 'A', NULL, NULL),
+('6256', 7, 'Sample Member', 'Member Address', 'asfmaomd', '2025-02-19', NULL, NULL, NULL, 1, '2014-06-18', 'A', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -518,6 +526,33 @@ CREATE TABLE `qouta` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `sms_logs`
+--
+
+CREATE TABLE `sms_logs` (
+  `id` int(11) NOT NULL,
+  `applicant_id` int(11) DEFAULT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `subject` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `template` varchar(50) DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
+  `status` varchar(20) NOT NULL,
+  `message_id` varchar(255) DEFAULT NULL,
+  `provider_response` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sms_logs`
+--
+
+INSERT INTO `sms_logs` (`id`, `applicant_id`, `phone_number`, `subject`, `content`, `template`, `due_date`, `status`, `message_id`, `provider_response`, `created_at`) VALUES
+(1, 17, '639105200970', 'Reminder', 'Hi Sandras Marcoses, this is a friendly reminder about your application. Please contact us if you have questions.', NULL, NULL, 'sent', '253607515', '[{\"message_id\":253607515,\"user_id\":57165,\"user\":\"inesphilip72@gmail.com\",\"account_id\":57026,\"account\":\"Knights of Columbus Fraternal Association\",\"recipient\":\"639105200970\",\"message\":\"Reminder\\n\\nHi Sandras Marcoses, this is a friendly reminder about your application. Please contact us if you have questions.\",\"sender_name\":\"KCFAPI\",\"network\":\"Smart\",\"status\":\"Pending\",\"type\":\"Single\",\"source\":\"Api\",\"created_at\":\"2025-08-20 19:16:32\",\"updated_at\":\"2025-08-20 19:16:32\"}]', '2025-08-20 19:16:32');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `transactions`
 --
 
@@ -568,13 +603,14 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `kcfapicode`, `email`, `phone_number`, `role`, `password`, `status`, `created_at`) VALUES
-(9, 'Rodrigo', 'Duterte', 'ROACODE', 'rodrigoroa@gmail.com', '09105200970', 'admin', '$2y$10$JDN36eEv6KaqtL8EPjKnAOAymSmK6f8TSF2ZghJ4S22sFGLKmkZyW', 'approved', '2025-04-29 02:37:07'),
-(10, 'Bongbong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09105200970', 'unit-manager', '$2y$10$G1aYlnjTwpxPLAq5BDQKheY1yf/icbbXQ0N6DSTuMINpHNNkcf7uS', 'approved', '2025-04-29 03:12:25'),
+(9, 'Rodrigo', 'Duterte', 'ROACODE', 'rodrigoroa@gmail.com', '09105200971', 'admin', '$2y$10$JDN36eEv6KaqtL8EPjKnAOAymSmK6f8TSF2ZghJ4S22sFGLKmkZyW', 'approved', '2025-04-29 02:37:07'),
+(10, 'Bongbong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09105200970', 'unit-manager', '$2y$10$m.IidSJa6LQJDBt6A1cJs.c8NYkD/.IZXvlA15g2YG7zz5nl82Y9S', 'approved', '2025-04-29 03:12:25'),
 (11, 'Sarah', 'Duterte', 'SARAHCODE', 'sarahduterte@gmail.com', '09105200970', 'fraternal-counselor', '$2y$10$Mz8F/Ya25UUr5dstBEZ2N.VJuxuLq0hi5IeK3y1CwC8LMvoX2ERIm', 'approved', '2025-04-29 03:17:08'),
-(12, 'Kitty', 'Duterte', 'KITTYCODE', 'inesphilip72@gmail.com', '09105200973', 'family-member', '$2y$10$kM2uW5S8ehCbpfI/7sqWS.oLhsYZNuYB69YBXPBCkTI9PbPgnAycC', 'disabled', '2025-04-29 03:18:54'),
+(12, 'Kitty', 'Duterte', 'KITTYCODE', 'inesphilip72@gmail.com', '09105200973', 'family-member', '$2y$10$kM2uW5S8ehCbpfI/7sqWS.oLhsYZNuYB69YBXPBCkTI9PbPgnAycC', 'approved', '2025-04-29 03:18:54'),
 (13, 'Sandro', 'Marcos', 'SANDROCODE', 'sandromarcos@gmail.com', '09105200974', 'member', '$2y$10$9t/uW.w9GTrU7HsdBQjck.W3VQcNAkz71N6eZ7yPCm3aSNcdKnJCm', 'approved', '2025-04-29 03:19:36'),
 (14, 'Baste', 'Duterte', 'BasteCode', 'basteduterte@gmail.com', '09090909011', 'unit-manager', '$2y$10$4vI/eo6dVFgMVPGizOhmJucuWURLGo5foZFTDu8mGQWO7Mb0z3Fia', 'approved', '2025-06-03 11:15:44'),
-(15, 'Pulong', 'Duterte', 'PULONGCODE', 'pulongduterte@gmail.com', '09123456788', 'fraternal-counselor', '$2y$10$P/xBZFYm/UWrCbQehQwOG.htLrTU.xufcvbBop9vJAzUrI8xdoGYO', 'pending', '2025-06-03 11:52:12');
+(15, 'Pulong', 'Duterte', 'PULONGCODE', 'pulongduterte@gmail.com', '09123456788', 'fraternal-counselor', '$2y$10$P/xBZFYm/UWrCbQehQwOG.htLrTU.xufcvbBop9vJAzUrI8xdoGYO', 'approved', '2025-06-03 11:52:12'),
+(16, 'admin', 'admin', 'KCFAPIADMIN', 'admin@kcfapi.com', '09123456789', 'admin', '$2y$10$7ozqmdWl7NNp6Pmg1cHt9.NQEK8SMfCEJ7icOS/EmfAPjFiPAehtm', 'approved', '2025-08-19 15:21:15');
 
 --
 -- Indexes for dumped tables
@@ -729,6 +765,12 @@ ALTER TABLE `qouta`
   ADD KEY `qouta_user_id` (`user_id`);
 
 --
+-- Indexes for table `sms_logs`
+--
+ALTER TABLE `sms_logs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `transactions`
 --
 ALTER TABLE `transactions`
@@ -752,7 +794,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `applicants`
@@ -857,6 +899,12 @@ ALTER TABLE `qouta`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `sms_logs`
+--
+ALTER TABLE `sms_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
@@ -866,7 +914,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables

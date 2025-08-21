@@ -389,7 +389,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = BASE_URL + `controllers/adminController/userController.php?reset=${userId}`;
+                    fetch(BASE_URL + `controllers/adminController/resetPasswordController.php?id=${userId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                title: data.success ? 'Password Reset' : 'Reset Failed',
+                                text: data.message || 'Password reset completed.',
+                                icon: data.success ? 'success' : 'error',
+                                confirmButtonColor: data.success ? '#10B981' : '#EF4444'
+                            }).then(() => {
+                                if (data.success) {
+                                    location.reload();
+                                }
+                            });
+                        })
+                        .catch(() => {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Request failed. Please try again.',
+                                icon: 'error',
+                                confirmButtonColor: '#EF4444'
+                            });
+                        });
                 }
             });
         });
@@ -534,7 +555,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Define handleUserAction function for the modal
     function handleUserAction(action, userId) {
         if (action === 'reset') {
-            window.location.href = BASE_URL + `controllers/adminController/userController.php?reset=${userId}`;
+            fetch(BASE_URL + `controllers/adminController/resetPasswordController.php?id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        title: data.success ? 'Password Reset' : 'Reset Failed',
+                        text: data.message || 'Password reset completed.',
+                        icon: data.success ? 'success' : 'error',
+                        confirmButtonColor: data.success ? '#10B981' : '#EF4444'
+                    }).then(() => {
+                        if (data.success) {
+                            location.reload();
+                        }
+                    });
+                })
+                .catch(() => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Request failed. Please try again.',
+                        icon: 'error',
+                        confirmButtonColor: '#EF4444'
+                    });
+                });
         } else {
             window.location.href = BASE_URL + `controllers/adminController/userStatusController.php?id=${userId}&action=${action}`;
         }

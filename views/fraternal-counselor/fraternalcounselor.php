@@ -18,9 +18,17 @@ if (!isset($_SESSION['email']) && $currentUser) {
     $_SESSION['email'] = $currentUser['email'];
 }
 
+$currentYear  = date('Y');
+$currentMonth = date('m');
+$lastMonth    = date('m', strtotime("-1 month"));
+$lastMonthYear= date('Y', strtotime("-1 month"));
+
 $councilModel           = new CouncilModel($conn);
 $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
 $applicationModel       = new MemberApplicationModel($conn);
+$thisMonthTotal      = $applicationModel->calculateMonthlyAllocationsByCouncil($_SESSION['user_id'], $currentYear, $currentMonth);
+$lastMonthTotal      = $applicationModel->calculateMonthlyAllocationsByCouncil($_SESSION['user_id'], $lastMonthYear, $lastMonth);
+$pending_application = $applicationModel->fetchPendingApplicantByCouncil($_SESSION['user_id']);
 $formsModel             = new FormsModel($conn);
 $announcementModel      = new announcementModel($conn);
 
@@ -28,6 +36,14 @@ $announcements   = $announcementModel->getAllAnnouncement();
 $totalApplicants = $applicationModel->countAllApplicants($_SESSION['user_id']);
 $totals          = $applicationModel->calculateTotalAllocationsForAllApplicants();
 $files           = $formsModel->viewAllForms();
+
+
+
+if ($lastMonthTotal > 0) {
+$growth = (($thisMonthTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
+} else {
+$growth = 0;
+}
 
 // $applicantData = $applicationModel->getApplicantByFraternalCounselor($_SESSION['user_id']);
 // $fetchFraternalBenefits = $fraternalBenefitsModel->getFraternalBenefitById($applicantData['fraternal_benefits_id']);
@@ -214,7 +230,7 @@ $files           = $formsModel->viewAllForms();
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-2">Total Applicants</h2>
                     <div class="flex items-baseline">
-            <p class="text-3xl font-bold text-green-600"><?= $totalApplicants ?></p>
+            <p class="text-3xl font-bold text-green-600"><?php echo $totalApplicants?></p>
                         <p class="ml-2 text-sm text-gray-500">members</p>
                     </div>
                 </div>
@@ -238,7 +254,7 @@ $files           = $formsModel->viewAllForms();
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-2">Pending Applications</h2>
                     <div class="flex items-baseline">
-                        <p class="text-3xl font-bold text-yellow-600">3</p>
+                        <p class="text-3xl font-bold text-yellow-600"><?php echo $pending_application; ?></p>
                         <p class="ml-2 text-sm text-gray-500">pending</p>
                     </div>
                 </div>
@@ -271,12 +287,17 @@ $files           = $formsModel->viewAllForms();
                     </svg>
                 </div>
             </div>
-            <div class="mt-4 flex items-center text-sm text-gray-500">
-                <svg class="w-4 h-4 text-blue-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-                <span>8% increase from last month</span>
-            </div>
+                <div class="mt-4 flex items-center text-sm text-gray-500">
+                    <svg class="w-4 h-4 <?php echo ($growth >= 0) ? 'text-green-500' : 'text-red-500'; ?> mr-1"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="<?php echo ($growth >= 0) ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' : 'M11 17h-8m0 0v-8m0 8l8-8 4 4 6-6'; ?>" />
+                    </svg>
+                    <span>
+                        <?php echo number_format(abs($growth), 2); ?>%
+                        <?php echo ($growth >= 0) ? 'increase' : 'decrease'; ?> from last month
+                    </span>
+                </div>
         </div>
     </div>
 
