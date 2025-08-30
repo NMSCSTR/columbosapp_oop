@@ -19,10 +19,10 @@
         $_SESSION['email'] = $currentUser['email'];
     }
 
-    $currentYear  = date('Y');
-    $currentMonth = date('m');
-    $lastMonth    = date('m', strtotime("-1 month"));
-    $lastMonthYear= date('Y', strtotime("-1 month"));
+    $currentYear   = date('Y');
+    $currentMonth  = date('m');
+    $lastMonth     = date('m', strtotime("-1 month"));
+    $lastMonthYear = date('Y', strtotime("-1 month"));
 
     $councilModel           = new CouncilModel($conn);
     $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
@@ -42,7 +42,7 @@
     } else {
         $growth = 0;
     }
-    
+
     // $applicantData = $applicationModel->getApplicantByFraternalCounselor($_SESSION['user_id']);
     // $fetchFraternalBenefits = $fraternalBenefitsModel->getFraternalBenefitById($applicantData['fraternal_benefits_id']);
     // $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
@@ -274,7 +274,7 @@
                     <div>
                         <h2 class="text-lg font-semibold text-gray-700 mb-2">Total Applicants</h2>
                         <div class="flex items-baseline">
-                            <p class="text-3xl font-bold text-green-600"><?php echo $totalApplicants?></p>
+                            <p class="text-3xl font-bold text-green-600"><?php echo $totalApplicants ?></p>
                             <p class="ml-2 text-sm text-gray-500">members</p>
                         </div>
                     </div>
@@ -340,14 +340,14 @@
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm text-gray-500">
-                    <svg class="w-4 h-4 <?php echo ($growth >= 0) ? 'text-green-500' : 'text-red-500'; ?> mr-1"
+                    <svg class="w-4 h-4                                                                               <?php echo($growth >= 0) ? 'text-green-500' : 'text-red-500'; ?> mr-1"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="<?php echo ($growth >= 0) ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' : 'M11 17h-8m0 0v-8m0 8l8-8 4 4 6-6'; ?>" />
+                            d="<?php echo($growth >= 0) ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' : 'M11 17h-8m0 0v-8m0 8l8-8 4 4 6-6'; ?>" />
                     </svg>
                     <span>
                         <?php echo number_format(abs($growth), 2); ?>%
-                        <?php echo ($growth >= 0) ? 'increase' : 'decrease'; ?> from last month
+                        <?php echo($growth >= 0) ? 'increase' : 'decrease'; ?> from last month
                     </span>
                 </div>
 
@@ -530,7 +530,7 @@
                         <td class="px-4 py-3 text-gray-700"><?php echo $row['description'] ?></td>
                         <td class="px-4 py-3">
                             <span
-                                class="px-3 py-1 text-xs rounded-full font-medium                                                                                  <?php echo strtolower($row['file_type']) === 'pdf' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700' ?>">
+                                class="px-3 py-1 text-xs rounded-full font-medium                                                                                                                                                                                                                                                    <?php echo strtolower($row['file_type']) === 'pdf' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700' ?>">
                                 <?php echo htmlspecialchars($row['file_type']) ?>
                             </span>
                         </td>
@@ -564,75 +564,79 @@
         </div>
     </div>
 
-    <!-- Councils Section -->
-    <div x-show="activeSection === 'council'" class="space-y-8" x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 transform -translate-y-4"
-        x-transition:enter-end="opacity-100 transform translate-y-0">
-        <!-- Section Header -->
-        <div
-            class="relative overflow-hidden bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-8 text-white mb-8">
-            <div class="relative z-10">
-                <h1 class="text-4xl text-green-700 font-bold mb-2">Council Directory 🏛️</h1>
-                <p class="text-purple-500 text-lg">View and manage council information.</p>
-            </div>
-            <div
-                class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-purple-400 opacity-20 transform rotate-12">
-            </div>
+<!-- Councils Section -->
+<div x-show="activeSection === 'council'" class="space-y-8" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
+    <!-- Section Header -->
+    <div class="relative overflow-hidden bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-8 text-white mb-8">
+        <div class="relative z-10">
+            <h1 class="text-4xl text-green-700 font-bold mb-2">Council Directory 🏛️</h1>
+            <p class="text-purple-500 text-lg">View and manage council information.</p>
         </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <table id="myTable3" class="stripe hover w-full" style="width:100%">
-                <thead class="bg-gray-800 text-white text-xs">
-                    <tr>
-                        <th class="px-4 py-3 rounded-l-lg">Council Number</th>
-                        <th class="px-4 py-3">Name</th>
-                        <th class="px-4 py-3">Unit Manager</th>
-                        <th class="px-4 py-3">Fraternal Counselor</th>
-                        <th class="px-4 py-3 rounded-r-lg">Established</th>
-                    </tr>
-                </thead>
-                <tbody class="text-sm">
-                    <?php
-                        $councilModel = new CouncilModel($conn);
-                        $councils     = $councilModel->getAllCouncil();
-
-                        if ($councils) {
-                            foreach ($councils as $council) {
-                                $um_name = $councilModel->getUserNameById($council['unit_manager_id'], 'unit-manager');
-                                $fc_name = $councilModel->getUserNameById($council['fraternal_counselor_id'], 'fraternal-counselor');
-                            ?>
-                    <tr class="border-b hover:bg-gray-50 transition-colors duration-200">
-                        <td class="px-4 py-3 text-gray-700 font-medium"><?php echo $council['council_number'] ?></td>
-                        <td class="px-4 py-3 text-gray-700"><?php echo $council['council_name'] ?></td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center mr-3">
-                                    <span class="text-blue-700 font-medium"><?php echo substr($um_name, 0, 1) ?></span>
-                                </div>
-                                <span class="text-gray-700"><?php echo $um_name ?></span>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center mr-3">
-                                    <span class="text-green-700 font-medium"><?php echo substr($fc_name, 0, 1) ?></span>
-                                </div>
-                                <span class="text-gray-700"><?php echo $fc_name ?></span>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-gray-700">
-                            <?php echo date("F j, Y", strtotime($council['date_established'])); ?></td>
-                    </tr>
-                    <?php
-                        }
-                        } else {
-                            echo "<tr><td colspan='5' class='px-4 py-3 text-center text-gray-500'>No councils found.</td></tr>";
-                        }
-                    ?>
-                </tbody>
-            </table>
-        </div>
+        <div class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-purple-400 opacity-20 transform rotate-12"></div>
     </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <table id="myTable3" class="stripe hover w-full" style="width:100%">
+                    <thead class="bg-gray-800 text-white text-xs uppercase">
+                        <tr>
+                            <th class="px-4 py-3 whitespace-nowrap">COUNCIL NUMBER</th>
+                            <th class="px-4 py-3 whitespace-nowrap">NAME</th>
+                            <th class="px-4 py-3 whitespace-nowrap">UNIT MANAGER</th>
+                            <th class="px-4 py-3 whitespace-nowrap">FRATERNAL COUNSELOR</th>
+                            <th class="px-4 py-3 whitespace-nowrap">ESTABLISHED</th>
+                            <th class="px-4 py-3 whitespace-nowrap">ACTIONS</th>
+                        </tr>
+                    </thead>
+                     <tbody class="text-sm">
+                        <?php
+                            $councilModel = new CouncilModel($conn);
+                            $councils     = $councilModel->getAllCouncil();
+
+                            if ($councils) {
+                                foreach ($councils as $council) {
+                                    $um_name = $councilModel->getUserNameById($council['unit_manager_id'], 'unit-manager');
+                                    $fc_name = $councilModel->getUserNameById($council['fraternal_counselor_id'], 'fraternal-counselor');
+                                ?>
+                            <tr class="border-b hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-4 py-3 text-gray-700 font-medium"><?php echo $council['council_number'] ?></td>
+                                <td class="px-4 py-3 text-gray-700"><?php echo $council['council_name'] ?></td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center mr-3">
+                                            <span class="text-blue-700 font-medium"><?php echo substr($um_name, 0, 1) ?></span>
+                                        </div>
+                                        <span class="text-gray-700"><?php echo $um_name ?></span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center mr-3">
+                                            <span class="text-green-700 font-medium"><?php echo substr($fc_name, 0, 1) ?></span>
+                                        </div>
+                                        <span class="text-gray-700"><?php echo $fc_name ?></span>
+                                    </div>
+                                        </td>
+                                <td class="px-4 py-3 text-gray-700"><?php echo date("F j, Y", strtotime($council['date_established'])); ?></td>
+                                <td class="px-4 py-3">
+                                    <a href="roasters.php?council_id=<?php echo $council['council_id'] ?>"
+                                       class="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors duration-200 shadow-sm hover:shadow-md">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                        View Roasters
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php
+                                }
+                                } else {
+                                    echo "<tr><td colspan='5' class='px-4 py-3 text-center text-gray-500'>No councils found.</td></tr>";
+                                }
+                            ?>
+                        </tbody>
+                    </table>
+    </div>
+</div>
 
     <!-- Fraternal Benefits Section -->
     <div x-show="activeSection === 'fraternalbenefits'" class="space-y-8"
@@ -672,7 +676,7 @@
                     <tr class="border-b hover:bg-gray-50 transition-colors duration-200">
                         <td class="px-4 py-3">
                             <span
-                                class="px-3 py-1 text-xs rounded-full font-medium                                                                                  <?php echo strtolower($fraternal['type']) === 'premium' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700' ?>">
+                                class="px-3 py-1 text-xs rounded-full font-medium                                                                                                                                                                                                                                                <?php echo strtolower($fraternal['type']) === 'premium' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700' ?>">
                                 <?php echo $fraternal['type']; ?>
                             </span>
                         </td>
@@ -734,13 +738,13 @@
                     <div class="flex-1">
                         <div class="flex items-center justify-between mb-2">
                             <h3 class="text-lg font-semibold text-gray-900">
-                                <?php echo htmlspecialchars($announcement['subject'])?></h3>
+                                <?php echo htmlspecialchars($announcement['subject']) ?></h3>
                             <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                                <?php echo date("M d, Y", strtotime($announcement['date_posted']))?>
+                                <?php echo date("M d, Y", strtotime($announcement['date_posted'])) ?>
                             </span>
                         </div>
                         <p class="text-gray-700 leading-relaxed mb-4">
-                            <?php echo nl2br(htmlspecialchars($announcement['content']))?></p>
+                            <?php echo nl2br(htmlspecialchars($announcement['content'])) ?></p>
                         <div class="flex items-center justify-between text-sm">
                             <div class="flex items-center text-green-600">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -754,7 +758,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <span><?php echo date("h:i A", strtotime($announcement['date_posted']))?></span>
+                                <span><?php echo date("h:i A", strtotime($announcement['date_posted'])) ?></span>
                             </div>
                         </div>
                     </div>
