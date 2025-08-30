@@ -5,16 +5,15 @@
     include '../../includes/header.php';
     include '../../includes/db.php';
     include '../../models/adminModel/userModel.php';
+    include '../../models/adminModel/setQoutaModel.php';
     include '../../includes/alert2.php';
     include '../../partials/breadcrumb.php';
 ?>
 
-<!-- Add this right after the header include -->
 <script>
     const BASE_URL = '<?php echo rtrim(dirname(dirname(dirname($_SERVER['PHP_SELF']))), '/') . '/'; ?>';
 </script>
 
-<!-- Import DataTables CSS and JS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
@@ -89,6 +88,15 @@
                         <div>
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">User Management</h2>
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage and monitor user accounts</p>
+                        </div>
+                        <div class="flex space-x-3">
+                            <a href="quota-progress.php" 
+                               class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 border border-blue-300 rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                                View Quota Progress
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -196,12 +204,33 @@
                                             </svg>
                                             Reset
                                         </button>
-                                        <a href="setqouta.php" class="action-button reset-password-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 focus:ring-2 focus:ring-blue-300 transition-colors duration-200">
+                                        <?php 
+                                        // Check if user has active quota
+                                        $quotaModel = new setQoutaModel($conn);
+                                        $activeQuota = $quotaModel->hasActiveQuota($user['id']);
+                                        
+                                        if($user['role'] === 'unit-manager' && $user['status'] === 'approved' && !$activeQuota): ?>
+                                        <a href="setqouta.php?userid=<?= $user['id'] ?>" class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 focus:ring-2 focus:ring-blue-300 transition-colors duration-200">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                                             </svg>
                                             Set qouta
                                         </a>
+                                        <?php elseif($user['role'] === 'unit-manager' && $user['status'] === 'approved' && $activeQuota): ?>
+                                        <button disabled class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-yellow-600 bg-yellow-100 rounded-lg cursor-not-allowed opacity-75" title="Quota in progress">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                            </svg>
+                                            Quota Active
+                                        </button>
+                                        <?php else: ?>
+                                        <button disabled class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed opacity-50">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2zm0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                            </svg>
+                                            Set qouta
+                                        </button>
+                                        <?php endif; ?>
 
                                         <?php if ($user['status'] === 'pending' || $user['status'] === 'disabled'): ?>
                                             <button class="action-button status-btn approve-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-2 focus:ring-green-300 transition-colors duration-200"

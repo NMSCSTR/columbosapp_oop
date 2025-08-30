@@ -247,13 +247,3 @@ FV ≈ 51,000 × 1.48024
 FV ≈ ₱75,492.24
 
 
-
-                            <tr class="bg-gray-50 text-sm text-gray-600">
-                                <td colspan="8" class="px-4 py-2 pl-10">
-                                    <strong>Total Contribution: ₱<?= $result['total_contribution'] ?></strong><br>
-                                    Insurance Cost (10%): ₱<?= $result['insurance_cost'] ?> |
-                                    Admin Fees (5%): ₱<?= $result['admin_fee'] ?> |
-                                    Savings Fund (85%): ₱<?= $result['savings_fund'] ?> |
-                                    Savings Fund Future Value (4% growth): ₱<?= $result['savings_fund_fv'] ?>
-                                </td>
-                            </tr>
