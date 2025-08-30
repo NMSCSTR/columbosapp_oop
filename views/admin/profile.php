@@ -10,6 +10,7 @@
 
     $userModel = new UserModel($conn);
     $user = $userModel->getUserById($_SESSION['user_id']);
+    
 ?>
 
 <!-- Add required CSS for animations -->
