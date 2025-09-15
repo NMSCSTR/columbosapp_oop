@@ -21,12 +21,12 @@ class TransactionModel
         return $transactions;
     }
 
-public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_date, $amount_paid, $currency, $next_due_date, $payment_timing_status)
-{
-    $sql = "INSERT INTO transactions (applicant_id, user_id, plan_id, payment_date, amount_paid, currency, next_due_date, payment_timing_status)
+    public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_date, $amount_paid, $currency, $next_due_date, $payment_timing_status)
+    {
+        $sql = "INSERT INTO transactions (applicant_id, user_id, plan_id, payment_date, amount_paid, currency, next_due_date, payment_timing_status)
             VALUES ('$applicant_id', '$user_id', '$plan_id', '$payment_date', '$amount_paid', '$currency', '$next_due_date', '$payment_timing_status')";
-    return mysqli_query($this->conn, $sql);
-}
+        return mysqli_query($this->conn, $sql);
+    }
 
     public function nextDueDateNotificationReminder()
     {
@@ -131,4 +131,34 @@ public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_d
         $sql = "DELETE FROM transactions WHERE transaction_id = '$transaction_id'";
         return mysqli_query($this->conn, $sql);
     }
+
+    public function getTransactionsById($id)
+    {
+        $id     = mysqli_real_escape_string($this->conn, $id);
+        $sql    = "SELECT * FROM transactions WHERE applicant_id = '$id'";
+        $result = mysqli_query($this->conn, $sql);
+        $data   = [];
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc()) {
+                $data[] = $row;
+            }
+        }
+        return $data;
+    }
+
+    public function sendNotifIfInsuranceNearToEnd($id){
+        $id = mysqli_real_escape_string($this->conn, $id);
+
+        $sql = "SELECT * FROM applicants WHERE applicant_id ='$id'";
+        $result=mysqli_query($this->conn,$sql);
+        $data = [];
+        if(mysqli_num_rows($result)){
+            while($row = mysqli_fetch_assoc($result)){
+                $data[] = $row;
+            }
+        }
+        return $data;
+    }
+
+    
 }

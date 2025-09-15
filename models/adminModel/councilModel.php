@@ -24,6 +24,20 @@ class CouncilModel
         return null;
     }
 
+    public function getAllCouncilByFc($fcid){
+        $fcid = mysqli_real_escape_string($this->conn, $fcid);
+        $sql = "SELECT * FROM council WHERE fraternal_counselor_id = '$fcid'";
+        $result = mysqli_query($this->conn, $sql);
+
+        if($result && mysqli_num_rows($result) > 0){
+            $councils = [];
+            while($row = mysqli_fetch_assoc($result)){
+                $councils[] = $row;
+            }
+            return $councils;
+        }
+    }
+
     public function getCouncilById($id)
     {
         $id = mysqli_real_escape_string($this->conn, $id);

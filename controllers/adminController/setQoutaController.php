@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// Validate required fields
+
 if (!isset($_POST['user_id']) || !isset($_POST['quota']) || !isset($_POST['duration'])) {
     $_SESSION['error'] = "All required fields must be filled.";
     header('Location: ../../views/admin/setqouta.php?userid=' . $_POST['user_id']);
