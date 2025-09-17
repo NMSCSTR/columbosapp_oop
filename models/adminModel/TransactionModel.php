@@ -151,6 +151,8 @@ class TransactionModel
         return $data;
     }
 
+    
+
 
     public function sendNotifIfInsuranceNearToEnd()
     {
@@ -162,7 +164,7 @@ class TransactionModel
                 c.mobile_number,
                 t.next_due_date,
                 t.plan_id,
-                f.name as plan_name,
+                f.name as plan_name,    
                 f.years_of_protection,
                 DATEDIFF(t.next_due_date, CURDATE()) as days_remaining
             FROM applicants a
