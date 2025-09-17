@@ -146,19 +146,109 @@ class TransactionModel
         return $data;
     }
 
-    public function sendNotifIfInsuranceNearToEnd($id){
-        $id = mysqli_real_escape_string($this->conn, $id);
 
-        $sql = "SELECT * FROM applicants WHERE applicant_id ='$id'";
-        $result=mysqli_query($this->conn,$sql);
-        $data = [];
-        if(mysqli_num_rows($result)){
-            while($row = mysqli_fetch_assoc($result)){
-                $data[] = $row;
+    public function sendNotifIfInsuranceNearToEnd()
+    {
+        // Get all active applicants with their contact info and transaction details
+        $sql = "SELECT
+                a.applicant_id,
+                a.firstname,
+                a.lastname,
+                c.mobile_number,
+                t.next_due_date,
+                t.plan_id,
+                f.name as plan_name,
+                f.years_of_protection,
+                DATEDIFF(t.next_due_date, CURDATE()) as days_remaining
+            FROM applicants a
+            JOIN contact_info c ON a.applicant_id = c.applicant_id
+            JOIN transactions t ON a.applicant_id = t.applicant_id
+            JOIN fraternal_benefits f ON t.plan_id = f.id
+            WHERE a.application_status = 'Approved'
+            AND t.status = 'Paid'
+            AND c.mobile_number IS NOT NULL
+            AND t.next_due_date IS NOT NULL
+            AND DATEDIFF(t.next_due_date, CURDATE()) BETWEEN 1 AND 30
+            ORDER BY t.next_due_date ASC";
+
+        $result             = mysqli_query($this->conn, $sql);
+        $notifications_sent = 0;
+
+        if (mysqli_num_rows($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $days_remaining = $row['days_remaining'];
+                $mobile_number  = $row['mobile_number'];
+                $plan_name      = $row['plan_name'];
+                $firstname      = $row['firstname'];
+                $due_date       = date('F j, Y', strtotime($row['next_due_date']));
+
+                // Customize message based on days remaining
+                if ($days_remaining <= 7) {
+                    $urgency = "URGENT";
+                } elseif ($days_remaining <= 14) {
+                    $urgency = "IMPORTANT";
+                } else {
+                    $urgency = "REMINDER";
+                }
+
+                $message = "[$urgency] Hi $firstname! Your $plan_name insurance plan will expire in $days_remaining days (on $due_date). Please renew to avoid coverage lapse. - KCFAPI";
+
+                // Send SMS
+                $sms_response = $this->sendSMS($mobile_number, $message);
+
+                // Log the notification
+                $log_sql = "INSERT INTO notification_logs
+                        (applicant_id, mobile_number, message, days_remaining, sent_at, response)
+                        VALUES
+                        ('{$row['applicant_id']}', '$mobile_number', '" . mysqli_real_escape_string($this->conn, $message) . "',
+                         '$days_remaining', NOW(), '" . mysqli_real_escape_string($this->conn, $sms_response) . "')";
+                mysqli_query($this->conn, $log_sql);
+
+                $notifications_sent++;
             }
         }
-        return $data;
+
+        return [
+            'notifications_sent' => $notifications_sent,
+            'message'            => "Sent $notifications_sent insurance expiration notifications",
+        ];
     }
 
-    
+// Additional method to get insurance status for a specific applicant
+    public function getInsuranceStatus($applicant_id)
+    {
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+
+        $sql = "SELECT
+                a.firstname,
+                a.lastname,
+                c.mobile_number,
+                t.next_due_date,
+                f.name as plan_name,
+                DATEDIFF(t.next_due_date, CURDATE()) as days_remaining,
+                CASE
+                    WHEN DATEDIFF(t.next_due_date, CURDATE()) <= 0 THEN 'EXPIRED'
+                    WHEN DATEDIFF(t.next_due_date, CURDATE()) <= 7 THEN 'CRITICAL'
+                    WHEN DATEDIFF(t.next_due_date, CURDATE()) <= 30 THEN 'NEAR_EXPIRATION'
+                    ELSE 'ACTIVE'
+                END as status
+            FROM applicants a
+            JOIN contact_info c ON a.applicant_id = c.applicant_id
+            JOIN transactions t ON a.applicant_id = t.applicant_id
+            JOIN fraternal_benefits f ON t.plan_id = f.id
+            WHERE a.applicant_id = '$applicant_id'
+            AND a.application_status = 'Approved'
+            AND t.status = 'Paid'
+            ORDER BY t.next_due_date DESC
+            LIMIT 1";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if (mysqli_num_rows($result)) {
+            return mysqli_fetch_assoc($result);
+        }
+
+        return null;
+    }
+
 }

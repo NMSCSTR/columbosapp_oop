@@ -14,19 +14,19 @@
     // var_dump($fraternalCounselor);
 ?>
 <style>
-.step-content {
-    display: none;
-}
+    .step-content {
+        display: none;
+    }
 
-.step-content.active {
-    display: block;
-}
+    .step-content.active {
+        display: block;
+    }
 
-input.border-red-500,
-select.border-red-500,
-textarea.border-red-500 {
-    border-width: 2px;
-}
+    input.border-red-500,
+    select.border-red-500,
+    textarea.border-red-500 {
+        border-width: 2px;
+    }
 </style>
 
 
