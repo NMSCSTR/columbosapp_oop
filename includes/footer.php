@@ -1,7 +1,6 @@
 
 <!-- Initialize DataTables -->
-<!-- Import jQuery and DataTables JS -->
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<!-- DataTables JS (jQuery already included in header) -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
@@ -36,13 +35,23 @@ document.getElementById('logoutBtn').addEventListener('click', function(e) {
 
 <script>
 $(document).ready(function() {
-    $('#myTable').DataTable({
+    var memberTransactionsTable = $('#myTable').DataTable({
         responsive: true,
+        autoWidth: true,
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        pageLength: 10, 
+        pageLength: 10
+    });
+
+    // Ensure wrapper spans full width and columns resize to available space
+    $('#myTable').closest('.dataTables_wrapper').css('width', '100%');
+    memberTransactionsTable.columns.adjust();
+
+    // Readjust on window resize
+    $(window).on('resize', function() {
+        memberTransactionsTable.columns.adjust();
     });
 });
 </script>

@@ -40,6 +40,16 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
+    <style>
+    /* Force DataTables containers to span full width */
+    .dataTables_wrapper, .dataTables_scroll, .dataTables_scrollHead, .dataTables_scrollBody, .dataTables_scrollFoot {
+        width: 100% !important;
+    }
+    table.dataTable {
+        width: 100% !important;
+    }
+    </style>
+
 
     <!-- Tailwind Custom Config -->
     <script>

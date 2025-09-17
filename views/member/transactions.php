@@ -23,7 +23,7 @@ $transactionHistory = $transactionModel->getTransactionsById($_SESSION['user_id'
 <div class="flex flex-col md:flex-row min-h-screen">
     <?php include '../../partials/memberSideBar.php'?>
     <!-- Main Content -->
-    <main class="flex-1">
+    <main class="flex-1 w-full">
         <div class="p-4">
             <h2 class="text-2xl font-bold mb-4">Transaction History</h2>
             
@@ -32,8 +32,8 @@ $transactionHistory = $transactionModel->getTransactionsById($_SESSION['user_id'
                     No transactions found.
                 </div>
             <?php else: ?>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <div class="overflow-x-auto w-full">
+                    <table id="myTable" class="w-full min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">Transaction ID</th>
