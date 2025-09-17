@@ -135,11 +135,16 @@ class TransactionModel
     public function getTransactionsById($id)
     {
         $id     = mysqli_real_escape_string($this->conn, $id);
-        $sql    = "SELECT * FROM transactions WHERE applicant_id = '$id'";
+        $sql    = "SELECT * FROM transactions WHERE user_id = '$id'";
         $result = mysqli_query($this->conn, $sql);
-        $data   = [];
+        
+        if (!$result) {
+            die("Query failed: " . mysqli_error($this->conn));
+        }
+        
+        $data = [];
         if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc()) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 $data[] = $row;
             }
         }
