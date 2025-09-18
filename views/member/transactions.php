@@ -32,6 +32,7 @@ $fraternalBenefitsId = isset($plansData['fraternal_benefits_id']) ? (int)$plansD
 $benefitModel = new fraternalBenefitsModel($conn);
 $benefit = $fraternalBenefitsId ? $benefitModel->getFraternalBenefitById($fraternalBenefitsId) : null;
 $contributionPeriodYears = (int)($benefit['contribution_period'] ?? 0);
+$benefitName = $benefit['name'] ?? 'Unknown Plan';
 
 // Payments per year and months per payment by mode
 $periodsPerYear = 0;
@@ -50,6 +51,30 @@ switch ($paymentMode) {
 }
 
 $totalPayments = $periodsPerYear * $contributionPeriodYears;
+
+// Compute per-period payment amount based on mode
+$contributionAmount = isset($plansData['contribution_amount']) ? (float)$plansData['contribution_amount'] : 0;
+$currencyCode = $plansData['currency'] ?? ($transactionHistory[0]['currency'] ?? 'PHP');
+$perPeriodAmount = ($monthsPerPayment > 0) ? $contributionAmount * $monthsPerPayment : 0;
+$paymentLabel = $paymentMode ? ucfirst($paymentMode) : 'Payment';
+
+// Count completed payments and compute remaining months overall
+$paymentsCount = 0;
+foreach ($transactionHistory as $t) {
+    if (strtolower($t['status'] ?? '') === 'paid') {
+        $paymentsCount++;
+    }
+}
+$remainingPayments = max($totalPayments - $paymentsCount, 0);
+$remainingMonths = ($monthsPerPayment > 0) ? $remainingPayments * $monthsPerPayment : 0;
+
+// Compute total amount paid (sum of Paid transactions)
+$totalPaid = 0;
+foreach ($transactionHistory as $t) {
+    if (strtolower($t['status'] ?? '') === 'paid') {
+        $totalPaid += (float)($t['amount_paid'] ?? 0);
+    }
+}
 
 // Sort transactions by payment date ascending for correct running balance
 if (!empty($transactionHistory)) {
@@ -71,6 +96,42 @@ if (!empty($transactionHistory)) {
     <main class="flex-1 w-full">
         <div class="p-4">
             <h2 class="text-2xl font-bold mb-4">Transaction History</h2>
+
+            <div class="mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="p-4 rounded-lg border bg-white shadow-sm">
+                    <div class="text-sm text-gray-500">Remaining Months</div>
+                    <div class="text-2xl font-semibold text-gray-900">
+                        <?php echo ($totalPayments > 0 && $monthsPerPayment > 0) ? (int)$remainingMonths : 'N/A'; ?>
+                    </div>
+                </div>
+                <div class="p-4 rounded-lg border bg-white shadow-sm">
+                    <div class="text-sm text-gray-500">Payment Mode</div>
+                    <div class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($paymentMode ?: 'Unknown'); ?></div>
+                </div>
+                <div class="p-4 rounded-lg border bg-white shadow-sm">
+                    <div class="text-sm text-gray-500">Contribution Period (years)</div>
+                    <div class="text-lg font-medium text-gray-900"><?php echo (int)$contributionPeriodYears; ?></div>
+                </div>
+                <div class="p-4 rounded-lg border bg-white shadow-sm">
+                    <div class="text-sm text-gray-500">Fraternal Benefit</div>
+                    <div class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($benefitName); ?></div>
+                </div>
+            </div>
+
+            <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="p-4 rounded-lg border bg-white shadow-sm">
+                    <div class="text-sm text-gray-500">Payment per <?php echo htmlspecialchars($paymentLabel); ?></div>
+                    <div class="text-xl font-semibold text-gray-900">
+                        <?php echo htmlspecialchars($currencyCode); ?> <?php echo number_format($perPeriodAmount, 2); ?>
+                    </div>
+                </div>
+                <div class="p-4 rounded-lg border bg-white shadow-sm">
+                    <div class="text-sm text-gray-500">Total Paid</div>
+                    <div class="text-xl font-semibold text-gray-900">
+                        <?php echo htmlspecialchars($currencyCode); ?> <?php echo number_format($totalPaid, 2); ?>
+                    </div>
+                </div>
+            </div>
             
             <?php if (empty($transactionHistory)): ?>
                 <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
@@ -88,11 +149,9 @@ if (!empty($transactionHistory)) {
                                 <th scope="col" class="px-6 py-3">Status</th>
                                 <th scope="col" class="px-6 py-3">Payment Timing</th>
                                 <th scope="col" class="px-6 py-3">Next Due Date</th>
-                                <th scope="col" class="px-6 py-3">Remaining Months</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $paymentsCount = 0; ?>
                             <?php foreach ($transactionHistory as $transaction): ?>
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <td class="px-6 py-4"><?php echo htmlspecialchars($transaction['transaction_id']); ?></td>
@@ -107,17 +166,6 @@ if (!empty($transactionHistory)) {
                                     </td>
                                     <td class="px-6 py-4"><?php echo htmlspecialchars($transaction['payment_timing_status']); ?></td>
                                     <td class="px-6 py-4"><?php echo htmlspecialchars($transaction['next_due_date']); ?></td>
-                                    <td class="px-6 py-4">
-                                        <?php
-                                            // Increment payments count if this transaction is paid
-                                            if (strtolower($transaction['status'] ?? '') === 'paid') {
-                                                $paymentsCount++;
-                                            }
-                                            $remainingPayments = max($totalPayments - $paymentsCount, 0);
-                                            $remainingMonths = ($monthsPerPayment > 0) ? $remainingPayments * $monthsPerPayment : 0;
-                                            echo ($totalPayments > 0 && $monthsPerPayment > 0) ? (int)$remainingMonths : 'N/A';
-                                        ?>
-                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
