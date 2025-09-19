@@ -10,7 +10,7 @@
 
     // Fetch all unit managers with their quota information
     $quotaModel = new setQoutaModel($conn);
-    $unitManagers = $quotaModel->getAllUnitManagersWithQuota();
+    $unitManagers = $quotaModel->getAllFraternalCounselorWithQuota();
 ?>
 
 <script>
