@@ -209,14 +209,14 @@
                                         $quotaModel = new setQoutaModel($conn);
                                         $activeQuota = $quotaModel->hasActiveQuota($user['id']);
                                         
-                                        if($user['role'] === 'unit-manager' && $user['status'] === 'approved' && !$activeQuota): ?>
+                                        if($user['role'] === 'fraternal-counselor' && $user['status'] === 'approved' && !$activeQuota): ?>
                                         <a href="setqouta.php?userid=<?= $user['id'] ?>" class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 focus:ring-2 focus:ring-blue-300 transition-colors duration-200">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                                             </svg>
                                             Set qouta
                                         </a>
-                                        <?php elseif($user['role'] === 'unit-manager' && $user['status'] === 'approved' && $activeQuota): ?>
+                                        <?php elseif($user['role'] === 'fraternal-counselor' && $user['status'] === 'approved' && $activeQuota): ?>
                                         <button disabled class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-yellow-600 bg-yellow-100 rounded-lg cursor-not-allowed opacity-75" title="Quota in progress">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
