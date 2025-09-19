@@ -44,7 +44,7 @@ if ($current_amount < 0) {
     exit();
 }
 
-// Verify user exists and is a unit manager
+// Verify user exists and is a fraternal counselor
 $userModel = new userModel($conn);
 $user = $userModel->getUserById($user_id);
 

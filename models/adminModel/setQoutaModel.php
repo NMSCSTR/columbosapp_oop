@@ -65,6 +65,7 @@ class setQoutaModel
 
         return mysqli_fetch_assoc($result);
     }
+    
     public function fetchApplicantByFraternalCounselor($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);

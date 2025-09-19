@@ -19,14 +19,17 @@
     $userModel = new userModel($conn);
     $user = $userModel->getUserById($user_id);
     
-    if (!$user || $user['role'] !== 'unit-manager') {
-        die("Invalid user or user is not a unit manager.");
+    if (!$user || $user['role'] !== 'fraternal-counselor') {
+        die("Invalid user or user is not a fraternal counselor.");
     }
     
     // Check for existing quota and active quota
     $quotaModel = new setQoutaModel($conn);
     $existingQuota = $quotaModel->checkExistingQuota($user_id);
     $activeQuota = $quotaModel->hasActiveQuota($user_id);
+    $currentFaceValue = $quotaModel->calculateAllApplicantsFaceValueByFraternalCounselor($user_id);
+    // echo "Total Face Value: " . $currentFaceValue;
+    
 ?>
 
 
@@ -62,7 +65,7 @@
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Set Quota</h2>
-                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Set quota for unit manager: <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Set quota for fraternal counselor: <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></p>
                         </div>
                     </div>
                 </div>
@@ -140,17 +143,16 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             </div>
                         </div>
-
                         <!-- Current Amount (Optional) -->
                         <div>
                             <label for="current_amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Current Amount (Optional)
+                                <!-- Current Amount (Optional) -->
                             </label>
                             <input type="number" 
                                    id="current_amount" 
                                    name="current_amount" 
                                    min="0"
-                                   value="0"
+                                   value="<?= $currentFaceValue  ?>"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                    placeholder="Enter current amount (default: 0)">
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Leave as 0 if starting fresh</p>
