@@ -14,6 +14,7 @@
     // Debug session data
     $userModel   = new UserModel($conn);
     $currentUser = $userModel->getUserById($_SESSION['user_id']);
+     // echo $currentUser['firstname'];
     if (! isset($_SESSION['email']) && $currentUser) {
         $_SESSION['email'] = $currentUser['email'];
     }
@@ -31,6 +32,7 @@
     $pending_application    = $applicationModel->fetchPendingApplicantByCouncil($_SESSION['user_id']);
     $formsModel             = new FormsModel($conn);
     $announcementModel      = new announcementModel($conn);
+   
 
     $announcements   = $announcementModel->getAllAnnouncement();
     $totalApplicants = $applicationModel->countAllApplicants($_SESSION['user_id']);
