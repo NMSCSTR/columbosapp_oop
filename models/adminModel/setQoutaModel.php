@@ -64,7 +64,7 @@ class setQoutaModel{
         return mysqli_fetch_assoc($result);
     }
 
-    public function getAllUnitManagersWithQuota(){
+    public function getAllFraternalCounselorWithQuota(){
         // First update quota statuses
         $this->updateQuotaStatus();
         
@@ -87,7 +87,7 @@ class setQoutaModel{
                     END as progress_percentage
                   FROM users u
                   LEFT JOIN qouta q ON u.id = q.user_id
-                  WHERE u.role = 'unit-manager'
+                  WHERE u.role = 'fraternal-counselor'
                   ORDER BY u.firstname, u.lastname";
         
         $result = mysqli_query($this->conn, $query);
