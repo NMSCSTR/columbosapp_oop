@@ -149,6 +149,75 @@ class MemberApplicationModel
 
         return null;
     }
+
+    public function fetchApplicantsByFraternalCounselor($user_id)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+
+        $query = "SELECT * FROM applicants WHERE fraternal_counselor_id = '$user_id'";
+        $result = mysqli_query($this->conn, $query);
+
+        $applicants = [];
+        if ($result && mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $applicants[] = $row;
+            }
+        }
+        return $applicants;
+    }
+
+    public function calculateAllTotalAllocationsByFraternalCounselor($fraternal_counselor_id)
+    {
+        $fraternal_counselor_id = mysqli_real_escape_string($this->conn, $fraternal_counselor_id);
+        
+        $sql = "SELECT
+            a.applicant_id,
+            a.user_id,
+            a.fraternal_counselor_id,
+            CONCAT(a.firstname, ' ', a.lastname) AS applicant_name,
+            fb.type AS plan_type,
+            fb.name AS plan_name,
+            fb.face_value,
+            fb.years_to_maturity,
+            fb.years_of_protection,
+            fb.contribution_period,
+            p.payment_mode,
+            p.contribution_amount,
+            p.fraternal_benefits_id,
+            a.application_status
+        FROM applicants a
+        LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+        LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+        WHERE a.fraternal_counselor_id = '$fraternal_counselor_id'
+        ORDER BY a.created_at DESC";
+
+        $result = mysqli_query($this->conn, $sql);
+        
+        $totals = [
+            'insurance_cost'     => 0,
+            'admin_fee'          => 0,
+            'savings_fund'       => 0,
+            'total_contribution' => 0,
+            'total_applicants'   => 0,
+            'total_face_value'   => 0
+        ];
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $total_contribution = $this->calculateTotalContributions($row);
+                $allocations        = $this->calculateContributionAllocations($total_contribution);
+
+                $totals['insurance_cost'] += $allocations['insurance_cost'];
+                $totals['admin_fee'] += $allocations['admin_fee'];
+                $totals['savings_fund'] += $allocations['savings_fund'];
+                $totals['total_contribution'] += $total_contribution;
+                $totals['total_applicants'] += 1;
+                $totals['total_face_value'] += (float)($row['face_value'] ?? 0);
+            }
+        }
+        
+        return $totals;
+    }
     
 
 
