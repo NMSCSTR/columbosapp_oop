@@ -122,18 +122,95 @@ if (!empty($transactionHistory)) {
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     @apply bg-blue-100 text-blue-700 rounded-lg border-0 !important;
 }
+
+/* Full width and zoom stability */
+.main-container {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Ensure content doesn't break on zoom */
+.content-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    min-width: 0;
+    max-width: none !important;
+}
+
+/* Override sidebar constraints */
+main {
+    width: calc(100% - 5rem) !important; /* Account for sidebar width on mobile */
+}
+
+@media (min-width: 768px) {
+    main {
+        width: calc(100% - 16rem) !important; /* Account for sidebar width on desktop */
+    }
+}
+
+/* Prevent layout shifts on zoom */
+* {
+    box-sizing: border-box;
+}
+
+/* Ensure tables and cards maintain full width */
+.table-container,
+.dashboard-card,
+.grid {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* DataTables full width configuration */
+.dataTables_wrapper {
+    width: 100% !important;
+    overflow-x: auto;
+}
+
+.dataTables_wrapper .dataTables_scroll {
+    width: 100% !important;
+}
+
+.dataTables_wrapper table {
+    width: 100% !important;
+    min-width: 100% !important;
+}
+
+/* Ensure all containers use full available width */
+.grid,
+.table-container,
+.dashboard-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+/* Force full width on all child elements */
+.content-wrapper * {
+    max-width: 100% !important;
+}
+
+/* Ensure responsive grid maintains full width */
+.grid-cols-1,
+.grid-cols-2,
+.grid-cols-4 {
+    width: 100% !important;
+}
 </style>
 
-<div class="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-    <?php include '../../partials/memberSideBar.php'?>
-    
-    <!-- Main Content -->
-    <main class="flex-1 p-6 md:p-8 overflow-y-auto">
+<?php include '../../partials/memberSideBar.php'?>
+
+<!-- Main Content -->
+<main class="flex-1 p-6 md:p-8 overflow-y-auto w-full min-w-0 main-container bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="content-wrapper w-full">
         <!-- Header Section -->
         <div class="relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 text-white mb-8">
             <div class="relative z-10">
-                <h1 class="text-4xl font-bold mb-2">Transaction History 💳</h1>
-                <p class="text-blue-100 text-lg">Track your payment progress and contribution status</p>
+                <h1 class="text-4xl text-green-900 font-bold mb-2">Transaction History 💳</h1>
+                <p class="text-blue-900 text-lg">Track your payment progress and contribution status</p>
             </div>
             <div class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-blue-400 opacity-20 transform rotate-12"></div>
         </div>
@@ -301,8 +378,8 @@ if (!empty($transactionHistory)) {
                 </div>
             <?php else: ?>
                 <!-- Transactions Table -->
-                <div class="overflow-x-auto">
-                    <table id="myTable" class="stripe hover w-full border-collapse" style="width:100%; font-size: 0.75rem;">
+                <div class="overflow-x-auto w-full">
+                    <table id="myTable25" class="stripe hover w-full border-collapse" style="width:100% !important; min-width: 100%; font-size: 0.75rem;">
                         <thead class="bg-gray-800 text-white text-xs uppercase">
                             <tr>
                                 <th class="px-2 py-2 sm:px-4 sm:py-3 whitespace-nowrap">Transaction ID</th>
@@ -396,7 +473,6 @@ if (!empty($transactionHistory)) {
         </div>
         </div>
     </main>
-</div>
 
 <!-- DataTables JavaScript -->
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -413,6 +489,8 @@ if (!empty($transactionHistory)) {
 $(document).ready(function() {
     const tableConfig = {
         responsive: true,
+        autoWidth: false,
+        scrollX: true,
         dom: '<"flex justify-between items-center mb-4"Bf>rt<"flex justify-between items-center mt-4"lip>',
         buttons: [
             {
@@ -450,7 +528,7 @@ $(document).ready(function() {
         }
     };
 
-    $('#myTable').DataTable(tableConfig);
+    $('#myTable25').DataTable(tableConfig);
 });
 </script>
 
