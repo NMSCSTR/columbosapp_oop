@@ -7,38 +7,14 @@
     include '../../models/usersModel.php';
     include '../../models/adminModel/councilModel.php';
     include '../../models/adminModel/fraternalBenefitsModel.php';
-
     $userModel          = new UserModel($conn);
     $user               = $userModel->getUserById($_SESSION['user_id']);
     $fraternalCounselor = $userModel->getUserWhereRoleFraternalCounselor();
-    // var_dump($fraternalCounselor);
 ?>
-<style>
-    .step-content {
-        display: none;
-    }
 
-    .step-content.active {
-        display: block;
-    }
-
-    input.border-red-500,
-    select.border-red-500,
-    textarea.border-red-500 {
-        border-width: 2px;
-    }
-    /* Full width and zoom stability to match transactions page */
-    .main-container { width: 100% !important; max-width: none !important; min-width: 0 !important; margin-left: 0 !important; margin-right: 0 !important; }
-    .content-wrapper { width: 100%; overflow-x: auto; min-width: 0; max-width: none !important; }
-    /* Account for sidebar width */
-    main { width: calc(100% - 5rem) !important; }
-    @media (min-width: 768px) { main { width: calc(100% - 16rem) !important; } }
-    * { box-sizing: border-box; }
-</style>
-
-
-
+<link rel="stylesheet" href="stylesheet/member.css">
 <?php include '../../partials/memberSideBar.php'?>
+
 <!-- Main Content -->
 <main class="flex-1 p-6 md:p-8 overflow-y-auto w-full min-w-0 main-container bg-gradient-to-br from-gray-50 to-gray-100">
     <div class="content-wrapper w-full">
@@ -82,18 +58,18 @@
                                         value="<?php echo htmlspecialchars($user['lastname']); ?>" name="lastname"
                                         class="border rounded p-2" readonly>
                                     <input type="text" placeholder="Middle Name" name="middlename"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="date" placeholder="Birthdate" name="birthdate"
-                                        class="border rounded p-2">
-                                    <input type="number" placeholder="Age" name="age" class="border rounded p-2">
+                                        class="border rounded p-2" required>
+                                    <input type="number" placeholder="Age" name="age" class="border rounded p-2" required>
                                     <input type="text" placeholder="Birthplace" name="birthplace"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <select class="border rounded p-2" name="gender">
                                         <option>Gender</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
-                                    <select class="border rounded p-2" name="fraternal_counselor_id">
+                                    <select class="border rounded p-2" name="fraternal_counselor_id" required>
                                         <option selected disabled>Select Fraternal Counselor</option>
                                         <?php
                                             if ($fraternalCounselor) {
@@ -111,9 +87,9 @@
                                         <option value="Single">Single</option>
                                         <option value="Married">Married</option>
                                     </select>
-                                    <input type="text" placeholder="TIN/SSS" name="tin_sss" class="border rounded p-2">
+                                    <input type="text" placeholder="TIN/SSS" name="tin_sss" class="border rounded p-2" required>
                                     <input type="text" placeholder="Nationality" class="border rounded p-2"
-                                        name="nationality">
+                                        name="nationality" required>
                                 </div>
                             </div>
 
@@ -123,13 +99,13 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input type="text" placeholder="Street" name="street" class="border rounded p-2">
                                     <input type="text" placeholder="Barangay" name="barangay"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" placeholder="City/Province" name="city_province"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" placeholder="Mobile Number" name="mobile_number"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="email" placeholder="Email Address" name="email_address"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                 </div>
                             </div>
 
@@ -206,7 +182,7 @@
                                         ?>
                                     </select>
                                     <input type="number" placeholder="Payment Amount" name="contribution_amount"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                 </div>
                             </div>
 
@@ -227,11 +203,11 @@
                                             <option value="Irrevocable">Irrevocable</option>
                                         </select>
                                         <input type="text" name="benefit_name[]" placeholder="Beneficiary Name"
-                                            class="border rounded p-2 w-full">
+                                            class="border rounded p-2 w-full" required>
                                         <input type="date" name="benefit_birthdate[]" placeholder="Birthdate"
-                                            class="border rounded p-2 w-full">
+                                            class="border rounded p-2 w-full" required>
                                         <input type="text" name="benefit_relationship[]" placeholder="Relationship"
-                                            class="border rounded p-2 w-full">
+                                            class="border rounded p-2 w-full" required>
                                         <!-- <input type="number" name="benefit_percentage[]" placeholder="Percentage (%)"
                                             class="border rounded p-2 w-full" required> -->
                                     </div>
@@ -250,31 +226,31 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Father Information -->
                                     <input type="text" name="father_lastname" placeholder="Father's Last Name"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" name="father_firstname" placeholder="Father's First Name"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" name="father_mi" placeholder="Father's Middle Initial"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
 
                                     <!-- Mother Information -->
                                     <input type="text" name="mother_lastname" placeholder="Mother's Last Name"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" name="mother_firstname" placeholder="Mother's First Name"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" name="mother_mi" placeholder="Mother's Middle Initial"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
 
                                     <!-- Siblings Information -->
                                     <input type="number" name="siblings_living" placeholder="Number of Living Siblings"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="number" name="siblings_deceased"
-                                        placeholder="Number of Deceased Siblings" class="border rounded p-2">
+                                        placeholder="Number of Deceased Siblings" class="border rounded p-2" required>
 
                                     <!-- Children Information -->
                                     <input type="number" name="children_living" placeholder="Number of Living Children"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="number" name="children_deceased"
-                                        placeholder="Number of Deceased Children" class="border rounded p-2">
+                                        placeholder="Number of Deceased Children" class="border rounded p-2" required>
                                 </div>
                             </div>
 
@@ -284,60 +260,60 @@
                                 <h2 class="text-lg font-bold mb-4">Step 7: A. Medical History</h2>
                                 <div class="grid grid-cols-2 gap-4">
                                     <textarea placeholder="Past Illnesses or Hospitalizations" name="past_illness"
-                                        class="border rounded p-2"></textarea>
+                                        class="border rounded p-2" required></textarea>
                                     <textarea placeholder="Current Medications" name="current_medication"
-                                        class="border rounded p-2"></textarea>
+                                        class="border rounded p-2" required></textarea>
                                 </div>
                                 <h2 class="text-lg font-bold mb-4 mt-4">B. Family Health History</h2>
                                 <div class="grid grid-cols-2 gap-4">
 
                                     <!-- Father Living -->
                                     <input type="number" name="father_living_age" placeholder="Father's Living Age"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" name="father_health" placeholder="Father's Health Condition"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
 
                                     <!-- Mother Living -->
                                     <input type="number" name="mother_living_age" placeholder="Mother's Living Age"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" name="mother_health" placeholder="Mother's Health Condition"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
 
                                     <!-- Siblings Living -->
                                     <input type="number" name="siblings_living_age"
                                         placeholder="Average Age of Living Siblings" class="border rounded p-2">
                                     <textarea name="siblings_health" rows="2" placeholder="Siblings' Health Conditions"
-                                        class="border rounded p-2"></textarea>
+                                        class="border rounded p-2" required></textarea>
 
                                     <!-- Children Living -->
                                     <input type="number" name="children_living_age"
                                         placeholder="Average Age of Living Children" class="border rounded p-2">
                                     <textarea name="children_health" rows="2" placeholder="Children's Health Conditions"
-                                        class="border rounded p-2"></textarea>
+                                        class="border rounded p-2" required></textarea>
 
                                     <!-- Father Death -->
                                     <input type="number" name="father_death_age" placeholder="Father's Age at Death"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" name="father_cause" placeholder="Father's Cause of Death"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
 
                                     <!-- Mother Death -->
                                     <input type="number" name="mother_death_age" placeholder="Mother's Age at Death"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" name="mother_cause" placeholder="Mother's Cause of Death"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
 
                                     <!-- Siblings Death -->
                                     <input type="number" name="siblings_death_age"
-                                        placeholder="Average Age of Deceased Siblings" class="border rounded p-2">
+                                        placeholder="Average Age of Deceased Siblings" class="border rounded p-2" required>
                                     <textarea name="siblings_cause" rows="2" placeholder="Cause(s) of Siblings' Death"
-                                        class="border rounded p-2"></textarea>
+                                        class="border rounded p-2" required></textarea>
 
                                     <!-- Children Death -->
                                     <input type="number" name="children_death_age"
-                                        placeholder="Average Age of Deceased Children" class="border rounded p-2">
+                                        placeholder="Average Age of Deceased Children" class="border rounded p-2" required>
                                     <textarea name="children_cause" rows="2" placeholder="Cause(s) of Children's Death"
-                                        class="border rounded p-2"></textarea>
+                                        class="border rounded p-2" required></textarea>
                                 </div>
                             </div>
 
@@ -346,11 +322,11 @@
                                 <h2 class="text-lg font-bold mb-4">Step 8: Physician Details</h2>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input type="text" placeholder="Physician Name" name="physician_name"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" placeholder="Contact Number" name="contact_number"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                     <input type="text" placeholder="Clinic Address" name="clinic_address"
-                                        class="border rounded p-2">
+                                        class="border rounded p-2" required>
                                 </div>
                             </div>
 

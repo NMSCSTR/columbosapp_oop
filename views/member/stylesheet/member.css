@@ -1,0 +1,39 @@
+.step-content {
+  display: none;
+}
+
+.step-content.active {
+  display: block;
+}
+
+input.border-red-500,
+select.border-red-500,
+textarea.border-red-500 {
+  border-width: 2px;
+}
+/* Full width and zoom stability to match transactions page */
+.main-container {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.content-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  min-width: 0;
+  max-width: none !important;
+}
+/* Account for sidebar width */
+main {
+  width: calc(100% - 5rem) !important;
+}
+@media (min-width: 768px) {
+  main {
+    width: calc(100% - 16rem) !important;
+  }
+}
+* {
+  box-sizing: border-box;
+}
