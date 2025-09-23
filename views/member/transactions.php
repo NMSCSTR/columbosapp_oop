@@ -94,112 +94,8 @@ if (!empty($transactionHistory)) {
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-
-<!-- Add custom styles -->
-<style>
-.dashboard-card {
-    @apply bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-100;
-}
-.dashboard-card-title {
-    @apply text-lg font-semibold text-gray-700 mb-2;
-}
-.dashboard-card-value {
-    @apply text-3xl font-bold;
-}
-.table-container {
-    @apply bg-white p-6 rounded-xl shadow-lg border border-gray-100;
-}
-/* Custom DataTables styling */
-.dataTables_wrapper .dataTables_filter input {
-    @apply rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500;
-}
-.dataTables_wrapper .dataTables_length select {
-    @apply rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    @apply bg-blue-500 text-white rounded-lg border-0 !important;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    @apply bg-blue-100 text-blue-700 rounded-lg border-0 !important;
-}
-
-/* Full width and zoom stability */
-.main-container {
-    width: 100% !important;
-    max-width: none !important;
-    min-width: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-}
-
-/* Ensure content doesn't break on zoom */
-.content-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    min-width: 0;
-    max-width: none !important;
-}
-
-/* Override sidebar constraints */
-main {
-    width: calc(100% - 5rem) !important; /* Account for sidebar width on mobile */
-}
-
-@media (min-width: 768px) {
-    main {
-        width: calc(100% - 16rem) !important; /* Account for sidebar width on desktop */
-    }
-}
-
-/* Prevent layout shifts on zoom */
-* {
-    box-sizing: border-box;
-}
-
-/* Ensure tables and cards maintain full width */
-.table-container,
-.dashboard-card,
-.grid {
-    width: 100% !important;
-    max-width: 100% !important;
-}
-
-/* DataTables full width configuration */
-.dataTables_wrapper {
-    width: 100% !important;
-    overflow-x: auto;
-}
-
-.dataTables_wrapper .dataTables_scroll {
-    width: 100% !important;
-}
-
-.dataTables_wrapper table {
-    width: 100% !important;
-    min-width: 100% !important;
-}
-
-/* Ensure all containers use full available width */
-.grid,
-.table-container,
-.dashboard-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-}
-
-/* Force full width on all child elements */
-.content-wrapper * {
-    max-width: 100% !important;
-}
-
-/* Ensure responsive grid maintains full width */
-.grid-cols-1,
-.grid-cols-2,
-.grid-cols-4 {
-    width: 100% !important;
-}
-</style>
+<!--custom styles -->
+<link rel="stylesheet" href="stylesheet/transaction.css">
 
 <?php include '../../partials/memberSideBar.php'?>
 
@@ -484,6 +380,7 @@ main {
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/4.0.0/js/dataTables.fixedHeader.min.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -491,6 +388,14 @@ $(document).ready(function() {
         responsive: true,
         autoWidth: false,
         scrollX: true,
+        fixedHeader: true,
+        order: [[1, 'desc']],
+        columnDefs: [
+            { targets: [0], className: 'text-left' },
+            { targets: [1, 6], className: 'whitespace-nowrap' },
+            { targets: [2], className: 'text-right' },
+            { targets: [3,4,5], className: 'text-center' }
+        ],
         dom: '<"flex justify-between items-center mb-4"Bf>rt<"flex justify-between items-center mt-4"lip>',
         buttons: [
             {
