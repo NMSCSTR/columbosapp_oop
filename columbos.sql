@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 21, 2025 at 04:26 AM
+-- Generation Time: Sep 23, 2025 at 04:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -520,8 +520,17 @@ CREATE TABLE `qouta` (
   `qouta` bigint(20) NOT NULL,
   `current_amount` bigint(20) NOT NULL,
   `duration` date NOT NULL,
+  `status` enum('on-progress','completed','expired') NOT NULL DEFAULT 'on-progress',
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `qouta`
+--
+
+INSERT INTO `qouta` (`id`, `user_id`, `qouta`, `current_amount`, `duration`, `status`, `date_created`) VALUES
+(1, 14, 1000000, 0, '2025-10-31', 'on-progress', '2025-08-30 14:53:22'),
+(2, 11, 10000000, 100000, '2026-09-19', 'on-progress', '2025-09-19 22:11:39');
 
 -- --------------------------------------------------------
 
@@ -575,9 +584,9 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`transaction_id`, `applicant_id`, `user_id`, `plan_id`, `payment_date`, `amount_paid`, `currency`, `next_due_date`, `status`, `payment_timing_status`, `created_at`) VALUES
-(1, 17, 13, 15, '2025-05-26', 1000, 'PHP', '2025-06-26', 'Paid', 'On-Time', '2025-05-26 08:39:26'),
-(2, 17, 13, 15, '2025-06-28', 1000, 'PHP', '2025-07-26', 'Paid', 'Late', '2025-05-26 10:11:54'),
-(4, 17, 13, 15, '2025-07-26', 1000, 'PHP', '2025-08-26', 'Paid', 'On-Time', '2025-05-26 13:19:28');
+(1, 17, 13, 15, '2025-05-26', 3000, 'PHP', '2025-06-26', 'Paid', 'On-Time', '2025-05-26 08:39:26'),
+(2, 17, 13, 15, '2025-06-28', 3000, 'PHP', '2025-07-26', 'Paid', 'Late', '2025-05-26 10:11:54'),
+(4, 17, 13, 15, '2025-07-26', 3000, 'PHP', '2025-08-26', 'Paid', 'On-Time', '2025-05-26 13:19:28');
 
 -- --------------------------------------------------------
 
@@ -604,9 +613,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `kcfapicode`, `email`, `phone_number`, `role`, `password`, `status`, `created_at`) VALUES
 (9, 'Rodrigo', 'Duterte', 'ROACODE', 'rodrigoroa@gmail.com', '09105200971', 'admin', '$2y$10$JDN36eEv6KaqtL8EPjKnAOAymSmK6f8TSF2ZghJ4S22sFGLKmkZyW', 'approved', '2025-04-29 02:37:07'),
-(10, 'Bongbong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09105200970', 'unit-manager', '$2y$10$m.IidSJa6LQJDBt6A1cJs.c8NYkD/.IZXvlA15g2YG7zz5nl82Y9S', 'approved', '2025-04-29 03:12:25'),
-(11, 'Sarah', 'Duterte', 'SARAHCODE', 'sarahduterte@gmail.com', '09105200970', 'fraternal-counselor', '$2y$10$Mz8F/Ya25UUr5dstBEZ2N.VJuxuLq0hi5IeK3y1CwC8LMvoX2ERIm', 'approved', '2025-04-29 03:17:08'),
-(12, 'Kitty', 'Duterte', 'KITTYCODE', 'inesphilip72@gmail.com', '09105200973', 'family-member', '$2y$10$kM2uW5S8ehCbpfI/7sqWS.oLhsYZNuYB69YBXPBCkTI9PbPgnAycC', 'approved', '2025-04-29 03:18:54'),
+(10, 'Bongbong', 'Marcos', 'MARCOSCODE', 'bongmarcos@gmail.com', '09105200972', 'unit-manager', '$2y$10$m.IidSJa6LQJDBt6A1cJs.c8NYkD/.IZXvlA15g2YG7zz5nl82Y9S', 'approved', '2025-04-29 03:12:25'),
+(11, 'Sarah', 'Duterte', 'SARAHCODE', 'sarahduterte@gmail.com', '09105200975', 'fraternal-counselor', '$2y$10$Mz8F/Ya25UUr5dstBEZ2N.VJuxuLq0hi5IeK3y1CwC8LMvoX2ERIm', 'approved', '2025-04-29 03:17:08'),
 (13, 'Sandro', 'Marcos', 'SANDROCODE', 'sandromarcos@gmail.com', '09105200974', 'member', '$2y$10$9t/uW.w9GTrU7HsdBQjck.W3VQcNAkz71N6eZ7yPCm3aSNcdKnJCm', 'approved', '2025-04-29 03:19:36'),
 (14, 'Baste', 'Duterte', 'BasteCode', 'basteduterte@gmail.com', '09090909011', 'unit-manager', '$2y$10$4vI/eo6dVFgMVPGizOhmJucuWURLGo5foZFTDu8mGQWO7Mb0z3Fia', 'approved', '2025-06-03 11:15:44'),
 (15, 'Pulong', 'Duterte', 'PULONGCODE', 'pulongduterte@gmail.com', '09123456788', 'fraternal-counselor', '$2y$10$P/xBZFYm/UWrCbQehQwOG.htLrTU.xufcvbBop9vJAzUrI8xdoGYO', 'approved', '2025-06-03 11:52:12'),
@@ -762,7 +770,8 @@ ALTER TABLE `plans`
 --
 ALTER TABLE `qouta`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `qouta_user_id` (`user_id`);
+  ADD KEY `idx_quota_status` (`status`),
+  ADD KEY `idx_quota_user_status` (`user_id`,`status`);
 
 --
 -- Indexes for table `sms_logs`
@@ -896,7 +905,7 @@ ALTER TABLE `plans`
 -- AUTO_INCREMENT for table `qouta`
 --
 ALTER TABLE `qouta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sms_logs`
@@ -908,7 +917,7 @@ ALTER TABLE `sms_logs`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`

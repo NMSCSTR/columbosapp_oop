@@ -27,15 +27,21 @@
     textarea.border-red-500 {
         border-width: 2px;
     }
+    /* Full width and zoom stability to match transactions page */
+    .main-container { width: 100% !important; max-width: none !important; min-width: 0 !important; margin-left: 0 !important; margin-right: 0 !important; }
+    .content-wrapper { width: 100%; overflow-x: auto; min-width: 0; max-width: none !important; }
+    /* Account for sidebar width */
+    main { width: calc(100% - 5rem) !important; }
+    @media (min-width: 768px) { main { width: calc(100% - 16rem) !important; } }
+    * { box-sizing: border-box; }
 </style>
 
 
 
-<div class="flex flex-col md:flex-row min-h-screen">
-    <?php include '../../partials/memberSideBar.php'?>
-    <!-- Main Content -->
-    <main class="flex-1">
-        <div class="p-4">
+<?php include '../../partials/memberSideBar.php'?>
+<!-- Main Content -->
+<main class="flex-1 p-6 md:p-8 overflow-y-auto w-full min-w-0 main-container bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="content-wrapper w-full">
 
             <h3 class="text-3xl text-center font-extrabold dark:text-white mb-8">Application form for
                 <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['lastname'] ?></h3>
@@ -67,7 +73,7 @@
                             <!-- Step 1 -->
                             <div class="step-content active">
                                 <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id'] ?>">
                                     <input type="text" placeholder="First Name"
                                         value="<?php echo htmlspecialchars($user['firstname']); ?>" name="firstname"
@@ -114,7 +120,7 @@
                             <!-- Step 2 -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 2: Contact Details</h2>
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input type="text" placeholder="Street" name="street" class="border rounded p-2">
                                     <input type="text" placeholder="Barangay" name="barangay"
                                         class="border rounded p-2">
@@ -130,7 +136,7 @@
                             <!-- Step 3 -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 3: Employment Details</h2>
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input type="text" placeholder="Occupation" name="occupation"
                                         class="border rounded p-2">
                                     <select class="border rounded p-2" name="employment_status">
@@ -159,7 +165,7 @@
                             <!-- Step 4 -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 4: Plan Information</h2>
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <select class="border rounded p-2" name="fraternal_benefits_id">
                                         <option>Select Plan</option>
                                         <?php
@@ -241,7 +247,7 @@
                             <!-- Step 6: Family Background -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 6: Family Background</h2>
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Father Information -->
                                     <input type="text" name="father_lastname" placeholder="Father's Last Name"
                                         class="border rounded p-2">
@@ -338,7 +344,7 @@
                             <!-- Step 8 -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 8: Physician Details</h2>
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input type="text" placeholder="Physician Name" name="physician_name"
                                         class="border rounded p-2">
                                     <input type="text" placeholder="Contact Number" name="contact_number"
@@ -505,7 +511,7 @@
                             <!-- Step 10: Personal and Membership Details -->
                             <div class="step-content">
                                 <h2 class="text-lg font-bold mb-4">Step 10: Personal and Membership Information</h2>
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Height -->
                                     <input type="text" name="height" placeholder="Height (cm/in)"
                                         class="border rounded p-2" required>
@@ -751,8 +757,8 @@
                 }
                 </script>
             </div>
-    </main>
-</div>
+    </div>
+</main>
 
 <?php
 include '../../includes/footer.php';
