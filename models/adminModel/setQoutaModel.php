@@ -66,7 +66,34 @@ class setQoutaModel
         return mysqli_fetch_assoc($result);
     }
 
-    //
+    //fetch all unit-managers under a specific fraternal counselor
+    public function fetchUnitManagerByFraternalCounselor($fraternal_counselor_id){
+        $fraternal_counselor_id = mysqli_real_escape_string($this->conn, $fraternal_counselor_id);
+
+        $query = "SELECT DISTINCT 
+                        u.id,
+                        u.firstname,
+                        u.lastname,
+                        u.email,
+                        u.phone_number,
+                        u.status,
+                        u.role
+                  FROM council c
+                  INNER JOIN users u ON u.id = c.unit_manager_id
+                  WHERE c.fraternal_counselor_id = '$fraternal_counselor_id'
+                    AND u.role = 'unit-manager'";
+
+        $result = mysqli_query($this->conn, $query);
+
+        $unitManagers = [];
+        if ($result && mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $unitManagers[] = $row;
+            }
+        }
+
+        return $unitManagers;
+    }
     
     public function fetchApplicantByUnitManager($user_id)
     {
@@ -83,17 +110,22 @@ class setQoutaModel
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
 
         $query = "SELECT
-                a.fraternal_counselor_id,
+                c.unit_manager_id,
                 COUNT(a.applicant_id) as total_applicants,
                 COALESCE(SUM(fb.face_value), 0) as total_face_value
               FROM applicants a
               LEFT JOIN plans p ON a.applicant_id = p.applicant_id
               LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
-              WHERE a.fraternal_counselor_id = '$user_id'
-              GROUP BY a.fraternal_counselor_id";
+              LEFT JOIN council c ON p.council_id = c.council_id
+              WHERE c.unit_manager_id = '$user_id'
+              GROUP BY c.unit_manager_id";
 
         $result = mysqli_query($this->conn, $query);
-        return mysqli_fetch_assoc($result);
+        $row = $result ? mysqli_fetch_assoc($result) : null;
+        if (!$row) {
+            return [ 'total_applicants' => 0, 'total_face_value' => 0 ];
+        }
+        return $row;
     }
 
     public function calculateAllApplicantsFaceValueByFraternalCounselor($user_id)
@@ -112,11 +144,10 @@ class setQoutaModel
         return $row['total_face_value'];
     }
 
-    public function getAllFraternalCounselorWithQuota()
+    public function getAllUnitManagerWithQuota()
     {
         // First update quota statuses
         $this->updateQuotaStatus();
-
         $query = "SELECT
                     u.id,
                     u.firstname,
@@ -136,7 +167,7 @@ class setQoutaModel
                     END as progress_percentage
                   FROM users u
                   LEFT JOIN qouta q ON u.id = q.user_id
-                  WHERE u.role = 'fraternal-counselor'
+                  WHERE u.role = 'unit-manager'
                   ORDER BY u.firstname, u.lastname";
 
         $result = mysqli_query($this->conn, $query);

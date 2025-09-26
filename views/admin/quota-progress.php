@@ -51,8 +51,8 @@
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Fraternal Counselor Quota Progress</h2>
-                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Monitor quota progress for all fraternal counselor</p>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Unit Manager Quota Progress</h2>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Monitor quota progress for all unit managers</p>
                         </div>
                         <div class="flex space-x-3">
                             <a href="users.php" 
@@ -113,8 +113,11 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <?php if ($UnitManager['quota_id']): ?>
-                                            <?php $allocations = $quotaModel->fetchTotalAllocationsInApplicantsByUnitManager($UnitManager['id']); ?>
-                                            <span class="font-medium"><?= number_format($allocations['total_face_value']) ?></span>
+                                            <?php 
+                                                $allocations = $quotaModel->fetchTotalAllocationsInApplicantsByUnitManager($UnitManager['id']);
+                                                $totalFaceValue = is_array($allocations) && isset($allocations['total_face_value']) ? (float)$allocations['total_face_value'] : 0;
+                                            ?>
+                                            <span class="font-medium"><?= number_format($totalFaceValue) ?></span>
                                         <?php else: ?>
                                             <span class="text-gray-400">-</span>
                                         <?php endif; ?>

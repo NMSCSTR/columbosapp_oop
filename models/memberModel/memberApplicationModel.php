@@ -1329,4 +1329,30 @@ class MemberApplicationModel
         }
     }
 
+	public function fetchUnitManagerByApplicant($applicant_id)
+	{
+		$applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+
+		$sql = "SELECT 
+				u.id,
+				u.firstname,
+				u.lastname,
+				u.email,
+				u.phone_number,
+				u.status,
+				u.role
+			FROM applicants a
+			LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+			LEFT JOIN council c ON p.council_id = c.council_id
+			LEFT JOIN users u ON c.unit_manager_id = u.id
+			WHERE a.applicant_id = '$applicant_id'
+			LIMIT 1";
+
+		$result = mysqli_query($this->conn, $sql);
+		if ($result && mysqli_num_rows($result) > 0) {
+			return mysqli_fetch_assoc($result);
+		}
+		return null;
+	}
+
 }
