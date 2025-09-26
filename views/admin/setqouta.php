@@ -32,10 +32,6 @@
     
 ?>
 
-
-
-
-
 <script>
     const BASE_URL = '<?php echo rtrim(dirname(dirname(dirname($_SERVER['PHP_SELF']))), '/') . '/'; ?>';
 </script>

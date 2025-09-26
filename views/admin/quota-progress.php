@@ -8,9 +8,9 @@
     include '../../includes/alert2.php';
     include '../../partials/breadcrumb.php';
 
-    // Fetch all Fraternal Counselors with their quota information
+    // Fetch all Unit Manager with their quota information
     $quotaModel = new setQoutaModel($conn);
-    $fraternalCounselors = $quotaModel->getAllFraternalCounselorWithQuota();
+    $UnitManagers = $quotaModel->getAllUnitManagerWithQuota();
 
     // Get basic info about applicants
     // $applicants = $quotaModel->fetchApplicantByFraternalCounselor($user_id);
@@ -69,7 +69,7 @@
                         <table id="quotaProgressTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">Fraternal Counselor</th>
+                                    <th scope="col" class="px-6 py-3">Unit Manager</th>
                                     <th scope="col" class="px-6 py-3">Status</th>
                                     <th scope="col" class="px-6 py-3">Quota Amount</th>
                                     <th scope="col" class="px-6 py-3">Current Amount</th>
@@ -81,20 +81,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($fraternalCounselors as $fraternalCounselor): ?>
+                                <?php foreach ($UnitManagers as $UnitManager): ?>
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <div>
-                                            <div class="font-medium"><?= htmlspecialchars($fraternalCounselor['firstname'] . ' ' . $fraternalCounselor['lastname']) ?></div>
-                                            <div class="text-sm text-gray-500"><?= htmlspecialchars($fraternalCounselor['email']) ?></div>
+                                            <div class="font-medium"><?= htmlspecialchars($UnitManager['firstname'] . ' ' . $UnitManager['lastname']) ?></div>
+                                            <div class="text-sm text-gray-500"><?= htmlspecialchars($UnitManager['email']) ?></div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <?php if ($fraternalCounselor['status'] === 'approved'): ?>
+                                        <?php if ($UnitManager['status'] === 'approved'): ?>
                                             <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                                                 Approved
                                             </span>
-                                        <?php elseif ($fraternalCounselor['status'] === 'pending'): ?>
+                                        <?php elseif ($UnitManager['status'] === 'pending'): ?>
                                             <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
                                                 Pending
                                             </span>
@@ -105,26 +105,26 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <?php if ($fraternalCounselor['quota_id']): ?>
-                                            <span class="font-medium"><?= number_format($fraternalCounselor['qouta']) ?></span>
+                                        <?php if ($UnitManager['quota_id']): ?>
+                                            <span class="font-medium"><?= number_format($UnitManager['qouta']) ?></span>
                                         <?php else: ?>
                                             <span class="text-gray-400">No quota set</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <?php if ($fraternalCounselor['quota_id']): ?>
-                                            <?php $allocations = $quotaModel->fetchTotalAllocationsInApplicantsByFraternalCounselor($fraternalCounselor['id']); ?>
+                                        <?php if ($UnitManager['quota_id']): ?>
+                                            <?php $allocations = $quotaModel->fetchTotalAllocationsInApplicantsByUnitManager($UnitManager['id']); ?>
                                             <span class="font-medium"><?= number_format($allocations['total_face_value']) ?></span>
                                         <?php else: ?>
                                             <span class="text-gray-400">-</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <?php if ($fraternalCounselor['quota_id']): ?>
+                                        <?php if ($UnitManager['quota_id']): ?>
                                             <div class="flex items-center">
                                                 <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
                                                     <?php 
-                                                    $progress = $fraternalCounselor['progress_percentage'];
+                                                    $progress = $UnitManager['progress_percentage'];
                                                     $colorClass = $progress >= 100 ? 'bg-green-600' : ($progress >= 70 ? 'bg-yellow-500' : 'bg-blue-600');
                                                     ?>
                                                     <div class="<?= $colorClass ?> h-2 rounded-full" style="width: <?= min(100, $progress) ?>%"></div>
@@ -136,9 +136,9 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <?php if ($fraternalCounselor['quota_id']): ?>
+                                        <?php if ($UnitManager['quota_id']): ?>
                                             <?php 
-                                            $status = $fraternalCounselor['quota_status'];
+                                            $status = $UnitManager['quota_status'];
                                             $statusClass = $status === 'completed' ? 'bg-green-100 text-green-800' : 
                                                          ($status === 'expired' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800');
                                             $statusLabel = ucfirst($status);
@@ -151,23 +151,23 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <?php if ($fraternalCounselor['quota_id']): ?>
-                                            <span class="text-sm"><?= date('M d, Y', strtotime($fraternalCounselor['duration'])) ?></span>
+                                        <?php if ($UnitManager['quota_id']): ?>
+                                            <span class="text-sm"><?= date('M d, Y', strtotime($UnitManager['duration'])) ?></span>
                                         <?php else: ?>
                                             <span class="text-gray-400">-</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <?php if ($fraternalCounselor['quota_id']): ?>
-                                            <span class="text-sm"><?= date('M d, Y', strtotime($fraternalCounselor['date_created'])) ?></span>
+                                        <?php if ($UnitManager['quota_id']): ?>
+                                            <span class="text-sm"><?= date('M d, Y', strtotime($UnitManager['date_created'])) ?></span>
                                         <?php else: ?>
                                             <span class="text-gray-400">-</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex space-x-2">
-                                            <?php if ($fraternalCounselor['status'] === 'approved'): ?>
-                                                <a href="setqouta.php?userid=<?= $fraternalCounselor['id'] ?>" 
+                                            <?php if ($UnitManager['status'] === 'approved'): ?>
+                                                <a href="setqouta.php?userid=<?= $UnitManager['id'] ?>" 
                                                    class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 focus:ring-2 focus:ring-blue-300 transition-colors duration-200">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>

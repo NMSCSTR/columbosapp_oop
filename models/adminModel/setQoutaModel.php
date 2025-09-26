@@ -65,6 +65,8 @@ class setQoutaModel
 
         return mysqli_fetch_assoc($result);
     }
+
+    //
     
     public function fetchApplicantByUnitManager($user_id)
     {
