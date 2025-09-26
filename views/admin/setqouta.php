@@ -27,7 +27,8 @@
     $quotaModel = new setQoutaModel($conn);
     $existingQuota = $quotaModel->checkExistingQuota($user_id);
     $activeQuota = $quotaModel->hasActiveQuota($user_id);
-    $currentFaceValue = $quotaModel->calculateAllApplicantsFaceValueByUnitManager($user_id);
+    $allocationsSummary = $quotaModel->fetchTotalAllocationsInApplicantsByUnitManager($user_id);
+    $currentFaceValue = isset($allocationsSummary['total_face_value']) ? $allocationsSummary['total_face_value'] : 0;
     // echo "Total Face Value: " . $currentFaceValue;
     
 ?>
@@ -61,7 +62,7 @@
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Set Quota</h2>
-                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Set quota for fraternal counselor: <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Set quota for Unit Manager: <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></p>
                         </div>
                     </div>
                 </div>
@@ -157,7 +158,7 @@
                         <!-- Submit Button -->
                         <div class="flex justify-end space-x-4">
                             <a href="users.php" 
-                               class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors duration-200">
+                               class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:bor der-gray-500 transition-colors duration-200">
                                 Cancel
                             </a>
                             <button type="submit" 

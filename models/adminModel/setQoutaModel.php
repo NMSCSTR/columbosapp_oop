@@ -128,7 +128,7 @@ class setQoutaModel
         return $row;
     }
 
-    public function calculateAllApplicantsFaceValueByFraternalCounselor($user_id)
+    public function calculateAllApplicantsFaceValueByUnitManager($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
 
