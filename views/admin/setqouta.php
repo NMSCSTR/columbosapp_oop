@@ -19,15 +19,15 @@
     $userModel = new userModel($conn);
     $user = $userModel->getUserById($user_id);
     
-    if (!$user || $user['role'] !== 'fraternal-counselor') {
-        die("Invalid user or user is not a fraternal counselor.");
+    if (!$user || $user['role'] !== 'unit-manager') {
+        die("Invalid user or user is not a unit manager.");
     }
     
     // Check for existing quota and active quota
     $quotaModel = new setQoutaModel($conn);
     $existingQuota = $quotaModel->checkExistingQuota($user_id);
     $activeQuota = $quotaModel->hasActiveQuota($user_id);
-    $currentFaceValue = $quotaModel->calculateAllApplicantsFaceValueByFraternalCounselor($user_id);
+    $currentFaceValue = $quotaModel->calculateAllApplicantsFaceValueByUnitManager($user_id);
     // echo "Total Face Value: " . $currentFaceValue;
     
 ?>

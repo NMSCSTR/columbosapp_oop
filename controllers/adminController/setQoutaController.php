@@ -48,8 +48,8 @@ if ($current_amount < 0) {
 $userModel = new userModel($conn);
 $user = $userModel->getUserById($user_id);
 
-if (!$user || $user['role'] !== 'fraternal-counselor') {
-    $_SESSION['error'] = "Invalid user or user is not a fraternal counselor.";
+if (!$user || $user['role'] !== 'unit-manager') {
+    $_SESSION['error'] = "Invalid user or user is not a unit-manager.";
     header('Location: ../../views/admin/users.php');
     exit();
 }

@@ -66,17 +66,17 @@ class setQoutaModel
         return mysqli_fetch_assoc($result);
     }
     
-    public function fetchApplicantByFraternalCounselor($user_id)
+    public function fetchApplicantByUnitManager($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
 
-        $query  = "SELECT * FROM applicants WHERE fraternal_counselor_id = '$user_id'";
+        $query  = "SELECT * FROM applicants WHERE unit_manager = '$user_id'";
         $result = mysqli_query($this->conn, $query);
 
         return mysqli_fetch_assoc($result);
     }
 
-    public function fetchTotalAllocationsInApplicantsByFraternalCounselor($user_id)
+    public function fetchTotalAllocationsInApplicantsByUnitManager($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
 

@@ -1126,6 +1126,7 @@ class MemberApplicationModel
             return "Error updating employment details: " . mysqli_error($this->conn);
         }
 
+
         // Update plan information
         $sql = "UPDATE plans SET
                 fraternal_benefits_id = '$fraternal_benefits_id',
@@ -1139,6 +1140,8 @@ class MemberApplicationModel
             return "Error updating plan information: " . mysqli_error($this->conn);
         }
 
+        
+        
         // Update beneficiaries (assuming you want to update them as well)
         $count = count($benefit_names);
         for ($i = 0; $i < $count; $i++) {
