@@ -10,7 +10,7 @@
     include '../../models/memberModel/memberApplicationModel.php';
     include '../../models/adminModel/announcementModel.php';
     include '../../models/adminModel/FormsModel.php';
-    include '../../models/adminModel/setQoutaModel.php';
+    // include '../../models/adminModel/setQoutaModel.php'; // Quota system moved to unit managers
 
     // Debug session data
     $userModel   = new UserModel($conn);
@@ -30,20 +30,20 @@
     $applicationModel       = new MemberApplicationModel($conn);
     $formsModel             = new FormsModel($conn);
     $announcementModel      = new announcementModel($conn);
-    $quotaModel             = new setQoutaModel($conn);
+    // $quotaModel             = new setQoutaModel($conn); // Quota system moved to unit managers
     $thisMonthTotal         = $applicationModel->calculateMonthlyAllocationsByCouncil($_SESSION['user_id'], $currentYear, $currentMonth);
     $lastMonthTotal         = $applicationModel->calculateMonthlyAllocationsByCouncil($_SESSION['user_id'], $lastMonthYear, $lastMonth);
     $pending_application    = $applicationModel->fetchPendingApplicantByCouncil($_SESSION['user_id']);
-    $fraternalCounselors    = $quotaModel->getAllFraternalCounselorWithQuota();
+    // $fraternalCounselors    = $quotaModel->getAllFraternalCounselorWithQuota(); // Quota system moved to unit managers
     $announcements          = $announcementModel->getAllAnnouncement();
     $totalApplicants        = $applicationModel->countAllApplicants($_SESSION['user_id']);
     $totals                 = $applicationModel->calculateTotalAllocationsForAllApplicants();
     $totalsByFraternalCounselor = $applicationModel->calculateAllTotalAllocationsByFraternalCounselor($_SESSION['user_id']);
     $files                  = $formsModel->viewAllForms();
     
-    // Get quota data for current fraternal counselor
-    $currentUserQuota = $quotaModel->checkExistingQuota($_SESSION['user_id']);
-    $currentFaceValue = $quotaModel->calculateAllApplicantsFaceValueByFraternalCounselor($_SESSION['user_id']);
+    // Get quota data for current fraternal counselor - QUOTA SYSTEM MOVED TO UNIT MANAGERS
+    // $currentUserQuota = $quotaModel->checkExistingQuota($_SESSION['user_id']);
+    // $currentFaceValue = $quotaModel->calculateAllApplicantsFaceValueByFraternalCounselor($_SESSION['user_id']);
 
     if ($lastMonthTotal > 0) {
         $growth = (($thisMonthTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
@@ -458,169 +458,7 @@
         </div>
     </div>
 
-    <!-- Quota Progress Section -->
-    <?php if ($currentUserQuota): ?>
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Quota Progress</h2>
-            <div class="flex items-center text-sm text-gray-500">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                <span>Target Achievement</span>
-            </div>
-        </div>
-
-        <!-- Quota Progress Card -->
-        <div class="bg-gradient-to-r from-indigo-50 to-indigo-100 rounded-xl p-6 border border-indigo-200">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h3 class="text-lg font-semibold text-indigo-800 mb-2">Your Quota Target</h3>
-                    <p class="text-sm text-indigo-600">Target: ₱<?php echo number_format($currentUserQuota['qouta'], 0) ?> | Current: ₱<?php echo number_format($currentFaceValue, 0) ?></p>
-                </div>
-                <div class="text-right">
-                    <div class="p-3 bg-indigo-500 rounded-xl">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Progress Bar -->
-            <?php 
-                $progressPercentage = $currentUserQuota['qouta'] > 0 ? min(($currentFaceValue / $currentUserQuota['qouta']) * 100, 100) : 0;
-                $isCompleted = $currentFaceValue >= $currentUserQuota['qouta'];
-                $isExpired = strtotime($currentUserQuota['duration']) < time();
-            ?>
-            <div class="mb-4">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm font-medium text-indigo-700">Progress</span>
-                    <span class="text-sm font-bold text-indigo-800"><?php echo number_format($progressPercentage, 1) ?>%</span>
-                </div>
-                <div class="w-full bg-indigo-200 rounded-full h-3">
-                    <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full transition-all duration-500 ease-out" 
-                         style="width: <?php echo $progressPercentage ?>%"></div>
-                </div>
-            </div>
-
-            <!-- Quota Details Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Target Amount -->
-                <div class="bg-white rounded-lg p-4 border border-indigo-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600 mb-1">Target Amount</p>
-                            <p class="text-xl font-bold text-indigo-700">₱<?php echo number_format($currentUserQuota['qouta'], 0) ?></p>
-                        </div>
-                        <div class="p-2 bg-indigo-100 rounded-lg">
-                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Current Achievement -->
-                <div class="bg-white rounded-lg p-4 border border-indigo-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600 mb-1">Current Achievement</p>
-                            <p class="text-xl font-bold text-green-700">₱<?php echo number_format($currentFaceValue, 0) ?></p>
-                        </div>
-                        <div class="p-2 bg-green-100 rounded-lg">
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Remaining Amount -->
-                <div class="bg-white rounded-lg p-4 border border-indigo-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600 mb-1">Remaining</p>
-                            <p class="text-xl font-bold <?php echo ($currentUserQuota['qouta'] - $currentFaceValue) <= 0 ? 'text-green-700' : 'text-orange-700' ?>">
-                                ₱<?php echo number_format(max(0, $currentUserQuota['qouta'] - $currentFaceValue), 0) ?>
-                            </p>
-                        </div>
-                        <div class="p-2 <?php echo ($currentUserQuota['qouta'] - $currentFaceValue) <= 0 ? 'bg-green-100' : 'bg-orange-100' ?> rounded-lg">
-                            <svg class="w-5 h-5 <?php echo ($currentUserQuota['qouta'] - $currentFaceValue) <= 0 ? 'text-green-600' : 'text-orange-600' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Status and Deadline -->
-            <div class="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-                <div class="flex items-center space-x-4">
-                    <!-- Status Badge -->
-                    <div class="flex items-center">
-                        <span class="px-3 py-1 text-xs font-medium rounded-full <?php 
-                            if ($isCompleted) {
-                                echo 'bg-green-100 text-green-700';
-                            } elseif ($isExpired) {
-                                echo 'bg-red-100 text-red-700';
-                            } else {
-                                echo 'bg-yellow-100 text-yellow-700';
-                            }
-                        ?>">
-                            <?php 
-                                if ($isCompleted) {
-                                    echo 'Completed';
-                                } elseif ($isExpired) {
-                                    echo 'Expired';
-                                } else {
-                                    echo 'In Progress';
-                                }
-                            ?>
-                        </span>
-                    </div>
-                    
-                    <!-- Duration Info -->
-                    <div class="flex items-center text-sm text-gray-600">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span>Deadline: <?php echo date('M d, Y', strtotime($currentUserQuota['duration'])) ?></span>
-                    </div>
-                </div>
-
-                <!-- Progress Indicator -->
-                <div class="flex items-center text-sm <?php echo $isCompleted ? 'text-green-600' : 'text-indigo-600' ?>">
-                    <?php if ($isCompleted): ?>
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span class="font-medium">Quota Achieved!</span>
-                    <?php else: ?>
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        <span class="font-medium">Keep going!</span>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php else: ?>
-    <!-- No Quota Set -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
-        <div class="text-center py-8">
-            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">No Quota Set</h3>
-            <p class="text-gray-600 mb-4">You don't have an active quota target assigned yet.</p>
-            <p class="text-sm text-gray-500">Contact your administrator to set up your quota target.</p>
-        </div>
-    </div>
-    <?php endif; ?>
+    <!-- Quota Progress Section - REMOVED: Quota system moved to unit managers -->
 </div>
 
 <!-- Orders Section -->
