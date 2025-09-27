@@ -10,7 +10,7 @@
     include '../../models/memberModel/memberApplicationModel.php';
     include '../../models/adminModel/announcementModel.php';
     include '../../models/adminModel/FormsModel.php';
-    // include '../../models/adminModel/setQoutaModel.php'; // Quota system moved to unit managers
+    include '../../models/adminModel/setQoutaModel.php';
 
     // Debug session data
     $userModel   = new UserModel($conn);
@@ -30,7 +30,7 @@
     $applicationModel       = new MemberApplicationModel($conn);
     $formsModel             = new FormsModel($conn);
     $announcementModel      = new announcementModel($conn);
-    // $quotaModel             = new setQoutaModel($conn); // Quota system moved to unit managers
+    $quotaModel             = new setQoutaModel($conn);
     $thisMonthTotal         = $applicationModel->calculateMonthlyAllocationsByCouncil($_SESSION['user_id'], $currentYear, $currentMonth);
     $lastMonthTotal         = $applicationModel->calculateMonthlyAllocationsByCouncil($_SESSION['user_id'], $lastMonthYear, $lastMonth);
     $pending_application    = $applicationModel->fetchPendingApplicantByCouncil($_SESSION['user_id']);
@@ -41,9 +41,31 @@
     $totalsByFraternalCounselor = $applicationModel->calculateAllTotalAllocationsByFraternalCounselor($_SESSION['user_id']);
     $files                  = $formsModel->viewAllForms();
     
-    // Get quota data for current fraternal counselor - QUOTA SYSTEM MOVED TO UNIT MANAGERS
-    // $currentUserQuota = $quotaModel->checkExistingQuota($_SESSION['user_id']);
-    // $currentFaceValue = $quotaModel->calculateAllApplicantsFaceValueByFraternalCounselor($_SESSION['user_id']);
+    // Get unit managers under this fraternal counselor and their quota data
+    $unitManagers = $quotaModel->fetchUnitManagerByFraternalCounselor($_SESSION['user_id']);
+    $unitManagerQuotaData = [];
+    $totalQuotaTarget = 0;
+    $totalQuotaAchieved = 0;
+    $totalQuotaFaceValue = 0;
+    
+    foreach ($unitManagers as $unitManager) {
+        $quotaInfo = $quotaModel->checkExistingQuota($unitManager['id']);
+        $allocations = $quotaModel->fetchTotalAllocationsInApplicantsByUnitManager($unitManager['id']);
+        
+        $unitManagerQuotaData[] = [
+            'unit_manager' => $unitManager,
+            'quota_info' => $quotaInfo,
+            'allocations' => $allocations,
+            'face_value' => $allocations['total_face_value'] ?? 0,
+            'applicants_count' => $allocations['total_applicants'] ?? 0
+        ];
+        
+        if ($quotaInfo) {
+            $totalQuotaTarget += $quotaInfo['qouta'];
+            $totalQuotaAchieved += $allocations['total_face_value'] ?? 0;
+        }
+        $totalQuotaFaceValue += $allocations['total_face_value'] ?? 0;
+    }
 
     if ($lastMonthTotal > 0) {
         $growth = (($thisMonthTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
@@ -458,7 +480,390 @@
         </div>
     </div>
 
-    <!-- Quota Progress Section - REMOVED: Quota system moved to unit managers -->
+    <!-- Unit Managers Quota Progress Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Unit Managers Quota Progress</h2>
+            <div class="flex items-center text-sm text-gray-500">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span>Team Performance Overview</span>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Total Unit Managers -->
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-blue-500 rounded-xl">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-3xl font-bold text-blue-700"><?php echo count($unitManagers) ?></p>
+                        <p class="text-sm text-blue-600 font-medium">Unit Managers</p>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm text-blue-600">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    <span>Under your supervision</span>
+                </div>
+            </div>
+
+            <!-- Total Quota Target -->
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-purple-500 rounded-xl">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-purple-700">₱<?php echo number_format($totalQuotaTarget, 0) ?></p>
+                        <p class="text-sm text-purple-600 font-medium">Total Quota Target</p>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm text-purple-600">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Combined targets</span>
+                </div>
+            </div>
+
+            <!-- Total Face Value Achieved -->
+            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-green-500 rounded-xl">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-green-700">₱<?php echo number_format($totalQuotaFaceValue, 0) ?></p>
+                        <p class="text-sm text-green-600 font-medium">Total Face Value</p>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm text-green-600">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    <span>Achieved by team</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unit Managers Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-200">
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Manager</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applicants</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Face Value</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quota Target</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <?php if (!empty($unitManagerQuotaData)): ?>
+                        <?php foreach ($unitManagerQuotaData as $data): ?>
+                            <?php 
+                                $unitManager = $data['unit_manager'];
+                                $quotaInfo = $data['quota_info'];
+                                $faceValue = $data['face_value'];
+                                $applicantsCount = $data['applicants_count'];
+                                
+                                $quotaTarget = $quotaInfo ? $quotaInfo['qouta'] : 0;
+                                $progressPercentage = $quotaTarget > 0 ? min(($faceValue / $quotaTarget) * 100, 100) : 0;
+                                $isCompleted = $faceValue >= $quotaTarget;
+                                $isExpired = $quotaInfo && strtotime($quotaInfo['duration']) < time();
+                            ?>
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                            <span class="text-blue-700 font-medium text-sm">
+                                                <?php echo strtoupper(substr($unitManager['firstname'], 0, 1) . substr($unitManager['lastname'], 0, 1)) ?>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">
+                                                <?php echo htmlspecialchars($unitManager['firstname'] . ' ' . $unitManager['lastname']) ?>
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                <?php echo htmlspecialchars($unitManager['email']) ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900"><?php echo $applicantsCount ?></div>
+                                    <div class="text-sm text-gray-500">applicants</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">₱<?php echo number_format($faceValue, 0) ?></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php if ($quotaInfo): ?>
+                                        <div class="text-sm font-medium text-gray-900">₱<?php echo number_format($quotaTarget, 0) ?></div>
+                                        <div class="text-sm text-gray-500">Due: <?php echo date('M d, Y', strtotime($quotaInfo['duration'])) ?></div>
+                                    <?php else: ?>
+                                        <div class="text-sm text-gray-500">No quota set</div>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php if ($quotaInfo): ?>
+                                        <div class="flex items-center">
+                                            <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
+                                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300" 
+                                                     style="width: <?php echo $progressPercentage ?>%"></div>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-900"><?php echo number_format($progressPercentage, 1) ?>%</span>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="text-sm text-gray-500">-</div>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php if ($quotaInfo): ?>
+                                        <span class="px-3 py-1 text-xs font-medium rounded-full <?php 
+                                            if ($isCompleted) {
+                                                echo 'bg-green-100 text-green-700';
+                                            } elseif ($isExpired) {
+                                                echo 'bg-red-100 text-red-700';
+                                            } else {
+                                                echo 'bg-yellow-100 text-yellow-700';
+                                            }
+                                        ?>">
+                                            <?php 
+                                                if ($isCompleted) {
+                                                    echo 'Completed';
+                                                } elseif ($isExpired) {
+                                                    echo 'Expired';
+                                                } else {
+                                                    echo 'In Progress';
+                                                }
+                                            ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                                            No Quota
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                No unit managers found under your supervision.
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Unit Managers Section -->
+<div x-show="activeSection === 'unitmanagers'" class="space-y-8" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
+    <!-- Section Header -->
+    <div class="relative overflow-hidden bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-2xl p-8 text-white mb-8">
+        <div class="relative z-10">
+            <h1 class="text-4xl font-bold mb-2 text-white">Unit Managers Quota Progress 📊</h1>
+            <p class="text-indigo-100 text-lg">Monitor and track your unit managers' performance and quota achievements.</p>
+        </div>
+        <div class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-indigo-400 opacity-20 transform rotate-12"></div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Total Unit Managers -->
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-3 bg-blue-500 rounded-xl">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <div class="text-right">
+                    <p class="text-3xl font-bold text-blue-700"><?php echo count($unitManagers) ?></p>
+                    <p class="text-sm text-blue-600 font-medium">Unit Managers</p>
+                </div>
+            </div>
+            <div class="flex items-center text-sm text-blue-600">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                <span>Under your supervision</span>
+            </div>
+        </div>
+
+        <!-- Total Quota Target -->
+        <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-3 bg-purple-500 rounded-xl">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="text-right">
+                    <p class="text-2xl font-bold text-purple-700">₱<?php echo number_format($totalQuotaTarget, 0) ?></p>
+                    <p class="text-sm text-purple-600 font-medium">Total Quota Target</p>
+                </div>
+            </div>
+            <div class="flex items-center text-sm text-purple-600">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Combined targets</span>
+            </div>
+        </div>
+
+        <!-- Total Face Value Achieved -->
+        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-3 bg-green-500 rounded-xl">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+                <div class="text-right">
+                    <p class="text-2xl font-bold text-green-700">₱<?php echo number_format($totalQuotaFaceValue, 0) ?></p>
+                    <p class="text-sm text-green-600 font-medium">Total Face Value</p>
+                </div>
+            </div>
+            <div class="flex items-center text-sm text-green-600">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                <span>Achieved by team</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unit Managers Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="overflow-x-auto">
+            <table id="unitManagersTable" class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-200">
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Manager</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applicants</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Face Value</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quota Target</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <?php if (!empty($unitManagerQuotaData)): ?>
+                        <?php foreach ($unitManagerQuotaData as $data): ?>
+                            <?php 
+                                $unitManager = $data['unit_manager'];
+                                $quotaInfo = $data['quota_info'];
+                                $faceValue = $data['face_value'];
+                                $applicantsCount = $data['applicants_count'];
+                                
+                                $quotaTarget = $quotaInfo ? $quotaInfo['qouta'] : 0;
+                                $progressPercentage = $quotaTarget > 0 ? min(($faceValue / $quotaTarget) * 100, 100) : 0;
+                                $isCompleted = $faceValue >= $quotaTarget;
+                                $isExpired = $quotaInfo && strtotime($quotaInfo['duration']) < time();
+                            ?>
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                            <span class="text-blue-700 font-medium text-sm">
+                                                <?php echo strtoupper(substr($unitManager['firstname'], 0, 1) . substr($unitManager['lastname'], 0, 1)) ?>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">
+                                                <?php echo htmlspecialchars($unitManager['firstname'] . ' ' . $unitManager['lastname']) ?>
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                <?php echo htmlspecialchars($unitManager['email']) ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900"><?php echo $applicantsCount ?></div>
+                                    <div class="text-sm text-gray-500">applicants</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">₱<?php echo number_format($faceValue, 0) ?></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php if ($quotaInfo): ?>
+                                        <div class="text-sm font-medium text-gray-900">₱<?php echo number_format($quotaTarget, 0) ?></div>
+                                        <div class="text-sm text-gray-500">Due: <?php echo date('M d, Y', strtotime($quotaInfo['duration'])) ?></div>
+                                    <?php else: ?>
+                                        <div class="text-sm text-gray-500">No quota set</div>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php if ($quotaInfo): ?>
+                                        <div class="flex items-center">
+                                            <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
+                                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300" 
+                                                     style="width: <?php echo $progressPercentage ?>%"></div>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-900"><?php echo number_format($progressPercentage, 1) ?>%</span>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="text-sm text-gray-500">-</div>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php if ($quotaInfo): ?>
+                                        <span class="px-3 py-1 text-xs font-medium rounded-full <?php 
+                                            if ($isCompleted) {
+                                                echo 'bg-green-100 text-green-700';
+                                            } elseif ($isExpired) {
+                                                echo 'bg-red-100 text-red-700';
+                                            } else {
+                                                echo 'bg-yellow-100 text-yellow-700';
+                                            }
+                                        ?>">
+                                            <?php 
+                                                if ($isCompleted) {
+                                                    echo 'Completed';
+                                                } elseif ($isExpired) {
+                                                    echo 'Expired';
+                                                } else {
+                                                    echo 'In Progress';
+                                                }
+                                            ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                                            No Quota
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                No unit managers found under your supervision.
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- Orders Section -->
@@ -896,6 +1301,7 @@ const tableConfig = {
 $('#myTable2').DataTable(tableConfig);
 $('#myTable3').DataTable(tableConfig);
 $('#myTable4').DataTable(tableConfig);
+$('#unitManagersTable').DataTable(tableConfig);
 });
 </script>
 

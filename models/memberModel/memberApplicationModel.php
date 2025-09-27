@@ -36,7 +36,7 @@ class MemberApplicationModel
         }
     }
 
-    public function countAllApplicants($fraternal_counselor_id)
+    public function countAllApplicants($fraternal_counselor_id) 
     {
         $sql    = "SELECT COUNT(*) as total FROM applicants WHERE fraternal_counselor_id = '$fraternal_counselor_id'";
         $result = mysqli_query($this->conn, $sql);
