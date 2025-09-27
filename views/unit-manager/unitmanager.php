@@ -34,6 +34,8 @@
 
     $announcements       = $announcementModel->getAllAnnouncement();
     $totalApplicants     = $applicationModel->countAllApplicants($_SESSION['user_id']);
+    $getCouncilId        = $applicationModel->getCouncilIdByUMID($_SESSION['user_id']);
+    $countApplicantByCid = $applicationModel->getTotalApplicantsByCouncil($getCouncilId);
     $thisMonthTotal      = $applicationModel->calculateMonthlyAllocationsByCouncil($_SESSION['user_id'], $currentYear, $currentMonth);
     $lastMonthTotal      = $applicationModel->calculateMonthlyAllocationsByCouncil($_SESSION['user_id'], $lastMonthYear, $lastMonth);
     $pending_application = $applicationModel->fetchPendingApplicantByCouncil($_SESSION['user_id']);
@@ -41,8 +43,8 @@
     
     // Get quota data for current unit manager
     $currentUserQuota = $quotaModel->checkExistingQuota($_SESSION['user_id']);
-    $currentFaceValue = $quotaModel->calculateAllApplicantsFaceValueByUnitManager($_SESSION['user_id']);
     $totalsByUnitManager = $quotaModel->fetchTotalAllocationsInApplicantsByUnitManager($_SESSION['user_id']);
+    $currentFaceValue = $totalsByUnitManager['total_face_value'] ?? 0;
     
     // Calculate financial breakdown for unit manager
     $totals = $applicationModel->calculateAllTotalAllocationsByUnitManager($_SESSION['user_id']);
@@ -53,6 +55,8 @@
         $growth = 0;
     }
 
+    
+   
     // $applicantData = $applicationModel->getApplicantByFraternalCounselor($_SESSION['user_id']);
     // $fetchFraternalBenefits = $fraternalBenefitsModel->getFraternalBenefitById($applicantData['fraternal_benefits_id']);
     // $fetchCouncil = $councilModel->getCouncilById($applicantData['council_id']);
@@ -284,7 +288,7 @@
                     <div>
                         <h2 class="text-lg font-semibold text-gray-700 mb-2">Total Applicants</h2>
                         <div class="flex items-baseline">
-                            <p class="text-3xl font-bold text-green-600"><?php echo $totalApplicants ?></p>
+                            <p class="text-3xl font-bold text-green-600"><?php echo $countApplicantByCid ?></p>
                             <p class="ml-2 text-sm text-gray-500">members</p>
                         </div>
                     </div>
@@ -366,25 +370,6 @@
 
         <!-- Recent Activity Section -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
-            <div class="space-y-4">
-                <!-- Activity Item -->
-                <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                    <div class="flex-shrink-0 mr-4">
-                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-800">New application submitted</p>
-                        <p class="text-xs text-gray-500">2 hours ago</p>
-                    </div>
-                </div>
-                <!-- Add more activity items as needed -->
-            </div>
         </div>
     </div>
 

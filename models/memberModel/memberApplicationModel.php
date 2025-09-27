@@ -12,6 +12,30 @@ class MemberApplicationModel
     {
         return mysqli_real_escape_string($this->conn, $value);
     }
+
+    public function getCouncilIdByUMID($umid)
+    {
+        $umid = $this->escape($umid);
+        $query = "SELECT `council_id` FROM `council` WHERE `unit_manager_id` = '$umid'";
+        if($result = mysqli_query($this->conn, $query)){
+            $row = mysqli_fetch_assoc($result);
+            return $row['council_id'];
+        }
+        return 0;
+    }
+
+    public function getTotalApplicantsByCouncil($council_id)
+    {
+        $council_id = $this->escape($council_id);
+        $query = "SELECT COUNT(*) as total_applicantsby_council FROM `plans` WHERE `council_id`='$council_id'";
+        $result = mysqli_query($this->conn, $query);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            return $row['total_applicantsby_council'];
+        }
+    }
+
     public function countAllApplicants($fraternal_counselor_id)
     {
         $sql    = "SELECT COUNT(*) as total FROM applicants WHERE fraternal_counselor_id = '$fraternal_counselor_id'";
