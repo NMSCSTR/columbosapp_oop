@@ -8,9 +8,9 @@ include 'includes/header.php';
 <main>
     <!-- Hero Section -->
     <section class="hero-section" id="hero">
-        <div class="container">
+        <div class="container row align-items-center min-vh-100" >
             <div class="row align-items-center min-vh-100">
-                <div class="col-lg-6 hero-content">
+                <div class="col-lg-6 col-12 order-2 order-lg-1 text-center text-lg-start">
                     <h1 class="hero-title">Knights of Columbus Fraternal Association of the Philippines Inc.</h1>
                     <p class="hero-subtitle">Providing life protection and financial security to our Brother Knights and their families. Get your Benefit Certificate from KCFAPI now! Contact the Fraternal Counselor nearest you or leave us here a message!</p>
                     <div class="d-flex flex-wrap gap-3">
@@ -18,7 +18,7 @@ include 'includes/header.php';
                         <a href="#about" class="btn-secondary-custom">Learn More</a>
                     </div>
                 </div>
-                <div class="col-lg-6 hero-image">
+                <div class="col-lg-6 col-12 order-1 order-lg-2 text-center mb-4 mb-lg-0">
                     <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
                         class="img-fluid" alt="Knights of Columbus Fraternal Association" width="700" height="500"
                         loading="lazy">

@@ -74,6 +74,15 @@
                 </a>
             </li>
 
+            <?php
+                // Query to get pending users count
+                $user_query = "SELECT COUNT(*) AS total_pending_users FROM users WHERE status = 'pending' OR status = 'disabled'";
+                $user_result = mysqli_query($conn, $user_query);
+                $user_row = mysqli_fetch_assoc($user_result);
+                $pending_users_count = $user_row['total_pending_users'];
+            ?>
+
+
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/users.php"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
@@ -82,9 +91,17 @@
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                         </svg>
                     </div>
-                    <span class="ms-3">Users</span>
+                    <span class="ms-3 flex items-center gap-2">
+                        Users
+                        <?php if ($pending_users_count > 0): ?>
+                            <span class="inline-flex items-center justify-center w-6 h-6 text-xs font-semibold text-white bg-red-500 rounded-full">
+                                <?php echo $pending_users_count; ?>
+                            </span>
+                        <?php endif; ?>
+                    </span>
                 </a>
             </li>
+
 
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/forms.php"
@@ -110,6 +127,15 @@
                 </a>
             </li>
 
+            <?php
+                // kaniing ge comment kay para count ne siya sa pending applications
+                // $pending_query = "SELECT COUNT(*) AS total_pending FROM applicants WHERE application_status = 'Pending'";
+                $pending_query = "SELECT COUNT(*) AS total_pending FROM applicants";
+                $pending_result = mysqli_query($conn, $pending_query);
+                $pending_row = mysqli_fetch_assoc($pending_result);
+                $pending_count = $pending_row['total_pending'];
+            ?>
+
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/application.php"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-gray-700 group transition-all duration-200">
@@ -118,9 +144,17 @@
                             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
                         </svg>
                     </div>
-                    <span class="ms-3">Applications</span>
+                    <span class="ms-3 flex items-center gap-2">
+                        Applications
+                        <?php if ($pending_count > 0): ?>
+                            <span class="inline-flex items-center justify-center w-6 h-6 text-xs font-semibold text-white bg-red-500 rounded-full">
+                                <?php echo $pending_count; ?>
+                            </span>
+                        <?php endif; ?>
+                    </span>
                 </a>
             </li>
+
 
             <li>
                 <a href="<?php echo BASE_URL?>views/admin/transactions.php"

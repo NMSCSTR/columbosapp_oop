@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 23, 2025 at 04:05 AM
+-- Generation Time: Sep 27, 2025 at 01:19 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -530,7 +530,8 @@ CREATE TABLE `qouta` (
 
 INSERT INTO `qouta` (`id`, `user_id`, `qouta`, `current_amount`, `duration`, `status`, `date_created`) VALUES
 (1, 14, 1000000, 0, '2025-10-31', 'on-progress', '2025-08-30 14:53:22'),
-(2, 11, 10000000, 100000, '2026-09-19', 'on-progress', '2025-09-19 22:11:39');
+(2, 11, 10000000, 100000, '2026-09-19', 'on-progress', '2025-09-19 22:11:39'),
+(3, 10, 10000000, 100000, '2026-09-26', 'on-progress', '2025-09-26 21:19:18');
 
 -- --------------------------------------------------------
 
@@ -905,7 +906,7 @@ ALTER TABLE `plans`
 -- AUTO_INCREMENT for table `qouta`
 --
 ALTER TABLE `qouta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sms_logs`
