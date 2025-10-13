@@ -64,7 +64,7 @@
                                 <!-- <option value="admin">Admin</option> -->
                                 <option value="unit-manager">Unit Manager</option>
                                 <option value="fraternal-counselor">Fraternal Counselor</option>
-                                <option value="family-member">Family Member</option>
+                                <!-- <option value="family-member">Family Member</option> -->
                                 <option value="member">Member</option>
                             </select>
                         </div>

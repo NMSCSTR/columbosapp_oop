@@ -408,11 +408,11 @@
         </div>
 
         <!-- Financial Breakdown Section -->
-        <div class="mt-8">
+        <!-- <div class="mt-8">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Financial Breakdown</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4"> -->
                 <!-- Insurance Cost -->
-                <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-lg p-4 border border-red-200">
+                <!-- <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-lg p-4 border border-red-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-red-600 mb-1">Insurance Cost</p>
@@ -424,10 +424,10 @@
                             </svg>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Admin Fee -->
-                <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg p-4 border border-yellow-200">
+                <!-- <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg p-4 border border-yellow-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-yellow-600 mb-1">Admin Fee</p>
@@ -439,10 +439,10 @@
                             </svg>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Savings Fund -->
-                <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-lg p-4 border border-emerald-200">
+                <!-- <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-lg p-4 border border-emerald-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-emerald-600 mb-1">Savings Fund</p>
@@ -456,7 +456,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Summary Card -->
         <div class="mt-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
@@ -481,8 +481,8 @@
     </div>
 
     <!-- Unit Managers Quota Progress Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
-        <div class="flex items-center justify-between mb-6">
+    <!-- <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8"> -->
+        <!-- <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Unit Managers Quota Progress</h2>
             <div class="flex items-center text-sm text-gray-500">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -490,12 +490,12 @@
                 </svg>
                 <span>Team Performance Overview</span>
             </div>
-        </div>
+        </div> -->
 
         <!-- Summary Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"> -->
             <!-- Total Unit Managers -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+            <!-- <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-blue-500 rounded-xl">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -513,10 +513,10 @@
                     </svg>
                     <span>Under your supervision</span>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Total Quota Target -->
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+            <!-- <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-purple-500 rounded-xl">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -534,10 +534,10 @@
                     </svg>
                     <span>Combined targets</span>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Total Face Value Achieved -->
-            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+            <!-- <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-green-500 rounded-xl">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -555,11 +555,11 @@
                     </svg>
                     <span>Achieved by team</span>
                 </div>
-            </div>
-        </div>
+            </div> -->
+        <!-- </div> -->
 
         <!-- Unit Managers Table -->
-        <div class="overflow-x-auto">
+        <!-- <div class="overflow-x-auto">
             <table class="w-full border-collapse">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200">
@@ -669,8 +669,8 @@
                     <?php endif; ?>
                 </tbody>
             </table>
-        </div>
-    </div>
+        </div> -->
+    <!-- </div> -->
 </div>
 
 <!-- Unit Managers Section -->
@@ -891,9 +891,9 @@
                         <th class="px-4 py-3 whitespace-nowrap">PAYMENT MODE</th>
                         <th class="px-4 py-3 whitespace-nowrap">CONTRIBUTION</th>
                         <th class="px-4 py-3 whitespace-nowrap">TOTAL</th>
-                        <th class="px-4 py-3 whitespace-nowrap">INSURANCE COST</th>
+                        <!-- <th class="px-4 py-3 whitespace-nowrap">INSURANCE COST</th>
                         <th class="px-4 py-3 whitespace-nowrap">ADMIN FEE</th>
-                        <th class="px-4 py-3 whitespace-nowrap">SAVINGS FUND</th>
+                        <th class="px-4 py-3 whitespace-nowrap">SAVINGS FUND</th> -->
                         <th class="px-4 py-3 whitespace-nowrap">STATUS</th>
                         <th class="px-4 py-3 whitespace-nowrap">ACTIONS</th>
                 </tr>
@@ -920,9 +920,9 @@
                         <td class="px-4 py-3 text-gray-700 whitespace-nowrap"><?php echo htmlspecialchars($applicant['payment_mode']) ?></td>
                         <td class="px-4 py-3 text-gray-700 whitespace-nowrap">₱<?php echo number_format($applicant['contribution_amount'], 2) ?></td>
                         <td class="px-4 py-3 text-gray-700 whitespace-nowrap">₱<?php echo number_format($applicant['total_contribution'], 2); ?></td>
-                        <td class="px-4 py-3 text-gray-700 whitespace-nowrap">₱<?php echo number_format($applicant['insurance_cost'], 2); ?></td>
-                        <td class="px-4 py-3 text-gray-700 whitespace-nowrap">₱<?php echo number_format($applicant['admin_fee'], 2); ?></td>
-                        <td class="px-4 py-3 text-gray-700 whitespace-nowrap">₱<?php echo number_format($applicant['savings_fund'], 2); ?></td>
+                        <!-- <td class="px-4 py-3 text-gray-700 whitespace-nowrap">₱<?php echo number_format($applicant['insurance_cost'], 2); ?></td> -->
+                        <!-- <td class="px-4 py-3 text-gray-700 whitespace-nowrap">₱<?php echo number_format($applicant['admin_fee'], 2); ?></td> -->
+                        <!-- <td class="px-4 py-3 text-gray-700 whitespace-nowrap">₱<?php echo number_format($applicant['savings_fund'], 2); ?></td> -->
                         <td class="px-4 py-3">
                             <span class="px-3 py-1 text-xs rounded-full font-medium
                                 <?php
