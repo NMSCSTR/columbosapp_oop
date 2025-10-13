@@ -38,6 +38,21 @@ class CouncilModel
         }
     }
 
+    public function getAllCouncilByUM($umid){
+        $umid = mysqli_real_escape_string($this->conn, $umid);
+        $sql = "SELECT * FROM council WHERE unit_manager_id = '$umid'";
+        $result = mysqli_query($this->conn, $sql);
+
+        if($result && mysqli_num_rows($result) > 0){
+            $councils = [];
+            while($row = mysqli_fetch_assoc($result)){
+                $councils[] = $row;
+            }
+            return $councils;
+        }
+
+    }
+
     public function getCouncilById($id)
     {
         $id = mysqli_real_escape_string($this->conn, $id);

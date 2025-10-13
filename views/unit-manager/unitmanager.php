@@ -369,13 +369,13 @@
         </div>
 
         <!-- Recent Activity Section -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
-        </div>
+        <!-- <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
+        </div> -->
     </div>
 
     <!-- Financial Overview Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
-        <div class="flex items-center justify-between mb-6">
+    <!-- <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8"> -->
+        <!-- <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Financial Overview</h2>
             <div class="flex items-center text-sm text-gray-500">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -383,12 +383,12 @@
                 </svg>
                 <span>All Time Records</span>
             </div>
-        </div>
+        </div> -->
         
         <!-- Financial Metrics Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> -->
             <!-- Total Applicants Card -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+            <!-- <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-blue-500 rounded-xl">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -406,10 +406,10 @@
                     </svg>
                     <span>Active members</span>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Total Face Value Card -->
-            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+            <!-- <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-green-500 rounded-xl">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -427,10 +427,10 @@
                     </svg>
                     <span>Insurance coverage</span>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Total Contributions Card -->
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+            <!-- <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-purple-500 rounded-xl">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -448,15 +448,15 @@
                     </svg>
                     <span>Member payments</span>
                 </div>
-            </div>
-        </div>
+            </div> -->
+        <!-- </div> -->
 
         <!-- Financial Breakdown Section -->
-        <div class="mt-8">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Financial Breakdown</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- <div class="mt-8"> -->
+            <!-- <h3 class="text-lg font-semibold text-gray-800 mb-4">Financial Breakdown</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4"> -->
                 <!-- Insurance Cost -->
-                <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-lg p-4 border border-red-200">
+                <!-- <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-lg p-4 border border-red-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-red-600 mb-1">Insurance Cost</p>
@@ -468,10 +468,10 @@
                             </svg>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Admin Fee -->
-                <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg p-4 border border-yellow-200">
+                <!-- <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg p-4 border border-yellow-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-yellow-600 mb-1">Admin Fee</p>
@@ -483,10 +483,10 @@
                             </svg>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Savings Fund -->
-                <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-lg p-4 border border-emerald-200">
+                <!-- <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-lg p-4 border border-emerald-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-emerald-600 mb-1">Savings Fund</p>
@@ -500,10 +500,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Summary Card -->
-        <div class="mt-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
+        <!-- <div class="mt-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="p-3 bg-gray-600 rounded-xl mr-4">
@@ -521,8 +521,8 @@
                     <p class="text-sm font-medium text-gray-700"><?php echo date('M d, Y') ?></p>
                 </div>
             </div>
-        </div>
-    </div>
+        </div> -->
+    <!-- </div> -->
 
     <!-- Orders Section -->
     <div x-show="activeSection === 'orders'" class="space-y-8" x-transition:enter="transition ease-out duration-300"
@@ -555,9 +555,9 @@
                             <th class="px-4 py-3 whitespace-nowrap">PAYMENT MODE</th>
                             <th class="px-4 py-3 whitespace-nowrap">CONTRIBUTION</th>
                             <th class="px-4 py-3 whitespace-nowrap">TOTAL</th>
-                            <th class="px-4 py-3 whitespace-nowrap">INSURANCE COST</th>
+                            <!-- <th class="px-4 py-3 whitespace-nowrap">INSURANCE COST</th>
                             <th class="px-4 py-3 whitespace-nowrap">ADMIN FEE</th>
-                            <th class="px-4 py-3 whitespace-nowrap">SAVINGS FUND</th>
+                            <th class="px-4 py-3 whitespace-nowrap">SAVINGS FUND</th> -->
                             <th class="px-4 py-3 whitespace-nowrap">STATUS</th>
                             <th class="px-4 py-3 whitespace-nowrap">ACTIONS</th>
                         </tr>
@@ -593,12 +593,12 @@
                                 ₱<?php echo number_format($applicant['contribution_amount'], 2) ?></td>
                             <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
                                 ₱<?php echo number_format($applicant['total_contribution'], 2); ?></td>
-                            <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
+                            <!-- <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
                                 ₱<?php echo number_format($applicant['insurance_cost'], 2); ?></td>
                             <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
                                 ₱<?php echo number_format($applicant['admin_fee'], 2); ?></td>
                             <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
-                                ₱<?php echo number_format($applicant['savings_fund'], 2); ?></td>
+                                ₱<?php echo number_format($applicant['savings_fund'], 2); ?></td> -->
                             <td class="px-4 py-3">
                                 <span class="px-3 py-1 text-xs rounded-full font-medium
                                     <?php
@@ -736,7 +736,7 @@
                      <tbody class="text-sm">
                         <?php
                             $councilModel = new CouncilModel($conn);
-                            $councils     = $councilModel->getAllCouncil();
+                            $councils     = $councilModel->getAllCouncilByUM($_SESSION['user_id']);
 
                             if ($councils) {
                                 foreach ($councils as $council) {
@@ -915,9 +915,9 @@
     </div>
 
     <!-- Quota Progress Section -->
-    <?php if ($currentUserQuota): ?>
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
-        <div class="flex items-center justify-between mb-6">
+    <!-- <?php if ($currentUserQuota): ?> -->
+    <!-- <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8"> -->
+        <!-- <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Quota Progress</h2>
             <div class="flex items-center text-sm text-gray-500">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -925,11 +925,11 @@
                 </svg>
                 <span>Target Achievement</span>
             </div>
-        </div>
+        </div> -->
 
         <!-- Quota Progress Card -->
-        <div class="bg-gradient-to-r from-indigo-50 to-indigo-100 rounded-xl p-6 border border-indigo-200">
-            <div class="flex items-center justify-between mb-6">
+        <!-- <div class="bg-gradient-to-r from-indigo-50 to-indigo-100 rounded-xl p-6 border border-indigo-200"> -->
+            <!-- <div class="flex items-center justify-between mb-6">
                 <div>
                     <h3 class="text-lg font-semibold text-indigo-800 mb-2">Your Quota Target</h3>
                     <p class="text-sm text-indigo-600">Target: ₱<?php echo number_format($currentUserQuota['qouta'], 0) ?> | Current: ₱<?php echo number_format($currentFaceValue, 0) ?></p>
@@ -941,10 +941,10 @@
                         </svg>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Progress Bar -->
-            <?php 
+            <!-- <?php 
                 $progressPercentage = $currentUserQuota['qouta'] > 0 ? min(($currentFaceValue / $currentUserQuota['qouta']) * 100, 100) : 0;
                 $isCompleted = $currentFaceValue >= $currentUserQuota['qouta'];
                 $isExpired = strtotime($currentUserQuota['duration']) < time();
@@ -958,12 +958,12 @@
                     <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full transition-all duration-500 ease-out" 
                          style="width: <?php echo $progressPercentage ?>%"></div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Quota Details Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-4"> -->
                 <!-- Target Amount -->
-                <div class="bg-white rounded-lg p-4 border border-indigo-200">
+                <!-- <div class="bg-white rounded-lg p-4 border border-indigo-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 mb-1">Target Amount</p>
@@ -975,10 +975,10 @@
                             </svg>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Current Achievement -->
-                <div class="bg-white rounded-lg p-4 border border-indigo-200">
+                <!-- <div class="bg-white rounded-lg p-4 border border-indigo-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 mb-1">Current Achievement</p>
@@ -990,10 +990,10 @@
                             </svg>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Remaining Amount -->
-                <div class="bg-white rounded-lg p-4 border border-indigo-200">
+                <!-- <div class="bg-white rounded-lg p-4 border border-indigo-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 mb-1">Remaining</p>
@@ -1007,14 +1007,14 @@
                             </svg>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <!-- Status and Deadline -->
-            <div class="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-                <div class="flex items-center space-x-4">
+            <!-- <div class="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                <div class="flex items-center space-x-4"> -->
                     <!-- Status Badge -->
-                    <div class="flex items-center">
+                    <!-- <div class="flex items-center">
                         <span class="px-3 py-1 text-xs font-medium rounded-full <?php 
                             if ($isCompleted) {
                                 echo 'bg-green-100 text-green-700';
@@ -1034,19 +1034,19 @@
                                 }
                             ?>
                         </span>
-                    </div>
+                    </div> -->
                     
                     <!-- Duration Info -->
-                    <div class="flex items-center text-sm text-gray-600">
+                    <!-- <div class="flex items-center text-sm text-gray-600">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         <span>Deadline: <?php echo date('M d, Y', strtotime($currentUserQuota['duration'])) ?></span>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Progress Indicator -->
-                <div class="flex items-center text-sm <?php echo $isCompleted ? 'text-green-600' : 'text-indigo-600' ?>">
+                <!-- <div class="flex items-center text-sm <?php echo $isCompleted ? 'text-green-600' : 'text-indigo-600' ?>">
                     <?php if ($isCompleted): ?>
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -1058,10 +1058,10 @@
                         </svg>
                         <span class="font-medium">Keep going!</span>
                     <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
+                </div> -->
+            <!-- </div> -->
+        <!-- </div>
+    </div> -->
     <?php else: ?>
     <!-- No Quota Set -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
