@@ -128,9 +128,8 @@
             </li>
 
             <?php
-                // kaniing ge comment kay para count ne siya sa pending applications
-                // $pending_query = "SELECT COUNT(*) AS total_pending FROM applicants WHERE application_status = 'Pending'";
-                $pending_query = "SELECT COUNT(*) AS total_pending FROM applicants";
+                $pending_query = "SELECT COUNT(*) AS total_pending FROM applicants WHERE application_status = 'Pending'";
+                // $pending_query = "SELECT COUNT(*) AS total_pending FROM applicants";
                 $pending_result = mysqli_query($conn, $pending_query);
                 $pending_row = mysqli_fetch_assoc($pending_result);
                 $pending_count = $pending_row['total_pending'];
