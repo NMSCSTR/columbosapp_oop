@@ -18,27 +18,26 @@ $userId = $_GET['id'];
 $userModel = new UserModel($conn);
 
 try {
-    // Generate a random temporary password (8 characters)
+
     $tempPassword = bin2hex(random_bytes(4));
     
-    // Get user details
+    
     $user = $userModel->getUserById($userId);
     if (!$user) {
         echo json_encode(['success' => false, 'message' => 'User not found']);
         exit;
     }
 
-    // Hash the new password
+
     $hashedPassword = password_hash($tempPassword, PASSWORD_DEFAULT);
     
-    // Update the password in database
     $updated = $userModel->updatePassword($userId, $hashedPassword);
     
     if ($updated) {
-        // Prepare SMS message
+
         $message = "Your password has been reset. Your temporary password is: " . $tempPassword . ". Please change it after logging in.";
         
-        // Send SMS using Semaphore API
+
         $ch = curl_init();
         $parameters = [
             'apikey' => '5bf90b2585f02b48d22e01d79503e591',

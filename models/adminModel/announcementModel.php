@@ -24,6 +24,18 @@ class announcementModel
         return null;
     }
 
+    public function getAnnouncementDetails($announcementId)
+    {
+        $cleanId = (int)$announcementId;
+        $sql = "SELECT subject, content FROM announcements WHERE id = $cleanId";
+        $result = mysqli_query($this->conn, $sql);
+        
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            return $row;
+        }
+        return null;
+    }
+
     public function getAllUserPhoneNumber()
     {
         $sql    = "SELECT * FROM users WHERE role NOT IN ('admin', 'member', 'family-member') AND status = 'approved'";

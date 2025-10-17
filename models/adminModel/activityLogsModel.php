@@ -10,7 +10,6 @@ class activityLogsModel
 
     public function getAllLogs()
     {
-        // Changed 'date_posted' to 'timestamp' as per the new table schema
         $sql    = "SELECT * FROM activity_logs ORDER BY timestamp DESC"; 
         $result = mysqli_query($this->conn, $sql);
 
@@ -47,7 +46,7 @@ class activityLogsModel
 
 
         $sql = "INSERT INTO activity_logs 
-                (user_id, action_type, entity_type, entity_id, action_details, old_value, new_value) 
+                (admin_id, action_type, entity_type, entity_id, action_details, old_value, new_value) 
                 VALUES 
                 (
                     $cleanUserId, 
