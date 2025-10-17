@@ -1,92 +1,101 @@
 <?php
-// Inputs
-$monthlyPremium = 1000;         // ₱1,000
-$paymentMonths = 60;            // 5 years = 60 months
-$annualInterestRate = 0.04;     // 4% annual interest
-$growthYears = 10;              // 10 years of fund growth after payment
+// user_status_update.php (Example AJAX endpoint)
 
-// Allocation Percentages
-$insurancePercent = 0.15;
-$feesPercent = 0.10;
-$savingsPercent = 1 - $insurancePercent - $feesPercent;
+// --- 1. Include necessary files and initialize
+// NOTE: You'll need to adapt these include paths
+require_once 'db_config.php';          // Your database connection file ($conn)
+require_once 'activityLogsModel.php';  // The class we created
+// Assume you have a UserModel for updating user data
+require_once 'userModel.php';          
 
-// Monthly Allocations
-$insuranceAmount = $monthlyPremium * $insurancePercent;
-$feesAmount = $monthlyPremium * $feesPercent;
-$savingsAmount = $monthlyPremium * $savingsPercent;
+// Start the session to get the Admin's ID
+session_start();
 
-// Compound interest for savings growth
-$monthlyInterestRate = $annualInterestRate / 12;
+// --- Basic Security Checks
+// Check if the request is an AJAX POST request
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id'], $_POST['action'])) {
+    http_response_code(400); // Bad Request
+    echo json_encode(['success' => false, 'message' => 'Invalid request method or missing parameters.']);
+    exit;
+}
 
-// Step 1: Accumulate savings over 5 years
-$futureValue_5yrs = $savingsAmount * (pow(1 + $monthlyInterestRate, $paymentMonths) - 1) / $monthlyInterestRate;
+// Check if the admin user is logged in (replace with your actual session check)
+if (!isset($_SESSION['admin_id'])) {
+    http_response_code(401); // Unauthorized
+    echo json_encode(['success' => false, 'message' => 'Admin session expired or unauthorized.']);
+    exit;
+}
 
-// Step 2: Let it grow for another 10 years
-$futureValue_15yrs = $futureValue_5yrs * pow(1 + $annualInterestRate, $growthYears);
+// --- 2. Setup Variables and Models
+$adminId = (int) $_SESSION['admin_id']; // The ID of the admin performing the action
+$userIdToUpdate = (int) $_POST['id'];
+$action = $_POST['action']; // 'approve' or 'disable'
+
+$logModel = new activityLogsModel($conn);
+$userModel = new userModel($conn); // Assuming you have this model
+
+// Determine the new status
+$newStatus = '';
+$actionDetails = '';
+$actionType = 'USER_STATUS_CHANGE';
+
+if ($action === 'approve') {
+    $newStatus = 'active'; // or 'approved', depending on your `users` table
+    $actionDetails = "Approved user ID $userIdToUpdate's account.";
+} elseif ($action === 'disable') {
+    $newStatus = 'disabled';
+    $actionDetails = "Disabled user ID $userIdToUpdate's account.";
+} else {
+    // Handle invalid action
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Invalid action specified.']);
+    exit;
+}
+
+// --- 3. Get Current Status (for logging the 'old_value')
+// You must retrieve the user's current status BEFORE updating it.
+$currentStatus = $userModel->getUserStatus($userIdToUpdate); // You need to implement this function in userModel
+
+if (!$currentStatus) {
+    http_response_code(404);
+    echo json_encode(['success' => false, 'message' => 'User not found or failed to retrieve current status.']);
+    exit;
+}
+
+// --- 4. Update the User's Status (The main action)
+$updateSuccess = $userModel->updateUserStatus($userIdToUpdate, $newStatus); // You need to implement this function in userModel
+
+if ($updateSuccess) {
+    
+    // --- 5. Log the Activity (The goal!) 💾
+    $logSuccess = $logModel->logActivity(
+        $adminId,
+        $actionType,
+        'users',
+        $userIdToUpdate,
+        $actionDetails,
+        $currentStatus, // Old status
+        $newStatus      // New status
+    );
+
+    // --- 6. Send Response
+    // Log success/failure is generally not sent to the frontend, but logged internally
+    // For debugging, you could include it: 'log_recorded' => $logSuccess
+    
+    echo json_encode([
+        'success' => true, 
+        'message' => "User ID $userIdToUpdate successfully set to '$newStatus'.",
+        // 'log_recorded' => $logSuccess // Optional
+    ]);
+
+} else {
+    // Update failed
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Database update failed.']);
+}
+
+// Close the database connection
+if (isset($conn)) {
+    mysqli_close($conn);
+}
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Insurance Allocation Summary</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 500px;
-        }
-        th, td {
-            border: 1px solid #aaa;
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f0f0f0;
-        }
-        caption {
-            font-size: 1.3em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
-
-<table>
-    <caption>Insurance Monthly Allocation Summary</caption>
-    <tr>
-        <th>Item</th>
-        <th>Value</th>
-    </tr>
-    <tr>
-        <td>Monthly Premium</td>
-        <td>₱<?= number_format($monthlyPremium, 2) ?></td>
-    </tr>
-    <tr>
-        <td>Insurance Portion (15%)</td>
-        <td>₱<?= number_format($insuranceAmount, 2) ?></td>
-    </tr>
-    <tr>
-        <td>Admin Fees (10%)</td>
-        <td>₱<?= number_format($feesAmount, 2) ?></td>
-    </tr>
-    <tr>
-        <td>Savings Fund (75%)</td>
-        <td>₱<?= number_format($savingsAmount, 2) ?></td>
-    </tr>
-    <tr>
-        <td>Total Contributions Over 5 Years</td>
-        <td>₱<?= number_format($savingsAmount * $paymentMonths, 2) ?></td>
-    </tr>
-    <tr>
-        <td>Future Value After 15 Years</td>
-        <td><strong>₱<?= number_format($futureValue_15yrs, 2) ?></strong></td>
-    </tr>
-</table>
-
-</body>
-</html>
