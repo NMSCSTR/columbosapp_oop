@@ -232,7 +232,6 @@
                                         </button>
                                         <?php endif; ?>
 
-                                        <?php if ($user['status'] === 'pending' || $user['status'] === 'disabled'): ?>
                                             <button class="action-button status-btn approve-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-2 focus:ring-green-300 transition-colors duration-200"
                                                 data-id="<?= $user['id'] ?>"
                                                 data-action="approve"
@@ -242,7 +241,7 @@
                                                 </svg>
                                                 Approve
                                             </button>
-                                        <?php elseif ($user['status'] === 'approved'): ?>
+                                        
                                             <button class="action-button status-btn disable-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-2 focus:ring-red-300 transition-colors duration-200"
                                                 data-id="<?= $user['id'] ?>"
                                                 data-action="disable"
@@ -252,7 +251,7 @@
                                                 </svg>
                                                 Disable
                                             </button>
-                                        <?php endif; ?>
+                                    
                                     </div>
                                 </td>
                             </tr>
