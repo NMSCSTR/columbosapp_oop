@@ -105,7 +105,6 @@ $logModel->logActivity(
     // old_value and new_value are optional, so we omit them here
 );
 
-<?php
 
 class activityLogsModel
 {
@@ -208,7 +207,7 @@ class activityLogsModel
 }
 
 
-<?php
+
 
 class activityLogsModel
 {

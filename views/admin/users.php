@@ -86,7 +86,7 @@
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">User Management</h2>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">User Management </h2>
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage and monitor user accounts</p>
                         </div>
                         <div class="flex space-x-3">
@@ -234,6 +234,7 @@
 
                                             <button class="action-button status-btn approve-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-2 focus:ring-green-300 transition-colors duration-200"
                                                 data-id="<?= $user['id'] ?>"
+                                                data-adminid="<?= $_SESSION['user_id']; ?>"
                                                 data-action="approve"
                                                 data-name="<?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,6 +246,7 @@
                                             <button class="action-button status-btn disable-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-2 focus:ring-red-300 transition-colors duration-200"
                                                 data-id="<?= $user['id'] ?>"
                                                 data-action="disable"
+                                                data-adminid="<?= $_SESSION['user_id']; ?>"
                                                 data-name="<?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
@@ -358,6 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const action = this.dataset.action;
             const userId = this.dataset.id;
+            const adminId = this.dataset.adminid;
             const userName = this.dataset.name;
             
             let title, text, icon, confirmButtonText, confirmButtonColor;
@@ -393,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = BASE_URL + `controllers/adminController/userStatusController.php?id=${userId}&action=${action}`;
+                    window.location.href = BASE_URL + `controllers/adminController/userStatusController.php?id=${userId}&action=${action}&adminId=${adminId}`;
                 }
             });
         });

@@ -3,8 +3,11 @@ session_start();
 include '../../includes/db.php';
 include '../../includes/config.php';
 include '../../models/adminModel/userModel.php';
+include '../../models/adminModel/activityLogsModel.php';
 
 $userModel = new UserModel($conn);
+$logModel  = new activityLogsModel($conn);
+$adminId   = $_GET['adminId'] ?? null;
 
 if (isset($_GET['id']) && isset($_GET['action'])) {
     $id     = $_GET['id'];
@@ -16,20 +19,43 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         exit();
     }
 
+    $newStatus  = '';
+    $actionType = '';
+
+    $oldStatus = $userModel->getUserStatus($id);
+
     if ($action === 'approve') {
-        $status = 'approved';
+        $newStatus    = 'approved';
+        $actionType   = 'USER_APPROVED';
+        $actionDetail = 'Approved user ID ' . $id;
     } elseif ($action === 'disable') {
-        $status = 'disabled';
+        $newStatus    = 'disabled';
+        $actionType   = 'USER_DISABLED';
+        $actionDetail = 'Disabled user ID ' . $id;
     } else {
         $_SESSION['error'] = 'Invalid action.';
         header('Location: ' . BASE_URL . 'views/admin/users.php');
         exit();
     }
 
-    if ($userModel->updateUserStatus($id, $status)) {
-        $_SESSION['success'] = "User status updated to '{$status}' successfully.";
+    if ($oldStatus && $oldStatus !== $newStatus) {
+        if ($userModel->updateUserStatus($id, $newStatus)) {
+            $logModel->logActivity(
+                $adminId,
+                $actionType,
+                'users',
+                $id,
+                $actionDetail,
+                $oldStatus,
+                $newStatus
+            );
+
+            $_SESSION['success'] = "User status updated to '{$status}' successfully.";
+        } else {
+            $_SESSION['error'] = 'Failed to update user status. Please try again.';
+        }
     } else {
-        $_SESSION['error'] = 'Failed to update user status. Please try again.';
+        $_SESSION['error'] = "User status is already '{$newStatus}'. No update performed.";
     }
 
     header('Location: ' . BASE_URL . 'views/admin/users.php');

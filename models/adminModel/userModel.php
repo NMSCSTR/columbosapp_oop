@@ -24,6 +24,20 @@ class UserModel
         return null;
     }
 
+    public function getUserStatus($userId)
+    {
+        $cleanUserId = (int)$userId;
+
+        $sql = "SELECT status FROM users WHERE id = $cleanUserId";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            return $row['status'];
+        }
+        return null;
+
+    }
+
     public function countAllUser()
     {
         $sql    = "SELECT COUNT(*) as total FROM users WHERE role != 'admin'";
