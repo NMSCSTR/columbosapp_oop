@@ -53,6 +53,18 @@ class CouncilModel
 
     }
 
+    public function getCouncilDetails($councilId)
+    {
+        $cleanId = (int)$councilId;
+        $sql = "SELECT council_number, council_name FROM council WHERE council_id = $cleanId";
+        $result = mysqli_query($this->conn, $sql);
+        
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            return $row;
+        }
+        return null;
+    }
+
     public function getCouncilById($id)
     {
         $id = mysqli_real_escape_string($this->conn, $id);

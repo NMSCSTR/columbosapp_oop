@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($newCouncilId) {
         $logModel->logActivity(
             $adminId,               
-            'COUNCIL_ADD',          
+            'ADD_COUNCIL',          
             'council',           
             $newCouncilId,          
             "Added new Council #{$council_number}: '{$council_name}'", 
