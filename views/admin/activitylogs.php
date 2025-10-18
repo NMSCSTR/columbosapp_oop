@@ -26,9 +26,9 @@ mysqli_close($conn);
             theme: {
                 extend: {
                     colors: {
-                        'primary-indigo': '#4f46e5', // A nice, deep indigo
-                        'primary-hover': '#4338ca', // Slightly darker for hover states
-                        'dashboard-bg': '#f3f4f6', // Lighter gray background
+                        'primary-indigo': '#4f46e5', 
+                        'primary-hover': '#4338ca', /
+                        'dashboard-bg': '#f3f4f6', 
                     },
                 }
             }
@@ -40,8 +40,6 @@ mysqli_close($conn);
             font-family: 'Poppins', sans-serif;
             background-color: #f3f4f6;
         }
-
-        /* --- DataTables Custom Styling --- */
         .dataTables_wrapper { @apply p-4; }
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             @apply px-3 py-1 mx-1 rounded-md border text-sm font-medium transition-all duration-200;
@@ -64,7 +62,7 @@ mysqli_close($conn);
         .dataTables_wrapper .dataTables_paginate {
             @apply pt-3 pb-3 px-0;
         }
-        /* Table Content Styling */
+
         #activityLogTable thead th {
             @apply bg-primary-indigo text-white font-semibold;
             border-bottom: none;
@@ -72,25 +70,29 @@ mysqli_close($conn);
         #activityLogTable th, #activityLogTable td {
             @apply px-4 py-3;
         }
-        /* Adjusted width for columns containing buttons to prevent excessive stretching */
         .short-column {
              max-width: 150px; 
         }
         
-        /* Specific coloring for Action Type badges */
+
         .badge-create { @apply bg-green-100 text-green-800 font-medium px-2 py-0.5 rounded-full text-xs; }
         .badge-update { @apply bg-blue-100 text-blue-800 font-medium px-2 py-0.5 rounded-full text-xs; }
         .badge-delete { @apply bg-red-100 text-red-800 font-medium px-2 py-0.5 rounded-full text-xs; }
         .badge-login { @apply bg-yellow-100 text-yellow-800 font-medium px-2 py-0.5 rounded-full text-xs; }
         .badge-other { @apply bg-gray-100 text-gray-800 font-medium px-2 py-0.5 rounded-full text-xs; }
 
-        /* Modal specific styling - ensure it's hidden by default */
-        .modal {
+        #logModal {
+            position: fixed !important; 
+            top: 0 !important;
+            left: 0 !important;
+            z-index: 5000 !important; 
+            opacity: 0;
+            pointer-events: none;
             transition: opacity 0.25s ease;
         }
         .modal-active {
-            opacity: 1;
-            pointer-events: auto;
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
 
     </style>
@@ -105,7 +107,7 @@ mysqli_close($conn);
                 </svg>
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">System Activity Logs</h1>
-                    <p class="text-gray-500 text-sm mt-0.5">Comprehensive audit trail of all administrative actions.</p>
+                    <p class="text-gray-500 text-sm mt-0.5">All administrative actions.</p>
                 </div>
             </div>
         </header>
@@ -134,7 +136,7 @@ mysqli_close($conn);
                                     
                                     <td class="py-3 text-sm text-gray-700 font-medium short-column">
                                         <?php 
-                                            $adminName = trim(htmlspecialchars($log['firstname'] . ' ' . $log['lastname']));
+                                            $adminName = trim(htmlspecialchars(strtoupper($log['firstname'] . ' ' . $log['lastname'])));
                                             echo empty($adminName) ? '<span class="text-xs text-gray-400">ID: ' . htmlspecialchars($log['admin_id']) . '</span>' : $adminName;
                                         ?>
                                     </td>
@@ -158,18 +160,16 @@ mysqli_close($conn);
                                         <span class="<?= $badgeClass ?>"><?= $actionType ?></span>
                                     </td>
                                     
-                                    <td class="py-3 text-sm text-gray-500 font-medium short-column"><?= htmlspecialchars($log['entity_type']) ?></td>
+                                    <td class="py-3 text-sm text-gray-500 font-medium short-column"><?= htmlspecialchars(strtoupper($log['entity_type'])) ?></td>
                                     
                                     <td class="py-3 text-sm text-gray-600">
                                         <?php if (!empty($log['action_details'])): 
-                                            // Escape the content, then JSON encode the escaped content
-                                            $detailsContent = htmlspecialchars($log['action_details']);
-                                            $dataContentSafe = htmlspecialchars(json_encode($detailsContent), ENT_QUOTES, 'UTF-8');
+                                            $dataContentSafe = htmlspecialchars($log['action_details'], ENT_QUOTES, 'UTF-8');
                                         ?>
                                             <button 
                                                 class="show-modal-btn text-xs font-semibold text-primary-indigo hover:text-primary-hover underline focus:outline-none"
                                                 data-title="Action Details (ID: <?= htmlspecialchars($log['log_id']) ?>)"
-                                                data-content-json='<?= $dataContentSafe ?>'
+                                                data-content='<?= $dataContentSafe ?>'
                                             >
                                                 See Details
                                             </button>
@@ -184,18 +184,17 @@ mysqli_close($conn);
                                             $new = htmlspecialchars($log['new_value']);
                                             
                                             if (!empty($old) || !empty($new)):
-                                                // Build the modal content structure cleanly
+                                                // Build the modal HTML content
                                                 $changesContent = '';
                                                 $changesContent .= '<p class="mb-2"><span class="font-semibold text-gray-800">Old Value:</span><br><code class="block bg-gray-100 p-2 rounded text-xs whitespace-pre-wrap">' . (empty($old) ? 'N/A' : $old) . '</code></p>';
                                                 $changesContent .= '<p><span class="font-semibold text-gray-800">New Value:</span><br><code class="block bg-gray-100 p-2 rounded text-xs whitespace-pre-wrap">' . (empty($new) ? 'N/A' : $new) . '</code></p>';
 
-                                                // Use json_encode and then htmlspecialchars to safely pass complex content to a data attribute
-                                                $dataContentSafe = htmlspecialchars(json_encode($changesContent), ENT_QUOTES, 'UTF-8');
+                                                $dataContentSafe = htmlspecialchars($changesContent, ENT_QUOTES, 'UTF-8');
                                         ?>
                                             <button 
                                                 class="show-modal-btn text-xs font-semibold text-primary-indigo hover:text-primary-hover underline focus:outline-none"
                                                 data-title="Changes (ID: <?= htmlspecialchars($log['log_id']) ?>)"
-                                                data-content-json='<?= $dataContentSafe ?>'
+                                                data-content='<?= $dataContentSafe ?>'
                                             >
                                                 See Changes
                                             </button>
@@ -217,7 +216,7 @@ mysqli_close($conn);
         </div>
         
         <footer class="mt-8 text-center text-xs text-gray-400">
-            Activity Log powered by DataTables and Tailwind CSS
+            
         </footer>
     </div>
 
@@ -254,17 +253,10 @@ mysqli_close($conn);
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.tailwindcss.min.js"></script>
+    
 <script>
-    // Helper function to decode HTML entities (like &lt; and &gt;)
-    // We need this because the PHP side double-escaped the content.
-    function htmlDecode(input) {
-      var doc = new DOMParser().parseFromString(input, "text/html");
-      return doc.documentElement.textContent;
-    }
-
     $(document).ready(function() {
 
-        // --- Initialize DataTables ---
         var dataTable = $('#activityLogTable').DataTable({
             language: {
                 search: "Filter Records:",
@@ -275,72 +267,55 @@ mysqli_close($conn);
             responsive: true
         });
 
-        // --- Modal Logic ---
+ 
         const modal = $('#logModal');
         const modalOverlay = $('.modal-overlay');
         const modalCloseButtons = $('.modal-close');
         const modalContentDiv = $('#modalContent');
         const modalTitleDiv = $('#modalTitle');
 
-        // Function to show modal
         function toggleModal(title, content) {
+            console.log("DEBUG: Attempting to show modal with title:", title); 
             modalTitleDiv.text(title);
-            // Use .html() to insert the content, which might contain HTML (like the <code> blocks)
+ 
             modalContentDiv.html(content); 
             modal.addClass('modal-active');
         }
 
-        // Function to hide modal
         function hideModal() {
             modal.removeClass('modal-active');
-            // Clear content after the transition
             setTimeout(() => {
                 modalContentDiv.empty();
                 modalTitleDiv.text('');
             }, 300); 
         }
 
-        // CRITICAL FIX: Use event delegation on the document 
+
         $(document).on('click', '.show-modal-btn', function() {
             const $button = $(this);
             const title = $button.data('title');
             
-            // 1. Get the HTML-escaped JSON string from the attribute
-            const escapedJsonString = $button.attr('data-content-json');
+
+            const escapedContent = $button.attr('data-content');
             
-            if (!escapedJsonString) {
-                console.error("data-content-json attribute is missing or empty.");
+            if (!escapedContent) {
+                console.error("DEBUG ERROR: data-content attribute is missing or empty.");
                 toggleModal(title, "Content data not found.");
                 return;
             }
 
-            // 2. Un-escape the string to reveal the raw JSON
-            const rawJsonString = htmlDecode(escapedJsonString);
-
-            // 3. Parse the raw JSON string to get the final content (HTML/text)
-            let content;
-            try {
-                content = JSON.parse(rawJsonString);
-                
-                // If the original content was just plain text (like the 'Details' column), 
-                // we need to unescape it one more time since it was htmlspecialchars'd in PHP.
-                if (typeof content === 'string' && !content.includes('<')) {
-                    content = htmlDecode(content);
-                }
-
-            } catch (e) {
-                console.error("Error parsing JSON content:", e, rawJsonString);
-                content = "Could not load content due to a data encoding error.";
-            }
-
+            const content = $("<textarea/>").html(escapedContent).text();
+            
+            console.log("DEBUG: Content successfully processed. Calling toggleModal.");
+            
             toggleModal(title, content);
         });
 
-        // Click listeners for closing the modal
+
         modalOverlay.on('click', hideModal);
         modalCloseButtons.on('click', hideModal);
 
-        // Escape key closes modal
+ 
         $(document).on('keydown', function(event) {
             if (event.key === "Escape") {
                 hideModal();
