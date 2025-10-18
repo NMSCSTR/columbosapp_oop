@@ -166,6 +166,17 @@
                     <span class="ms-3">Transactions</span>
                 </a>
             </li>
+            <li>
+            <a href="<?php echo BASE_URL?>views/admin/activitylogs.php"
+                class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-white/50 dark:hover:bg-dark-900 group transition-all duration-200">
+                <div class="p-2 bg-gray-100 rounded-lg dark:bg-cyan-900/50">
+                    <svg class="w-5 h-5 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 1a11 11 0 1 0 11 11A11.013 11.013 0 0 0 12 1zm0 20a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9zm.5-13h-1v6l5.25 3.15.5-.85-4.75-2.8z"/>
+                    </svg>
+                </div>
+                <span class="ms-3">Activity Logs</span>
+            </a>
+            </li>
 
             <!-- Logout Section -->
             <li class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">

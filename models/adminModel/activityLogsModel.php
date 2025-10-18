@@ -8,21 +8,36 @@ class activityLogsModel
         $this->conn = $dbConnection;
     }
 
-    public function getAllLogs()
-    {
-        $sql    = "SELECT * FROM activity_logs ORDER BY timestamp DESC"; 
-        $result = mysqli_query($this->conn, $sql);
+public function getAllLogs()
+        {
+            $sql = "SELECT 
+                        al.log_id, 
+                        al.admin_id, 
+                        al.action_type, 
+                        al.entity_type, 
+                        al.entity_id, 
+                        al.action_details, 
+                        al.timestamp, 
+                        al.old_value, 
+                        al.new_value,
+                        u.firstname,
+                        u.lastname
+                    FROM activity_logs al
+                    LEFT JOIN users u ON al.admin_id = u.id /* Join to fetch the user's name */
+                    ORDER BY al.timestamp DESC";
+            
+            $result = mysqli_query($this->conn, $sql);
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $logs = [];
-            while ($row = mysqli_fetch_assoc($result)) {
-                $logs[] = $row;
+            if ($result && mysqli_num_rows($result) > 0) {
+                $logs = [];
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $logs[] = $row;
+                }
+                return $logs;
             }
-            return $logs;
-        }
 
-        return null;
-    }
+            return [];
+        }
 
     public function logActivity(
         $userId,
