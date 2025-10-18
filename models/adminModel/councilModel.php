@@ -38,6 +38,18 @@ class CouncilModel
         }
     }
 
+    public function getCouncilAllDetails($councilId)
+    {
+        $cleanId = (int)$councilId;
+        $sql = "SELECT council_number, council_name, unit_manager_id, fraternal_counselor_id, date_established FROM council WHERE council_id = $cleanId";
+        $result = mysqli_query($this->conn, $sql);
+        
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            return $row;
+        }
+        return null;
+    }
+
     public function getAllCouncilByUM($umid){
         $umid = mysqli_real_escape_string($this->conn, $umid);
         $sql = "SELECT * FROM council WHERE unit_manager_id = '$umid'";

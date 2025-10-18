@@ -32,7 +32,7 @@ if (isset($_GET['id']) && $adminId) {
             $councilId,               
             "Deleted Council #{$councilNumber}: '{$councilName}'", 
             $oldValue,               
-            null                    
+            null        
         );
         
         $_SESSION['success'] = 'Council deleted successfully.';

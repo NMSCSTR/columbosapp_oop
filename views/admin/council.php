@@ -406,7 +406,7 @@ $(document).on('click', '.delete-council', function(e) {
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '../../controllers/adminController/deleteCouncilController.php?id=' + councilId;
+            window.location.href = '../../controllers/adminController/deleteCouncil.php?id=' + councilId;
         }
     });
 });
