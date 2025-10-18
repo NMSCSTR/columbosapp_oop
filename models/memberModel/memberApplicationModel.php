@@ -49,6 +49,18 @@ class MemberApplicationModel
         return 0;
     }
 
+    public function getApplicationDetails($applicantId)
+    {
+        $cleanId = (int)$applicantId;
+        $sql = "SELECT application_status, firstname, lastname FROM applicants WHERE applicant_id = $cleanId";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            return $row;
+        }
+        return null;
+    }
+
 
 
     public function getAllApplicantsOlderVer()

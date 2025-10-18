@@ -263,48 +263,50 @@
                                             <div class="font-medium text-gray-900"><?php echo htmlspecialchars($applicant['applicant_name'])?></div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <span class="badge                                                               <?php
-                                                                   switch (strtolower(str_replace(' ', '', $applicant['plan_type']))) {
-                                                                               case 'investmentplan':
-                                                                                   echo 'badge-investment';
-                                                                                   break;
-                                                                               case 'retirementplan':
-                                                                                   echo 'badge-retirement';
-                                                                                   break;
-                                                                               case 'educationalplan':
-                                                                                   echo 'badge-educational';
-                                                                                   break;
-                                                                               case 'protectionplan':
-                                                                                   echo 'badge-protection';
-                                                                                   break;
-                                                                               case 'termplan':
-                                                                                   echo 'badge-term';
-                                                                                   break;
-                                                                               default:
-                                                                                   echo 'bg-gray-100 text-gray-800';
-                                                                       }
-                                                                       ?>">
+                                            <span class="badge                                                               
+                                            <?php
+                                            switch (strtolower(str_replace(' ', '', $applicant['plan_type']))) {
+                                                        case 'investmentplan':
+                                                            echo 'badge-investment';
+                                                            break;
+                                                        case 'retirementplan':
+                                                            echo 'badge-retirement';
+                                                            break;
+                                                        case 'educationalplan':
+                                                            echo 'badge-educational';
+                                                            break;
+                                                        case 'protectionplan':
+                                                            echo 'badge-protection';
+                                                            break;
+                                                        case 'termplan':
+                                                            echo 'badge-term';
+                                                            break;
+                                                        default:
+                                                            echo 'bg-gray-100 text-gray-800';
+                                                }
+                                                ?>">
                                                 <?php echo htmlspecialchars($applicant['plan_type'])?>
                                             </span>
                                         </td>
                                         <td class="px-6 py-4"><?php echo htmlspecialchars($applicant['plan_name'])?></td>
                                         <td class="px-6 py-4 text-right">₱<?php echo number_format($applicant['face_value'], 2)?></td>
                                         <td class="px-6 py-4">
-                                            <span class="badge                                                               <?php
-                                                                   switch (strtolower($applicant['application_status'])) {
-                                                                               case 'approved':
-                                                                                   echo 'badge-approved';
-                                                                                   break;
-                                                                               case 'pending':
-                                                                                   echo 'badge-pending';
-                                                                                   break;
-                                                                               case 'rejected':
-                                                                                   echo 'badge-rejected';
-                                                                                   break;
-                                                                               default:
-                                                                                   echo 'bg-gray-100 text-gray-800';
-                                                                       }
-                                                                       ?>">
+                                            <span class="badge                                                               
+                                            <?php
+                                            switch (strtolower($applicant['application_status'])) {
+                                                        case 'approved':
+                                                            echo 'badge-approved';
+                                                            break;
+                                                        case 'pending':
+                                                            echo 'badge-pending';
+                                                            break;
+                                                        case 'rejected':
+                                                            echo 'badge-rejected';
+                                                            break;
+                                                        default:
+                                                            echo 'bg-gray-100 text-gray-800';
+                                                }
+                                                ?>">
                                                 <?php echo ucfirst(htmlspecialchars($applicant['application_status']))?>
                                             </span>
                                         </td>
@@ -325,7 +327,6 @@
 													</svg>
 													Send SMS
 												</button>
-                                                <?php if (strtolower($applicant['application_status']) === 'pending'): ?>
                                                     <button onclick="updateStatus(<?php echo $applicant['applicant_id']?>, 'Approved')"
                                                         class="action-button inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-2 focus:ring-green-300 transition-colors duration-200">
                                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -340,7 +341,6 @@
                                                         </svg>
                                                         Reject
                                                     </button>
-                                                <?php endif; ?>
                                             </div>
                                         </td>
                                     </tr>
