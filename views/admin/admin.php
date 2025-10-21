@@ -1,4 +1,5 @@
 <?php
+    $conn = mysqli_connect('localhost', 'root', '', 'columbos');
     require_once '../../middleware/auth.php';
     authorize(['admin']);
     include '../../includes/config.php';

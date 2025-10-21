@@ -466,6 +466,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateImagePreview();
     }
 
+    const BASE_URL = "<?= BASE_URL ?>";
+
+
     // Delete plan functionality
     document.querySelectorAll('.delete-plan').forEach(button => {
         button.addEventListener('click', function() {
@@ -489,6 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
+                    console.log(planId);
                     window.location.href = `${BASE_URL}controllers/adminController/deleteFraternalBenefitsController.php?id=${planId}`;
                 }
             });
