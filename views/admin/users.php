@@ -243,15 +243,15 @@
                                                 Approve
                                             </button>
                                         
-                                            <button class="action-button status-btn disable-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-2 focus:ring-red-300 transition-colors duration-200"
+                                            <button class="action-button status-btn reject-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-2 focus:ring-red-300 transition-colors duration-200"
                                                 data-id="<?= $user['id'] ?>"
-                                                data-action="disable"
+                                                data-action="reject"
                                                 data-adminid="<?= $_SESSION['user_id']; ?>"
                                                 data-name="<?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
                                                 </svg>
-                                                Disable
+                                                Reject
                                             </button>
                                     
                                     </div>
@@ -372,10 +372,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonText = 'Yes, approve';
                 confirmButtonColor = '#10B981';
             } else {
-                title = 'Disable User?';
-                text = `Are you sure you want to disable ${userName}?`;
+                title = 'Reject User?';
+                text = `Are you sure you want to reject ${userName}?`;
                 icon = 'warning';
-                confirmButtonText = 'Yes, disable';
+                confirmButtonText = 'Yes, reject';
                 confirmButtonColor = '#EF4444';
             }
             
@@ -548,11 +548,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             </button>` :
                             userData.status === 'approved' ?
                             `<button class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-2 focus:ring-red-300 transition-colors duration-200"
-                                onclick="handleUserAction('disable', '${userData.id}')">
+                                onclick="handleUserAction('reject', '${userData.id}')">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
                                 </svg>
-                                Disable User
+                                Reject User
                             </button>` : ''
                         }
                     </div>

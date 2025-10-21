@@ -28,10 +28,10 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
         $newStatus    = 'approved';
         $actionType   = 'USER_APPROVED';
         $actionDetail = 'Approved user ID ' . $id;
-    } elseif ($action === 'disable') {
-        $newStatus    = 'disabled';
-        $actionType   = 'USER_DISABLED';
-        $actionDetail = 'Disabled user ID ' . $id;
+    } elseif ($action === 'reject') {
+        $newStatus    = 'rejected';
+        $actionType   = 'USER_REJECTED';
+        $actionDetail = 'Rejected user ID ' . $id;
     } else {
         $_SESSION['error'] = 'Invalid action.';
         header('Location: ' . BASE_URL . 'views/admin/users.php');
