@@ -118,19 +118,15 @@ const BASE_URL = '<?php echo rtrim(dirname(dirname(dirname($_SERVER['PHP_SELF'])
                                 </svg>
                                 View Quota Progress
                             </a>
-                            <a href="#pendingUsersModal"
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-transparent border border-red-300 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200">
-                                <svg class="w-5 h-5 text-red-600 dark:text-yellow-400" fill="currentColor"
+                            <button data-modal-target="default-modal" data-modal-toggle="default-modal"
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-transparent border border-red-300 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200"
+                                type="button">
+                                                                <svg class="w-5 h-5 text-red-600 dark:text-yellow-400" fill="currentColor"
                                     viewBox="0 0 24 24">
                                     <path
                                         d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                                 </svg>
                                 View Pending Users
-                            </a>
-                            <button data-modal-target="default-modal" data-modal-toggle="default-modal"
-                                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                type="button">
-                                Toggle modal
                             </button>
                         </div>
                     </div>
@@ -291,7 +287,7 @@ const BASE_URL = '<?php echo rtrim(dirname(dirname(dirname($_SERVER['PHP_SELF'])
                                         </button>
                                         <?php endif; ?>
 
-                                        <button
+                                        <!-- <button
                                             class="action-button status-btn approve-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-2 focus:ring-green-300 transition-colors duration-200"
                                             data-id="<?= $user['id'] ?>" data-adminid="<?= $_SESSION['user_id']; ?>"
                                             data-action="approve"
@@ -315,7 +311,7 @@ const BASE_URL = '<?php echo rtrim(dirname(dirname(dirname($_SERVER['PHP_SELF'])
                                                     d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                                             </svg>
                                             Reject
-                                        </button>
+                                        </button> -->
 
                                     </div>
                                 </td>
