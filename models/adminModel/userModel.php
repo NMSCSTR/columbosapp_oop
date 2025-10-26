@@ -10,7 +10,22 @@ class UserModel
 
     public function getAllUser()
     {
-        $sql    = "SELECT * FROM users WHERE role != 'admin'";
+        $sql    = "SELECT * FROM users WHERE role != 'admin' AND status='approved'";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $councils = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $councils[] = $row;
+            }
+            return $councils;
+        }
+
+        return null;
+    }
+    public function getAllPendingUser()
+    {
+        $sql    = "SELECT * FROM users WHERE role != 'admin' AND status='pending'";
         $result = mysqli_query($this->conn, $sql);
 
         if ($result && mysqli_num_rows($result) > 0) {
