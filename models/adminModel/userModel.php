@@ -23,7 +23,7 @@ class UserModel
 
         return null;
     }
-    public function getAllPendingUser()
+    public function getAllPendingUsers()
     {
         $sql    = "SELECT * FROM users WHERE role != 'admin' AND status='pending'";
         $result = mysqli_query($this->conn, $sql);
