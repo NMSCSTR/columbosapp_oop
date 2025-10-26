@@ -272,7 +272,7 @@
                                 </tr>
                             <?php } ?>
                         </tbody>
-                    </table>
+                    </table>`
                 </div>
                 </section>
             </div>
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Swal.fire({
                 title: title,
                 text: text,
-                icon: icon,
+                icon: icon, 
                 showCancelButton: true,
                 confirmButtonColor: confirmButtonColor,
                 cancelButtonColor: '#6B7280',
