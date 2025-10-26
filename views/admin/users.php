@@ -81,6 +81,20 @@
             renderBreadcrumb($breadcrumbItems);
             ?>
 
+            <div id="pendingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6">
+                <div class="flex justify-between items-center border-b pb-3">
+                <h2 class="text-lg font-semibold text-gray-800">Pending Users</h2>
+                <button id="closeModalBtn" class="text-gray-600 hover:text-gray-900 text-2xl">&times;</button>
+                </div>
+
+                <!-- Pending Users Table -->
+                <div id="pendingUsersTable" class="mt-4">
+                <p class="text-gray-500">Loading...</p>
+                </div>
+            </div>
+            </div>
+
             <section class="user-card bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
                 <!-- Header -->
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -97,12 +111,12 @@
                                 </svg>
                                 View Quota Progress
                             </a>
-                            <a href="" 
-                               class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-transparent border border-red-300 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200">
-                            <svg class="w-5 h-5 text-red-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                                View Pending User
+                            <a href="#" id="viewPendingBtn"
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-transparent border border-red-300 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200">
+                                <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                                View Pending Users
                             </a>
                         </div>
                     </div>
