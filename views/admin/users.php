@@ -347,7 +347,7 @@ const BASE_URL = '<?php echo rtrim(dirname(dirname(dirname($_SERVER['PHP_SELF'])
 
 <div id="default-modal" tabindex="-1" aria-hidden="true"
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-5xl max-h-full">
+        <div class="relative p-4 w-full max-w-7xl max-h-full">
 
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
@@ -419,7 +419,31 @@ const BASE_URL = '<?php echo rtrim(dirname(dirname(dirname($_SERVER['PHP_SELF'])
                                     <?= htmlspecialchars($puser['status']) ?>
                                 </td>
                                 <td class="px-6 py-4">
-                                    $2999
+                                     <button
+                                            class="action-button status-btn approve-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-2 focus:ring-green-300 transition-colors duration-200"
+                                            data-id="<?= $puser['id'] ?>" data-adminid="<?= $_SESSION['user_id']; ?>"
+                                            data-action="approve"
+                                            data-name="<?= htmlspecialchars($puser['firstname'] . ' ' . $puser['lastname']) ?>">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            Approve
+                                        </button>
+
+                                        <button
+                                            class="action-button status-btn reject-btn inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-2 focus:ring-red-300 transition-colors duration-200"
+                                            data-id="<?= $puser['id'] ?>" data-action="reject"
+                                            data-adminid="<?= $_SESSION['user_id']; ?>"
+                                            data-name="<?= htmlspecialchars($puser['firstname'] . ' ' . $puser['lastname']) ?>">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                            </svg>
+                                            Reject
+                                        </button>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
