@@ -11,13 +11,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstname             = htmlspecialchars(trim($_POST['firstname']));
     $lastname              = htmlspecialchars(trim($_POST['lastname']));
     $middlename            = htmlspecialchars(trim($_POST['middlename']));
-    $birthdate             = $_POST['birthdate'];
+    // $birthdate             = $_POST['birthdate'];
+    $birthdate             = new DateTime($_POST['birthdate']);
     $birthplace            = htmlspecialchars(trim($_POST['birthplace']));
     $age                   = intval($_POST['age']);
     $gender                = htmlspecialchars(trim($_POST['gender']));
     $marital_status        = htmlspecialchars(trim($_POST['marital_status']));
     $tin_sss               = htmlspecialchars(trim($_POST['tin_sss']));
     $nationality           = htmlspecialchars(trim($_POST['nationality']));
+
+    // 6 month rule age calculation
+    $today          = new DateTime();
+    $age            = $today->diff($birthdate)->y;
+    $next_birthday  = (clone $birthdate)->modify('+' . ($age + 1) . ' years');
+    $months_to_next_bday = ($today->diff($next_birthday)->y * 12) + $today->diff($next_birthday)->m;
+    if ($months_to_next_bday <= 6) {
+        $age += 1;
+    }
 
     // insertApplicantContactDetailsController
     // Contact Details
@@ -101,8 +111,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $model  = new MemberApplicationModel($conn);
     $applicant_id = $model->insertApplicant(
-        $user_id, $fraternal_counselor_id, $firstname, $lastname, $middlename,
-        $birthdate, $birthplace, $age, $gender, $marital_status, $tin_sss, $nationality
+        $user_id, 
+        $fraternal_counselor_id,
+        $firstname, 
+        $lastname, 
+        $middlename,
+        $age, 
+        $birthdate->format('Y-m-d'),
+        $birthplace, 
+        $gender, 
+        $marital_status, 
+        $tin_sss, 
+        $nationality
     );
 
     $result1 = $model->insertApplicantContactDetails($applicant_id, $user_id, $street, $barangay, $city_province, $mobile_number, $email_address);
