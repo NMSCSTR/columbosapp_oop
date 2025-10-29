@@ -398,7 +398,7 @@ const BASE_URL = '<?php echo rtrim(dirname(dirname(dirname($_SERVER['PHP_SELF'])
                             <?php foreach ($pendingUsers as $puser): ?>
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <?= htmlspecialchars($puser['firstname'] . ' ' . $user['lastname']) ?>
+                                    <?= htmlspecialchars($puser['firstname'] . ' ' . $puser['lastname']) ?>
                                 </th>
                                 <td class="px-6 py-4">
                                     <?= htmlspecialchars($puser['kcfapicode']) ?></td>

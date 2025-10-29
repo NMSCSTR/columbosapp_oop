@@ -59,9 +59,9 @@
                                         class="border rounded p-2" readonly>
                                     <input type="text" placeholder="Middle Name" name="middlename"
                                         class="border rounded p-2" required>
-                                    <input type="date" placeholder="Birthdate" name="birthdate"
+                                    <input type="date" placeholder="Birthdate" placeholder="dd/mm/yyyy" id="birthdate" name="birthdate"
                                         class="border rounded p-2" required>
-                                    <input type="number" placeholder="Age" name="age" class="border rounded p-2" required>
+                                    <input type="number" placeholder="Age" id="age" name="age" class="border rounded p-2" readonly>
                                     <input type="text" placeholder="Birthplace" name="birthplace"
                                         class="border rounded p-2" required>
                                     <select class="border rounded p-2" name="gender">
@@ -732,6 +732,58 @@
                     container.appendChild(group);
                 }
                 </script>
+<script>
+document.getElementById('birthdate').addEventListener('change', function () {
+    // --- Helper: Philippine current time ---
+    function getPhilippineToday() {
+        const now = new Date();
+        const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+        return new Date(utc + 8 * 60 * 60 * 1000);
+    }
+
+    // --- Parse birthdate ---
+    const parts = this.value.split('-'); // "yyyy-mm-dd"
+    if (parts.length !== 3) return;
+    const birthdate = new Date(parts[0], parseInt(parts[1], 10)-1, parts[2]);
+
+    const today = getPhilippineToday();
+
+// Last birthday
+let lastBday = new Date(today.getFullYear(), birthdate.getMonth(), birthdate.getDate());
+if (today < lastBday) {
+    // Last birthday was last year
+    lastBday.setFullYear(today.getFullYear() - 1);
+}
+// Next birthday is always the first birthday after today
+let nextBday = new Date(birthdate.getFullYear(), birthdate.getMonth(), birthdate.getDate());
+nextBday.setFullYear(today.getFullYear());
+if (nextBday <= today) {
+    nextBday.setFullYear(today.getFullYear() + 1); // push to next year if passed
+}
+    // --- Days to next birthday ---
+    const oneDay = 1000*60*60*24;
+    const daysToNext = Math.round((nextBday - today) / oneDay);
+
+    // --- Apply 6-month rule ---
+    let finalAge;
+    if (daysToNext <= 183) { // within 6 months
+        finalAge = lastBday.getFullYear() - birthdate.getFullYear() + 1;
+    } else {
+        finalAge = lastBday.getFullYear() - birthdate.getFullYear();
+    }
+
+    document.getElementById('age').value = finalAge;
+
+    console.log({
+        birthdate: birthdate.toDateString(),
+        today: today.toDateString(),
+        lastBday: lastBday.toDateString(),
+        nextBday: nextBday.toDateString(),
+        daysToNext,
+        finalAge
+    });
+});
+</script>
             </div>
     </div>
 </main>

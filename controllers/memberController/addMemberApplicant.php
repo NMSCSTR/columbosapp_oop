@@ -11,8 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstname             = htmlspecialchars(trim($_POST['firstname']));
     $lastname              = htmlspecialchars(trim($_POST['lastname']));
     $middlename            = htmlspecialchars(trim($_POST['middlename']));
-    // $birthdate             = $_POST['birthdate'];
-    $birthdate             = new DateTime($_POST['birthdate']);
+    $birthdate             = $_POST['birthdate'];
+    // $birthdate             = new DateTime($_POST['birthdate']);
     $birthplace            = htmlspecialchars(trim($_POST['birthplace']));
     $age                   = intval($_POST['age']);
     $gender                = htmlspecialchars(trim($_POST['gender']));
@@ -21,13 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nationality           = htmlspecialchars(trim($_POST['nationality']));
 
     // 6 month rule age calculation
-    $today          = new DateTime();
-    $age            = $today->diff($birthdate)->y;
-    $next_birthday  = (clone $birthdate)->modify('+' . ($age + 1) . ' years');
-    $months_to_next_bday = ($today->diff($next_birthday)->y * 12) + $today->diff($next_birthday)->m;
-    if ($months_to_next_bday <= 6) {
-        $age += 1;
-    }
+    // $today          = new DateTime();
+    // $age            = $today->diff($birthdate)->y;
+    // $next_birthday  = (clone $birthdate)->modify('+' . ($age + 1) . ' years');
+    // $months_to_next_bday = ($today->diff($next_birthday)->y * 12) + $today->diff($next_birthday)->m;
+    // if ($months_to_next_bday <= 6) {
+    //     $age += 1;
+    // }
 
     // insertApplicantContactDetailsController
     // Contact Details
