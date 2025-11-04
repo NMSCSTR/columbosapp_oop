@@ -24,6 +24,17 @@ class MemberApplicationModel
         return 0;
     }
 
+    public function getPendingApplicants()
+    {
+        $query = "SELECT * FROM applicants";
+        $result = mysqli_query($this->conn, $query);
+        if($result = mysqli_query($this->conn, $query)){
+            $row = mysqli_fetch_assoc($result);
+        }
+        return 0;
+
+    }
+
     public function getTotalApplicantsByCouncil($council_id)
     {
         $council_id = $this->escape($council_id);
@@ -143,6 +154,96 @@ class MemberApplicationModel
             'savings_fund'   => $total_contribution * 0.85,
         ];
     }
+
+    public function getAllPendingApplicants()
+    {
+        $sql = "SELECT
+            a.applicant_id,
+            a.user_id,
+            CONCAT(a.firstname, ' ', a.lastname) AS applicant_name,
+            fb.type AS plan_type,
+            fb.name AS plan_name,
+            fb.face_value,
+            fb.years_to_maturity,
+            fb.years_of_protection,
+            fb.contribution_period,
+            p.payment_mode,
+            p.contribution_amount,
+            p.fraternal_benefits_id,
+            a.application_status
+        FROM applicants a
+        LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+        LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+        WHERE a.application_status = 'Pending'
+        ORDER BY a.created_at DESC";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $applicants = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $total_contribution = $this->calculateTotalContributions($row);
+                $allocations        = $this->calculateContributionAllocations($total_contribution);
+
+                $row['total_contribution'] = $total_contribution;
+                $row['insurance_cost']     = $allocations['insurance_cost'];
+                $row['admin_fee']          = $allocations['admin_fee'];
+                $row['savings_fund']       = $allocations['savings_fund'];
+
+                $applicants[] = $row;
+            }
+            return $applicants;
+        }
+
+        return null;
+    }
+
+    public function getAllApprovedApplicants()
+    {
+        $sql = "SELECT
+            a.applicant_id,
+            a.user_id,
+            CONCAT(a.firstname, ' ', a.lastname) AS applicant_name,
+            fb.type AS plan_type,
+            fb.name AS plan_name,
+            fb.face_value,
+            fb.years_to_maturity,
+            fb.years_of_protection,
+            fb.contribution_period,
+            p.payment_mode,
+            p.contribution_amount,
+            p.fraternal_benefits_id,
+            a.application_status
+        FROM applicants a
+        LEFT JOIN plans p ON a.applicant_id = p.applicant_id
+        LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+        WHERE a.application_status = 'Approved'
+        ORDER BY a.created_at DESC";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $applicants = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $total_contribution = $this->calculateTotalContributions($row);
+                $allocations        = $this->calculateContributionAllocations($total_contribution);
+
+                $row['total_contribution'] = $total_contribution;
+                $row['insurance_cost']     = $allocations['insurance_cost'];
+                $row['admin_fee']          = $allocations['admin_fee'];
+                $row['savings_fund']       = $allocations['savings_fund'];
+
+                $applicants[] = $row;
+            }
+            return $applicants;
+        }
+
+        return null;
+    }
+
+
+
+
 
     public function getAllApplicants()
     {

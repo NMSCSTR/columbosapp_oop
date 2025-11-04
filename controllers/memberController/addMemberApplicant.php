@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $lastname, 
         $middlename,
         $age, 
-        $birthdate->format('Y-m-d'),
+        $birthdate,
         $birthplace, 
         $gender, 
         $marital_status, 
