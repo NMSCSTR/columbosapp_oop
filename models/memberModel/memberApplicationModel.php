@@ -72,6 +72,19 @@ class MemberApplicationModel
         return null;
     }
 
+    public function getPlanDetailsByApplicantId($applicant_id)
+    {
+        $applicant_id = mysqli_real_escape_string($conn, $applicant_id);
+
+        $sql = "SELECT `plan_id`, `applicant_id`, `user_id`, `fraternal_benefits_id`, `council_id`, `payment_mode`, `contribution_amount`, `currency` FROM `plans` WHERE applicant_id = '$applicant_id'";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            return $row;
+        }
+        return null;
+    }
+
 
 
     public function getAllApplicantsOlderVer()

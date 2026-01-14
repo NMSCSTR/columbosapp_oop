@@ -9,6 +9,8 @@
     include '../../partials/breadcrumb.php';
 
     $model = new announcementModel($conn);
+    // $users = $model->getAllUserPhoneNumber();
+    $users = $model->getSelectableUsers();
     $announcements = $model->getAllAnnouncement();
 ?>
 
@@ -187,6 +189,51 @@
                                         <span class="character-count text-gray-500">0 characters</span>
                                     </div>
                                 </div>
+
+                                <div class="space-y-3">
+                                    <label class="block text-sm font-semibold text-gray-800">
+                                        Send Announcement To
+                                    </label>
+
+                                    <div class="max-h-56 overflow-y-auto rounded-xl border border-gray-200 bg-gray-50 p-2 shadow-inner">
+                                        <?php foreach ($users as $user): ?>
+                                            <label
+                                                class="group flex items-center justify-between gap-3 rounded-lg bg-white px-3 py-2 text-sm text-gray-700
+                                                    border border-transparent hover:border-blue-200 hover:bg-blue-50
+                                                    transition-all duration-150 cursor-pointer">
+
+                                                <div class="flex items-center gap-3">
+                                                    <input type="checkbox"
+                                                        name="recipients[]"
+                                                        value="<?= $user['id'] ?>"
+                                                        class="h-4 w-4 rounded border-gray-300 text-blue-600
+                                                                focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
+
+                                                    <div class="leading-tight">
+                                                        <p class="font-medium text-gray-800 group-hover:text-blue-700">
+                                                            <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>
+                                                        </p>
+                                                        <p class="text-xs text-gray-500">
+                                                            <?= htmlspecialchars($user['phone_number']) ?>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <svg class="h-4 w-4 text-gray-300 group-hover:text-blue-500 transition"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </label>
+                                        <?php endforeach; ?>
+                                    </div>
+
+                                    <p class="text-xs text-gray-500">
+                                        Select one or more users to receive this announcement via SMS.
+                                    </p>
+                                </div>
+
+
 
                                 <div class="pt-4">
                                     <button type="submit"

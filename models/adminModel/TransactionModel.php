@@ -21,6 +21,20 @@ class TransactionModel
         return $transactions;
     }
 
+    public function getPlanDetailsByApplicantId($applicant_id)
+    {
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+
+        $sql = "SELECT `plan_id`, `applicant_id`, `user_id`, `fraternal_benefits_id`, `council_id`, `payment_mode`, `contribution_amount`, `currency` FROM `plans` WHERE `applicant_id` = '$applicant_id'";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            return $row;
+        }
+        return null;
+    }
+
+
     public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_date, $amount_paid, $currency, $next_due_date, $payment_timing_status)
     {
         $sql = "INSERT INTO transactions (applicant_id, user_id, plan_id, payment_date, amount_paid, currency, next_due_date, payment_timing_status)

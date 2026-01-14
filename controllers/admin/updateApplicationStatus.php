@@ -4,6 +4,7 @@ authorize(['admin']);
 include '../../includes/db.php';
 include '../../models/memberModel/memberApplicationModel.php';
 include '../../models/adminModel/activityLogsModel.php';
+include '../../models/adminModel/sendSmsModel.php';
 
 header('Content-Type: application/json');
 
@@ -46,6 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $applicationModel->updateApplicationStatus($applicant_id, $newStatus);
 
         if ($result) {
+            $subject = "APPLICATION APPROVED";
+            $content = "Your application was being approved!";
+            $smsModel = new sendSmsModel($conn);
+		    $result = $smsModel->sendSmsToApplicant($applicant_id, $subject, $content, $template, $dueDate);
             
             $logModel->logActivity(
                 $adminId,                 

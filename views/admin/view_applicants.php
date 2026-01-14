@@ -178,6 +178,8 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Birthdate</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Application Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Contribution Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Payment Mode</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Created At</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
                             </tr>
@@ -191,6 +193,8 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['gender']) ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['birthdate']) ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['status']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['contribution_amount']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['payment_mode']) ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['application_status']) ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <?= $a['created_at'] != '0000-00-00 00:00:00' ? date("F j, Y", strtotime($a['created_at'])) : 'N/A' ?>
