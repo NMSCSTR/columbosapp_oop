@@ -190,49 +190,53 @@
                                     </div>
                                 </div>
 
-                                <div class="space-y-3">
-                                    <label class="block text-sm font-semibold text-gray-800">
-                                        Send Announcement To
+                                <div class="mb-4">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Send To
                                     </label>
 
-                                    <div class="max-h-56 overflow-y-auto rounded-xl border border-gray-200 bg-gray-50 p-2 shadow-inner">
-                                        <?php foreach ($users as $user): ?>
-                                            <label
-                                                class="group flex items-center justify-between gap-3 rounded-lg bg-white px-3 py-2 text-sm text-gray-700
-                                                    border border-transparent hover:border-blue-200 hover:bg-blue-50
-                                                    transition-all duration-150 cursor-pointer">
-
-                                                <div class="flex items-center gap-3">
-                                                    <input type="checkbox"
-                                                        name="recipients[]"
-                                                        value="<?= $user['id'] ?>"
-                                                        class="h-4 w-4 rounded border-gray-300 text-blue-600
-                                                                focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
-
-                                                    <div class="leading-tight">
-                                                        <p class="font-medium text-gray-800 group-hover:text-blue-700">
-                                                            <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>
-                                                        </p>
-                                                        <p class="text-xs text-gray-500">
-                                                            <?= htmlspecialchars($user['phone_number']) ?>
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <svg class="h-4 w-4 text-gray-300 group-hover:text-blue-500 transition"
-                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M5 13l4 4L19 7" />
-                                                </svg>
-                                            </label>
-                                        <?php endforeach; ?>
+                                    <div class="max-h-64 overflow-y-auto border border-gray-300 rounded-lg p-3 bg-white shadow-sm">
+                                        <?php if (!empty($users)): ?>
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                                <?php foreach ($users as $user): ?>
+                                                    <label class="flex items-center p-2 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-150">
+                                                        <input type="checkbox"
+                                                            name="recipients[]"
+                                                            value="<?= $user['id'] ?>"
+                                                            class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                                                        <div class="ml-3 text-sm">
+                                                            <div class="font-medium text-gray-900">
+                                                                <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>
+                                                            </div>
+                                                            <div class="text-gray-500 text-xs">
+                                                                <?= htmlspecialchars($user['phone_number']) ?>
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php else: ?>
+                                            <p class="text-gray-500 text-sm">No users available to send announcement.</p>
+                                        <?php endif; ?>
                                     </div>
-
-                                    <p class="text-xs text-gray-500">
-                                        Select one or more users to receive this announcement via SMS.
-                                    </p>
                                 </div>
 
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium text-gray-700">Send To</span>
+                                    <div class="space-x-2">
+                                        <button type="button" onclick="selectAll()" class="text-blue-600 text-xs hover:underline">Select All</button>
+                                        <button type="button" onclick="deselectAll()" class="text-red-600 text-xs hover:underline">Deselect All</button>
+                                    </div>
+                                </div>
+
+                                <script>
+                                function selectAll() {
+                                    document.querySelectorAll('input[name="recipients[]"]').forEach(cb => cb.checked = true);
+                                }
+                                function deselectAll() {
+                                    document.querySelectorAll('input[name="recipients[]"]').forEach(cb => cb.checked = false);
+                                }
+                                </script>
 
 
                                 <div class="pt-4">
