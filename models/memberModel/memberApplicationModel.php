@@ -15,9 +15,9 @@ class MemberApplicationModel
 
     public function getCouncilIdByUMID($umid)
     {
-        $umid = $this->escape($umid);
+        $umid  = $this->escape($umid);
         $query = "SELECT `council_id` FROM `council` WHERE `unit_manager_id` = '$umid'";
-        if($result = mysqli_query($this->conn, $query)){
+        if ($result = mysqli_query($this->conn, $query)) {
             $row = mysqli_fetch_assoc($result);
             return $row['council_id'];
         }
@@ -26,20 +26,78 @@ class MemberApplicationModel
 
     public function getPendingApplicants()
     {
-        $query = "SELECT * FROM applicants";
+        $query  = "SELECT * FROM applicants";
         $result = mysqli_query($this->conn, $query);
-        if($result = mysqli_query($this->conn, $query)){
+        if ($result = mysqli_query($this->conn, $query)) {
             $row = mysqli_fetch_assoc($result);
         }
         return 0;
 
     }
 
+    public function getTransactionsByPlan($plan_id)
+    {
+        $plan_id = mysqli_real_escape_string($this->conn, $plan_id);
+
+        $sql = "
+        SELECT t.transaction_id, t.payment_date, t.amount_paid, t.currency, t.next_due_date, t.status, t.payment_timing_status,
+               a.firstname, a.lastname, fb.name AS plan_name
+        FROM transactions t
+        LEFT JOIN applicants a ON t.applicant_id = a.applicant_id
+        LEFT JOIN plans p ON t.plan_id = p.plan_id
+        LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+        WHERE t.plan_id = '$plan_id'
+        ORDER BY t.payment_date ASC
+    ";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if (! $result) {
+            throw new Exception("Failed to fetch transactions: " . $this->conn->error);
+        }
+
+        $transactions = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $transactions[] = $row;
+        }
+
+        return $transactions;
+    }
+
+    public function getApplicationsByUser($user_id)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+
+        $sql = "
+            SELECT p.plan_id, fb.name AS plan_name, fb.type AS plan_type, fb.face_value, fb.years_of_protection,
+                fb.contribution_period, p.payment_mode, p.contribution_amount, p.currency,
+                a.application_status, a.applicant_id, a.created_at AS application_date
+            FROM plans p
+            LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+            LEFT JOIN applicants a ON p.applicant_id = a.applicant_id
+            WHERE p.user_id = '$user_id'
+            ORDER BY a.created_at DESC
+    ";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if (! $result) {
+            throw new Exception("Query failed: " . mysqli_error($this->conn));
+        }
+
+        $applications = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $applications[] = $row;
+        }
+
+        return $applications;
+    }
+
     public function getTotalApplicantsByCouncil($council_id)
     {
         $council_id = $this->escape($council_id);
-        $query = "SELECT COUNT(*) as total_applicantsby_council FROM `plans` WHERE `council_id`='$council_id'";
-        $result = mysqli_query($this->conn, $query);
+        $query      = "SELECT COUNT(*) as total_applicantsby_council FROM `plans` WHERE `council_id`='$council_id'";
+        $result     = mysqli_query($this->conn, $query);
 
         if ($result && mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
@@ -47,7 +105,7 @@ class MemberApplicationModel
         }
     }
 
-    public function countAllApplicants($fraternal_counselor_id) 
+    public function countAllApplicants($fraternal_counselor_id)
     {
         $sql    = "SELECT COUNT(*) as total FROM applicants WHERE fraternal_counselor_id = '$fraternal_counselor_id'";
         $result = mysqli_query($this->conn, $sql);
@@ -62,21 +120,43 @@ class MemberApplicationModel
 
     public function getApplicationDetails($applicantId)
     {
-        $cleanId = (int)$applicantId;
-        $sql = "SELECT application_status, firstname, lastname FROM applicants WHERE applicant_id = $cleanId";
-        $result = mysqli_query($this->conn, $sql);
+        $cleanId = (int) $applicantId;
+        $sql     = "SELECT application_status, firstname, lastname FROM applicants WHERE applicant_id = $cleanId";
+        $result  = mysqli_query($this->conn, $sql);
 
         if ($result && $row = mysqli_fetch_assoc($result)) {
             return $row;
         }
         return null;
     }
+
+    public function getPlanDetails($plan_id)
+    {
+        $plan_id = mysqli_real_escape_string($this->conn, $plan_id);
+
+        $sql = "
+            SELECT p.plan_id, fb.name AS plan_name, fb.type AS plan_type, p.contribution_amount, p.currency
+            FROM plans p
+            LEFT JOIN fraternal_benefits fb ON p.fraternal_benefits_id = fb.id
+            WHERE p.plan_id = '$plan_id'
+            LIMIT 1
+        ";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if (!$result) {
+            throw new Exception("Failed to fetch plan details: " . $this->conn->error);
+        }
+
+        return mysqli_fetch_assoc($result);
+    }
+
 
     public function getPlanDetailsByApplicantId($applicant_id)
     {
         $applicant_id = mysqli_real_escape_string($conn, $applicant_id);
 
-        $sql = "SELECT `plan_id`, `applicant_id`, `user_id`, `fraternal_benefits_id`, `council_id`, `payment_mode`, `contribution_amount`, `currency` FROM `plans` WHERE applicant_id = '$applicant_id'";
+        $sql    = "SELECT `plan_id`, `applicant_id`, `user_id`, `fraternal_benefits_id`, `council_id`, `payment_mode`, `contribution_amount`, `currency` FROM `plans` WHERE applicant_id = '$applicant_id'";
         $result = mysqli_query($this->conn, $sql);
 
         if ($result && $row = mysqli_fetch_assoc($result)) {
@@ -84,8 +164,6 @@ class MemberApplicationModel
         }
         return null;
     }
-
-
 
     public function getAllApplicantsOlderVer()
     {
@@ -129,20 +207,20 @@ class MemberApplicationModel
 
         // Number of payments per year depending on payment mode
         $periods_per_year = match ($payment_mode) {
-            'monthly' => 12,
-            'quarterly' => 4,
+            'monthly'       => 12,
+            'quarterly'     => 4,
             'semi-annually' => 2,
-            'annually' => 1,
-            default => 0,
+            'annually'      => 1,
+            default         => 0,
         };
 
         // Number of months in each payment period
         $months_per_payment = match ($payment_mode) {
-            'monthly' => 1,
-            'quarterly' => 3,
+            'monthly'       => 1,
+            'quarterly'     => 3,
             'semi-annually' => 6,
-            'annually' => 12,
-            default => 0,
+            'annually'      => 12,
+            default         => 0,
         };
 
         if ($periods_per_year === 0 || $contribution_period === 0 || $months_per_payment === 0) {
@@ -254,10 +332,6 @@ class MemberApplicationModel
         return null;
     }
 
-
-
-
-
     public function getAllApplicants()
     {
         $sql = "SELECT
@@ -304,7 +378,7 @@ class MemberApplicationModel
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
 
-        $query = "SELECT * FROM applicants WHERE fraternal_counselor_id = '$user_id'";
+        $query  = "SELECT * FROM applicants WHERE fraternal_counselor_id = '$user_id'";
         $result = mysqli_query($this->conn, $query);
 
         $applicants = [];
@@ -319,7 +393,7 @@ class MemberApplicationModel
     public function calculateAllTotalAllocationsByFraternalCounselor($fraternal_counselor_id)
     {
         $fraternal_counselor_id = mysqli_real_escape_string($this->conn, $fraternal_counselor_id);
-        
+
         $sql = "SELECT
             a.applicant_id,
             a.user_id,
@@ -342,14 +416,14 @@ class MemberApplicationModel
         ORDER BY a.created_at DESC";
 
         $result = mysqli_query($this->conn, $sql);
-        
+
         $totals = [
             'insurance_cost'     => 0,
             'admin_fee'          => 0,
             'savings_fund'       => 0,
             'total_contribution' => 0,
             'total_applicants'   => 0,
-            'total_face_value'   => 0
+            'total_face_value'   => 0,
         ];
 
         if ($result && mysqli_num_rows($result) > 0) {
@@ -357,22 +431,22 @@ class MemberApplicationModel
                 $total_contribution = $this->calculateTotalContributions($row);
                 $allocations        = $this->calculateContributionAllocations($total_contribution);
 
-                $totals['insurance_cost'] += $allocations['insurance_cost'];
-                $totals['admin_fee'] += $allocations['admin_fee'];
-                $totals['savings_fund'] += $allocations['savings_fund'];
+                $totals['insurance_cost']     += $allocations['insurance_cost'];
+                $totals['admin_fee']          += $allocations['admin_fee'];
+                $totals['savings_fund']       += $allocations['savings_fund'];
                 $totals['total_contribution'] += $total_contribution;
-                $totals['total_applicants'] += 1;
-                $totals['total_face_value'] += (float)($row['face_value'] ?? 0);
+                $totals['total_applicants']   += 1;
+                $totals['total_face_value']   += (float) ($row['face_value'] ?? 0);
             }
         }
-        
+
         return $totals;
     }
 
     public function calculateAllTotalAllocationsByUnitManager($unit_manager_id)
     {
         $unit_manager_id = mysqli_real_escape_string($this->conn, $unit_manager_id);
-        
+
         $sql = "SELECT
             a.applicant_id,
             a.user_id,
@@ -396,14 +470,14 @@ class MemberApplicationModel
         ORDER BY a.created_at DESC";
 
         $result = mysqli_query($this->conn, $sql);
-        
+
         $totals = [
             'insurance_cost'     => 0,
             'admin_fee'          => 0,
             'savings_fund'       => 0,
             'total_contribution' => 0,
             'total_applicants'   => 0,
-            'total_face_value'   => 0
+            'total_face_value'   => 0,
         ];
 
         if ($result && mysqli_num_rows($result) > 0) {
@@ -411,19 +485,17 @@ class MemberApplicationModel
                 $total_contribution = $this->calculateTotalContributions($row);
                 $allocations        = $this->calculateContributionAllocations($total_contribution);
 
-                $totals['insurance_cost'] += $allocations['insurance_cost'];
-                $totals['admin_fee'] += $allocations['admin_fee'];
-                $totals['savings_fund'] += $allocations['savings_fund'];
+                $totals['insurance_cost']     += $allocations['insurance_cost'];
+                $totals['admin_fee']          += $allocations['admin_fee'];
+                $totals['savings_fund']       += $allocations['savings_fund'];
                 $totals['total_contribution'] += $total_contribution;
-                $totals['total_applicants'] += 1;
-                $totals['total_face_value'] += (float)($row['face_value'] ?? 0);
+                $totals['total_applicants']   += 1;
+                $totals['total_face_value']   += (float) ($row['face_value'] ?? 0);
             }
         }
-        
+
         return $totals;
     }
-    
-
 
     public function calculateTotalAllocationsForAllApplicants()
     {
@@ -437,16 +509,14 @@ class MemberApplicationModel
 
         if ($applicants && is_array($applicants)) {
             foreach ($applicants as $applicant) {
-                $totals['insurance_cost'] += $applicant['insurance_cost'] ?? 0;
-                $totals['admin_fee'] += $applicant['admin_fee'] ?? 0;
-                $totals['savings_fund'] += $applicant['savings_fund'] ?? 0;
+                $totals['insurance_cost']     += $applicant['insurance_cost'] ?? 0;
+                $totals['admin_fee']          += $applicant['admin_fee'] ?? 0;
+                $totals['savings_fund']       += $applicant['savings_fund'] ?? 0;
                 $totals['total_contribution'] += $applicant['total_contribution'] ?? 0;
             }
         }
         return $totals;
     }
-
-    
 
     public function calculateMonthlyAllocationsByCouncil($council_id, $year, $month)
     {
@@ -469,15 +539,13 @@ class MemberApplicationModel
 
         if ($result && mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
-                $total_contribution = $this->calculateTotalContributions($row);
-                $total += $total_contribution;
+                $total_contribution  = $this->calculateTotalContributions($row);
+                $total              += $total_contribution;
             }
         }
 
         return $total;
     }
-
-
 
     // public function calculateTotalContributions($applicant)
     // {
@@ -683,7 +751,8 @@ class MemberApplicationModel
 
     }
 
-    public function fetchPendingApplicantByCouncil($council_id){
+    public function fetchPendingApplicantByCouncil($council_id)
+    {
         $council_id = mysqli_real_escape_string($this->conn, $council_id);
 
         $sql = "SELECT COUNT(*) AS total_pending
@@ -694,18 +763,16 @@ class MemberApplicationModel
 
         $result = mysqli_query($this->conn, $sql);
 
-        if($result){
+        if ($result) {
             $row = mysqli_fetch_assoc($result);
             return $row['total_pending'];
         }
         return 0;
     }
 
-
-
     public function fetchAllApplicantById($user_id)
     {
-        $sql = "SELECT 
+        $sql = "SELECT
             a.*,
             c.*,
             e.*,
@@ -749,16 +816,16 @@ class MemberApplicationModel
 
         if ($result && mysqli_num_rows($result) > 0) {
             $applicantData = mysqli_fetch_assoc($result);
-            
+
             // Calculate financial details
             $total_contribution = $this->calculateTotalContributions($applicantData);
-            $allocations = $this->calculateContributionAllocations($total_contribution);
+            $allocations        = $this->calculateContributionAllocations($total_contribution);
 
             // Add financial details to the applicant data
             $applicantData['total_contribution'] = $total_contribution;
-            $applicantData['insurance_cost'] = $allocations['insurance_cost'];
-            $applicantData['admin_fee'] = $allocations['admin_fee'];
-            $applicantData['savings_fund'] = $allocations['savings_fund'];
+            $applicantData['insurance_cost']     = $allocations['insurance_cost'];
+            $applicantData['admin_fee']          = $allocations['admin_fee'];
+            $applicantData['savings_fund']       = $allocations['savings_fund'];
 
             return $applicantData;
         }
@@ -776,7 +843,6 @@ class MemberApplicationModel
         return null;
     }
 
-    
     public function fetchAllApplicants()
     {
 
@@ -1330,7 +1396,6 @@ class MemberApplicationModel
             return "Error updating employment details: " . mysqli_error($this->conn);
         }
 
-
         // Update plan information
         $sql = "UPDATE plans SET
                 fraternal_benefits_id = '$fraternal_benefits_id',
@@ -1344,8 +1409,6 @@ class MemberApplicationModel
             return "Error updating plan information: " . mysqli_error($this->conn);
         }
 
-        
-        
         // Update beneficiaries (assuming you want to update them as well)
         $count = count($benefit_names);
         for ($i = 0; $i < $count; $i++) {
@@ -1519,10 +1582,10 @@ class MemberApplicationModel
     public function updateApplicationStatus($applicant_id, $status)
     {
         try {
-            $sql = "UPDATE applicants SET application_status = ? WHERE applicant_id = ?";
+            $sql  = "UPDATE applicants SET application_status = ? WHERE applicant_id = ?";
             $stmt = mysqli_prepare($this->conn, $sql);
             mysqli_stmt_bind_param($stmt, "si", $status, $applicant_id);
-            
+
             if (mysqli_stmt_execute($stmt)) {
                 return true;
             }
@@ -1533,11 +1596,11 @@ class MemberApplicationModel
         }
     }
 
-	public function fetchUnitManagerByApplicant($applicant_id)
-	{
-		$applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+    public function fetchUnitManagerByApplicant($applicant_id)
+    {
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
 
-		$sql = "SELECT 
+        $sql = "SELECT
 				u.id,
 				u.firstname,
 				u.lastname,
@@ -1552,11 +1615,11 @@ class MemberApplicationModel
 			WHERE a.applicant_id = '$applicant_id'
 			LIMIT 1";
 
-		$result = mysqli_query($this->conn, $sql);
-		if ($result && mysqli_num_rows($result) > 0) {
-			return mysqli_fetch_assoc($result);
-		}
-		return null;
-	}
+        $result = mysqli_query($this->conn, $sql);
+        if ($result && mysqli_num_rows($result) > 0) {
+            return mysqli_fetch_assoc($result);
+        }
+        return null;
+    }
 
 }

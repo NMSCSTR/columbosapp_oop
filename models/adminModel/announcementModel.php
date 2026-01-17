@@ -106,6 +106,20 @@ class announcementModel
         return $response;
     }
 
+    public function getAnnouncementDetails($announcementId)
+    {
+        $id = (int) $announcementId;
+        $sql = "SELECT * FROM announcements WHERE id = $id";
+        $result = mysqli_query($this->conn, $sql);
+
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            return $row;
+        }
+
+        return null;
+    }
+
+
     /* =======================
        INSERT ANNOUNCEMENT
     ======================== */

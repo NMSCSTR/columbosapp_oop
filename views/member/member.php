@@ -25,7 +25,7 @@
 
         <div class="p-4 rounded-lg dark:border-gray-700">
             <!-- Responsive grid layout -->
-            <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
+            <div class="max-w-12xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
                 <!-- Stepper Header -->
                 <div class="grid grid-cols-11 border-b border-cyan-200 text-center text-xs font-semibold text-cyan-700">
                     <template id="step-header-template">

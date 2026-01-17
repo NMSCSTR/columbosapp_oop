@@ -61,7 +61,7 @@ if ($newAnnouncementId) {
         $newAnnouncementId,
         "Posted new announcement: '" . substr($subject, 0, 50) . "...'",
         null,
-        "Subject: $subject"
+        "Subject: $subject" 
     );
 
     respond(true, 'Announcement posted & SMS sent successfully.');
