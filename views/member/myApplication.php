@@ -25,7 +25,15 @@ $applications     = $applicationModel->getApplicationsByUser($_SESSION['user_id'
         <div class="p-4 rounded-lg dark:border-gray-700">
             <div class="max-w-12xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden p-4">
                 <h2 class="text-xl font-bold mb-4">List of Applications</h2>
+                
                 <div class="overflow-x-auto">
+                    <!-- <div class="mt-6 text-right">
+                        <a href="applyNewPlan.php" 
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-150">
+                        Apply for New Plan
+                        </a>
+                    </div> -->
+
                     <table class="table-auto w-full border-collapse border border-gray-300 text-sm">
                         <thead>
                             <tr class="bg-gray-100 text-left">

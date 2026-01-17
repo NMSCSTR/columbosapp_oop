@@ -24,6 +24,14 @@ class MemberApplicationModel
         return 0;
     }
 
+    public function getApplicantByUserId($user_id)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+        $sql = "SELECT * FROM applicants WHERE user_id = '$user_id' LIMIT 1";
+        $result = mysqli_query($this->conn, $sql);
+        return mysqli_fetch_assoc($result);
+    }
+
     public function getPendingApplicants()
     {
         $query  = "SELECT * FROM applicants";
