@@ -8,22 +8,30 @@
     include '../../models/adminModel/FormsModel.php';
     include '../../models/adminModel/TransactionModel.php';
     
-    $searchResults = $_SESSION['search_results'] ?? [];
-    $transactions = [];
+    // Updated fetching logic
     $user_id = $_SESSION['user_id'] ?? null;
+    $plan_id = $_SESSION['selected_plan_id'] ?? null;
+    $searchResults = $_SESSION['search_results'] ?? [];
 
-    if ($user_id) {
+    if ($user_id && $plan_id) {
         $transactionModel = new TransactionModel($conn);
-        $transactions = $transactionModel->getPaymentTransactionsByApplicant($user_id);
+        // Use the specific function to filter history by both user and plan
+        $transactions = $transactionModel->getPaymentTransactionsByApplicantAndPlan($user_id, $plan_id);
     } else {
-        echo "User ID not set in session.";
+        echo "Access Denied: User ID or Plan ID not set in session.";
         exit;
     }
 
-    $c = $searchResults[0]['basicInfo'] ?? null;
-    $d = $searchResults[0]['fullDetails'] ?? null;
-    $planInfo = $d['plans'] ?? null;
-    $applicant = $d['applicantData'] ?? null;
+    // Map variables from the new session structure
+    // search_results[0] contains the hydrated data from fetchAllApplicantsByIdV2
+    $data = $searchResults[0] ?? null;
+    $applicant = $data['applicantData'] ?? null;
+    $contactInfo = $data['contactInfo'] ?? null;
+    $planInfo = $data['plans'] ?? null; // This now holds the specific selected plan
+
+    // For backward compatibility with your existing HTML variables:
+    $c = $applicant; // Used for names and user_id
+    $c['email'] = $contactInfo['email_address'] ?? 'N/A'; // Map contact email to $c['email']
 
     $suggestedPremium = 0;
     if (isset($applicant['applicant_id'])) {
@@ -72,8 +80,8 @@
             <div class="p-8">
                 <form class="space-y-6" action="../../controllers/adminController/transactionController.php" method="POST">
                     <input type="hidden" value="<?= $applicant['applicant_id'] ?? ''; ?>" name="applicant_id">
-                    <input type="hidden" value="<?= $c['user_id'] ?? ''; ?>" name="user_id">
-                    <input type="hidden" value="<?= $planInfo['plan_id'] ?? '' ?>" name="plan_id">
+                    <input type="hidden" value="<?= $user_id ?? ''; ?>" name="user_id">
+                    <input type="hidden" value="<?= $plan_id ?? '' ?>" name="plan_id">
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1.5">
@@ -182,7 +190,7 @@
                         <div>
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Full Name</p>
                             <h2 class="text-lg font-bold text-slate-800">
-                                <?= htmlspecialchars($c['firstname'] . ' ' . $c['lastname']) ?></h2>
+                                <?= htmlspecialchars(($applicant['firstname'] ?? 'N/A') . ' ' . ($applicant['lastname'] ?? '')) ?></h2>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-3 border-t border-slate-50 pt-4">
@@ -190,8 +198,11 @@
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Applicant ID / Age
                             </p>
                             <?php 
-                                $birthDate = new DateTime($applicant['birthdate']);
-                                $realAge = (new DateTime())->diff($birthDate)->y;
+                                $realAge = 0;
+                                if(!empty($applicant['birthdate'])) {
+                                    $birthDate = new DateTime($applicant['birthdate']);
+                                    $realAge = (new DateTime())->diff($birthDate)->y;
+                                }
                             ?>
                             <p class="text-sm font-semibold text-slate-600">
                                 #<?= htmlspecialchars($applicant['applicant_id'] ?? 'N/A') ?> — <?= $realAge ?> yrs old
@@ -281,6 +292,7 @@
                                 <th class="px-8 py-4">Next Due Date</th>
                                 <th class="px-8 py-4">Ledger Notes</th>
                                 <th class="px-8 py-4">Timing</th>
+                                <th class="px-8 py-4">Action</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50">
@@ -372,7 +384,7 @@
                     <div class="space-y-6 mb-10">
                         <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Transaction ID</span><span id="rcpt-id" class="text-slate-900"></span></div>
                         <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Date Paid</span><span id="rcpt-date" class="text-slate-900"></span></div>
-                        <div class="flex justify-between border-t border-slate-100 pt-6"><span>Member</span><span class="font-black"><?= htmlspecialchars($c['firstname'] . ' ' . $c['lastname']) ?></span></div>
+                        <div class="flex justify-between border-t border-slate-100 pt-6"><span>Member</span><span class="font-black"><?= htmlspecialchars(($applicant['firstname'] ?? '') . ' ' . ($applicant['lastname'] ?? '')) ?></span></div>
                         <div class="flex justify-between text-2xl border-y-4 border-double border-slate-100 py-6 my-6"><span class="font-black text-slate-300">TOTAL</span><span class="font-black text-blue-600" id="rcpt-amount"></span></div>
                         <div class="text-center bg-slate-50 py-4 rounded-2xl"><p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Next Due Date</p><p id="rcpt-next" class="text-lg font-black text-slate-900"></p></div>
                     </div>
@@ -383,15 +395,6 @@
                 </div>
             </div>
         </div>
-
-        <style>
-            @media print {
-                body * { visibility: hidden; }
-                #printable-receipt, #printable-receipt * { visibility: visible; }
-                #printable-receipt { position: fixed; left: 0; top: 0; width: 100%; padding: 40px; }
-                .no-print { display: none !important; }
-            }
-        </style>
     </main>
 </div>
 

@@ -708,7 +708,7 @@ class MemberApplicationModel
         }
     }
     // memberApplication model method
-    public function fetchAllApplicantsByIdV2($user_id)
+       public function fetchAllApplicantsByIdV2($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
 
@@ -744,6 +744,77 @@ class MemberApplicationModel
         } else {
             return "No applicant found with the provided ID.";
         }
+    }
+
+    private function fetchData1($table, $user_id, $plan_id = null)
+{
+    $user_id = mysqli_real_escape_string($this->conn, $user_id);
+
+    if ($table === "plans") {
+        // If a specific plan_id is provided, filter by it. 
+        // Otherwise, it will just grab the first one found.
+        $planFilter = "";
+        if ($plan_id) {
+            $plan_id = mysqli_real_escape_string($this->conn, $plan_id);
+            $planFilter = " AND p.plan_id = '$plan_id'";
+        }
+
+        $sql = "SELECT 
+                    p.*, 
+                    f.name AS plan_name, 
+                    f.face_value, 
+                    f.years_to_maturity, 
+                    f.years_of_protection, 
+                    f.type 
+                FROM plans p
+                INNER JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
+                WHERE p.user_id = '$user_id' $planFilter";
+    } else {
+        $sql = "SELECT * FROM $table WHERE user_id = '$user_id'";
+    }
+
+    $result = mysqli_query($this->conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        // If we are looking for the plan, we want the specific one.
+        return mysqli_fetch_assoc($result);
+    }
+    return null;
+}
+
+    public function fetchAllApplicantsByIdV3($user_id, $plan_id = null)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+        $sql = "SELECT * FROM applicants WHERE user_id = '$user_id'";
+        $result = mysqli_query($this->conn, $sql);
+
+        if (mysqli_num_rows($result) > 0) {
+            $applicantData = mysqli_fetch_assoc($result);
+
+            $contactInfo      = $this->fetchData1("contact_info", $user_id);
+            $employment       = $this->fetchData1("employment", $user_id);
+            $plans            = $this->fetchData1("plans", $user_id, $plan_id);
+            $beneficiaries    = $this->fetchData1("beneficiaries", $user_id);
+            $familyBackground = $this->fetchData1("family_background", $user_id);
+            $medicalHistory   = $this->fetchData1("medical_history", $user_id);
+            $familyHealth     = $this->fetchData1("family_health", $user_id);
+            $physician        = $this->fetchData1("physician", $user_id);
+            $transactions     = $this->fetchData1("transactions", $user_id);
+
+            return [
+                    'applicantData'    => $applicantData,
+                    'contactInfo'      => $contactInfo,
+                    'employment'       => $employment,
+                    'plans'            => $plans,
+                    'beneficiaries'    => $beneficiaries,
+                    'familyBackground' => $familyBackground,
+                    'medicalHistory'   => $medicalHistory,
+                    'familyHealth'     => $familyHealth,
+                    'physician'        => $physician,
+                    'transactions'     => $transactions,
+                ];
+        }
+        return "No applicant found.";
     }
 
     public function changedApplicationStatus($applicant_id, $status)
@@ -841,45 +912,20 @@ class MemberApplicationModel
         return null;
     }
 
-    // private function fetchData($table, $user_id)
-    // {
-    //     $sql    = "SELECT * FROM $table WHERE user_id = '$user_id'";
-    //     $result = mysqli_query($this->conn, $sql);
-    //     if (mysqli_num_rows($result) > 0) {
-    //         return mysqli_fetch_assoc($result);
-    //     }
-    //     return null;
-    // }
-
-
-
     private function fetchData($table, $user_id)
     {
-        $user_id = mysqli_real_escape_string($this->conn, $user_id);
-
-        if ($table === "plans") {
-            // We join 'plans' with 'fraternal_benefits' using the IDs found in your SQL
-            $sql = "SELECT 
-                        p.*, 
-                        f.name AS plan_name, 
-                        f.face_value, 
-                        f.years_to_maturity, 
-                        f.years_of_protection, 
-                        f.type 
-                    FROM plans p
-                    INNER JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
-                    WHERE p.user_id = '$user_id'";
-        } else {
-            $sql = "SELECT * FROM $table WHERE user_id = '$user_id'";
-        }
-
+        $sql    = "SELECT * FROM $table WHERE user_id = '$user_id'";
         $result = mysqli_query($this->conn, $sql);
-
-        if ($result && mysqli_num_rows($result) > 0) {
+        if (mysqli_num_rows($result) > 0) {
             return mysqli_fetch_assoc($result);
         }
         return null;
     }
+
+
+
+
+
     public function fetchAllApplicants()
     {
 

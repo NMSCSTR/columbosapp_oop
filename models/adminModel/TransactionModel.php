@@ -20,68 +20,73 @@ class TransactionModel
 
         return $transactions;
     }
-    
+
     public function calculatePremium($applicant_id)
     {
         $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
 
         // 1. Get birthdate and face value
-        $sql = "SELECT a.birthdate, f.face_value, p.fraternal_benefits_id 
-                FROM applicants a 
-                JOIN plans p ON a.user_id = p.user_id 
+        $sql = "SELECT a.birthdate, f.face_value, p.fraternal_benefits_id
+                FROM applicants a
+                JOIN plans p ON a.user_id = p.user_id
                 JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
                 WHERE a.applicant_id = '$applicant_id'";
-        
-        $res = mysqli_query($this->conn, $sql);
+
+        $res  = mysqli_query($this->conn, $sql);
         $data = mysqli_fetch_assoc($res);
 
-        if (!$data || empty($data['birthdate'])) return 0;
+        if (! $data || empty($data['birthdate'])) {
+            return 0;
+        }
 
         // Calculate Real Age
         $birthDate = new DateTime($data['birthdate']);
-        $age = (new DateTime())->diff($birthDate)->y;
+        $age       = (new DateTime())->diff($birthDate)->y;
 
-        $faceValue = (float)$data['face_value'];
+        $faceValue = (float) $data['face_value'];
         $benefitId = $data['fraternal_benefits_id'];
 
-        $catSql = "SELECT id FROM benefit_rate_categories 
+        $catSql = "SELECT id FROM benefit_rate_categories
                 WHERE ('$faceValue' >= min_face_value AND ('$faceValue' < max_face_value OR max_face_value IS NULL))
                 ORDER BY (plan_id = '$benefitId') DESC LIMIT 1";
-        
-        $catRes = mysqli_query($this->conn, $catSql);
+
+        $catRes   = mysqli_query($this->conn, $catSql);
         $category = mysqli_fetch_assoc($catRes);
 
-        if (!$category) return 0;
+        if (! $category) {
+            return 0;
+        }
 
         $catId = $category['id'];
 
         // 3. Get the rate for the age
-        $rateSql = "SELECT rate FROM benefit_rates 
-                    WHERE category_id = '$catId' 
+        $rateSql = "SELECT rate FROM benefit_rates
+                    WHERE category_id = '$catId'
                     AND '$age' BETWEEN min_age AND max_age";
-        
-        $rateRes = mysqli_query($this->conn, $rateSql);
+
+        $rateRes  = mysqli_query($this->conn, $rateSql);
         $rateData = mysqli_fetch_assoc($rateRes);
 
         if ($rateData) {
-            return ($faceValue / 1000) * (float)$rateData['rate'];
+            return ($faceValue / 1000) * (float) $rateData['rate'];
         }
 
         return 0;
     }
 
+    public function getApplicantStatus($next_due_date)
+    {
+        if (! $next_due_date) {
+            return 'Unknown';
+        }
 
-
-    public function getApplicantStatus($next_due_date) {
-        if (!$next_due_date) return 'Unknown';
-        
         $dueDate = new DateTime($next_due_date);
-        $today = new DateTime();
-        
+        $today   = new DateTime();
+
         if ($today <= $dueDate) {
             return 'Active';
         }
-        
+
         $interval = $today->diff($dueDate);
         $daysPast = $interval->days;
 
@@ -97,7 +102,7 @@ class TransactionModel
     {
         $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
 
-        $sql = "SELECT `plan_id`, `applicant_id`, `user_id`, `fraternal_benefits_id`, `council_id`, `payment_mode`, `contribution_amount`, `currency` FROM `plans` WHERE `applicant_id` = '$applicant_id'";
+        $sql    = "SELECT `plan_id`, `applicant_id`, `user_id`, `fraternal_benefits_id`, `council_id`, `payment_mode`, `contribution_amount`, `currency` FROM `plans` WHERE `applicant_id` = '$applicant_id'";
         $result = mysqli_query($this->conn, $sql);
 
         if ($result && $row = mysqli_fetch_assoc($result)) {
@@ -106,8 +111,22 @@ class TransactionModel
         return null;
     }
 
+    public function getPlansByUserId($user_id)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+        $sql     = "SELECT p.*, f.name as plan_name, f.face_value
+                FROM plans p
+                JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
+                WHERE p.user_id = '$user_id'";
+        $result = mysqli_query($this->conn, $sql);
+        $plans  = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $plans[] = $row;
+        }
+        return $plans;
+    }
 
-    public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_date, $amount_paid, $currency, $next_due_date, $payment_timing_status,$remarks)
+    public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_date, $amount_paid, $currency, $next_due_date, $payment_timing_status, $remarks)
     {
         $sql = "INSERT INTO transactions (applicant_id, user_id, plan_id, payment_date, amount_paid, currency, next_due_date, payment_timing_status,remarks)
             VALUES ('$applicant_id', '$user_id', '$plan_id', '$payment_date', '$amount_paid', '$currency', '$next_due_date', '$payment_timing_status','$remarks')";
@@ -116,16 +135,16 @@ class TransactionModel
 
     public function updateNotebookRemarks($transaction_id, $remarks)
     {
-        $sql = "UPDATE transactions SET remarks = ? WHERE transaction_id = ?";
+        $sql  = "UPDATE transactions SET remarks = ? WHERE transaction_id = ?";
         $stmt = mysqli_prepare($this->conn, $sql);
-        
+
         if ($stmt) {
             mysqli_stmt_bind_param($stmt, "si", $remarks, $transaction_id);
             $result = mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
             return $result;
         }
-        
+
         return false;
     }
 
@@ -238,11 +257,11 @@ class TransactionModel
         $id     = mysqli_real_escape_string($this->conn, $id);
         $sql    = "SELECT * FROM transactions WHERE user_id = '$id'";
         $result = mysqli_query($this->conn, $sql);
-        
-        if (!$result) {
+
+        if (! $result) {
             die("Query failed: " . mysqli_error($this->conn));
         }
-        
+
         $data = [];
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
@@ -251,9 +270,6 @@ class TransactionModel
         }
         return $data;
     }
-
-    
-
 
     public function sendNotifIfInsuranceNearToEnd()
     {
@@ -265,7 +281,7 @@ class TransactionModel
                 c.mobile_number,
                 t.next_due_date,
                 t.plan_id,
-                f.name as plan_name,    
+                f.name as plan_name,
                 f.years_of_protection,
                 DATEDIFF(t.next_due_date, CURDATE()) as days_remaining
             FROM applicants a
@@ -320,6 +336,56 @@ class TransactionModel
             'notifications_sent' => $notifications_sent,
             'message'            => "Sent $notifications_sent insurance expiration notifications",
         ];
+    }
+
+   public function fetchAllApplicantsWithPlans() {
+    // Join strictly on applicant_id to ensure plans stay with the correct person
+    $sql = "SELECT 
+                a.firstname, 
+                a.lastname, 
+                a.user_id, 
+                a.applicant_id,
+                p.plan_id, 
+                p.payment_mode, 
+                p.contribution_amount, 
+                f.name as plan_name 
+            FROM plans p
+            INNER JOIN applicants a ON p.applicant_id = a.applicant_id
+            INNER JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
+            ORDER BY a.lastname ASC";
+            
+    $result = mysqli_query($this->conn, $sql);
+    $data = [];
+    if ($result) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $data[] = $row;
+        }
+    }
+    return $data;
+}
+
+/**
+ * Fetches transactions filtered by BOTH user and specific plan
+ */
+    public function getPaymentTransactionsByApplicantAndPlan($user_id, $plan_id)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+        $plan_id = mysqli_real_escape_string($this->conn, $plan_id);
+
+        $sql = "SELECT t.*, u.firstname, u.lastname
+            FROM transactions t
+            JOIN users u ON t.user_id = u.id
+            WHERE t.user_id = '$user_id' AND t.plan_id = '$plan_id'
+            ORDER BY t.payment_date DESC";
+
+        $result       = mysqli_query($this->conn, $sql);
+        $transactions = [];
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $transactions[] = $row;
+            }
+        }
+        return $transactions;
     }
 
 // Additional method to get insurance status for a specific applicant
