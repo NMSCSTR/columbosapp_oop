@@ -7,282 +7,189 @@
     include '../../includes/alert2.php';
     include '../../models/adminModel/FormsModel.php';
     include '../../models/adminModel/TransactionModel.php';
+    
     $searchResults = $_SESSION['search_results'] ?? [];
     $transactions = [];
-
-    // var_dump($searchResults);
-    // exit;
     $user_id = $_SESSION['user_id'] ?? null;
-    // print_r($searchResults);
-    // exit;
+
     if ($user_id) {
         $transactionModel = new TransactionModel($conn);
         $transactions = $transactionModel->getPaymentTransactionsByApplicant($user_id);
-
     } else {
         echo "User ID not set in session.";
         exit;
     }
 
-
+    $c = $searchResults[0]['basicInfo'] ?? null;
+    $d = $searchResults[0]['fullDetails'] ?? null;
 ?>
 
-<?php $c = $searchResults[0]['basicInfo']; ?>
-<?php $d = $searchResults[0]['fullDetails']; ?>
-
-
-<!-- Main modal -->
-<div id="authentication-modal" tabindex="-1" aria-hidden="true"
-    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-            <!-- Modal header -->
-            <div
-                class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Make Payment
-                </h3>
-                <button type="button"
-                    class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                    data-modal-hide="authentication-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        <div class="relative bg-white rounded-xl shadow-lg dark:bg-gray-800">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-700">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Make Payment</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="authentication-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                     </svg>
-                    <span class="sr-only">Close modal</span>
                 </button>
             </div>
-            <!-- Modal body -->
             <div class="p-4 md:p-5">
                 <form class="space-y-4" action="../../controllers/adminController/transactionController.php" method="POST">
-                    <div>
-                        <!-- <label for="applicant_id "
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">APPLICANT ID</label> -->
-                        <input type="hidden" value="<?= $d['applicantData']['applicant_id']; ?>" name="applicant_id" id="applicant_id"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required />
-                    </div>
-                    <div>
-                        <!-- <label for="user_id " class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">USER
-                            ID</label> -->
-                        <input type="hidden" value="<?= $c['user_id']; ?>" name="user_id" id="user_id"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required />
-                    </div>
-                    <div>
-                        <!-- <label for="hidden " class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">PLAN
-                            ID</label> -->
-                        <input type="hidden" value="<?= $d['plans']['plan_id'] ?>" name="plan_id" id="plan_id"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required />
-                    </div>
+                    <input type="hidden" value="<?= $d['applicantData']['applicant_id'] ?? ''; ?>" name="applicant_id">
+                    <input type="hidden" value="<?= $c['user_id'] ?? ''; ?>" name="user_id">
+                    <input type="hidden" value="<?= $d['plans']['plan_id'] ?? '' ?>" name="plan_id">
                     
                     <div>
-                        <label for="payment_date "
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">PAYMENT DATE</label>
-                        <input type="date" name="payment_date" id="payment_date"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required />
+                        <label class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">PAYMENT DATE</label>
+                        <input type="date" name="payment_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">AMOUNT</label>
+                            <input type="number" name="amount_paid" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">CURRENCY</label>
+                            <input type="text" value="<?= $d['plans']['currency'] ?? 'PHP' ?>" name="currency" class="bg-gray-100 border border-gray-300 text-gray-500 text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" readonly />
+                        </div>
                     </div>
                     <div>
-                        <label for=" "
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">AMOUNT</label>
-                        <input type="number" name="amount_paid" id="amount_paid"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required />
-                    </div>
-                    <div>
-                        <label for="currency"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">CURRENCY</label>
-                        <input type="text" value="<?= $d['plans']['currency'] ?>"  name="currency" id="currency"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required />
-                    </div>
-                    <div>
-                        <label for="payment_timing_status"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">PAYMENT TIMING STATUS</label>
-                        <select id="payment_timing_status" name="payment_timing_status"
-                            class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                            <option selected disabled>Choose an option</option>
+                        <label class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">TIMING STATUS</label>
+                        <select name="payment_timing_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
                             <option value="On-Time">On-Time</option>
                             <option value="Late">Late</option>
                         </select>
                     </div>
 
-
-                    <button type="submit" name="submit_transaction"
-                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">PAY</button>
+                    <button type="submit" name="submit_transaction" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-3 transition-all">
+                        CONFIRM PAYMENT
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-
-<div class="flex flex-col md:flex-row min-h-screen">
+<div class="flex flex-col md:flex-row min-h-screen bg-gray-50">
     <?php include '../../partials/sidebar.php' ?>
 
-    <!-- Main Content -->
-    <main class="flex-1">
-        <div class="p-4 sm:ml-64">
-
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                    <li class="inline-flex items-center">
-                        <a href="#"
-                            class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                            <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
-                            </svg>
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m1 9 4-4-4-4" />
-                            </svg>
-                            <a href="#"
-                                class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Admin</a>
-                        </div>
-                    </li>
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m1 9 4-4-4-4" />
-                            </svg>
-                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">View
-                                Applicant</span>
-                        </div>
-                    </li>
+    <main class="flex-1 transition-all duration-300 sm:ml-64">
+        <div class="p-6">
+            <nav class="flex mb-6" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-2">
+                    <li class="inline-flex items-center text-sm text-gray-500">Home</li>
+                    <li><div class="flex items-center"><span class="mx-2 text-gray-400">/</span><span class="text-sm text-gray-500">Admin</span></div></li>
+                    <li><div class="flex items-center"><span class="mx-2 text-gray-400">/</span><span class="text-sm font-bold text-gray-900">Applicant Details</span></div></li>
                 </ol>
             </nav>
 
-            <div class="p-4 rounded-lg dark:border-gray-700">
-                <section class="bg-gray-50 p-5 rounded shadow">
-
-                    <table id="myTable" class="min-w-full divide-y divide-gray-200 shadow-sm rounded-lg overflow-hidden">
-                        <thead class="bg-white text-gray-500">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">First Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Last Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Gender</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Birthdate</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Application Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Contribution Amount</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Payment Mode</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Created At</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($searchResults as $result): ?>
-                                <?php $a = $result['fullDetails']['applicantData']; ?>
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= htmlspecialchars($a['firstname']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['lastname']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['gender']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['birthdate']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['status']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['contribution_amount']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['payment_mode']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($a['application_status']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <?= $a['created_at'] != '0000-00-00 00:00:00' ? date("F j, Y", strtotime($a['created_at'])) : 'N/A' ?>
+            <div class="space-y-8">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="p-4 border-b border-gray-100 bg-gray-50/50">
+                        <h2 class="text-lg font-bold text-gray-800">Applicant Information</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-4">Name</th>
+                                    <th class="px-6 py-4">Gender</th>
+                                    <th class="px-6 py-4">Birthdate</th>
+                                    <th class="px-6 py-4">Status</th>
+                                    <th class="px-6 py-4">Contribution</th>
+                                    <th class="px-6 py-4">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <?php foreach ($searchResults as $result): 
+                                    $a = $result['fullDetails']['applicantData']; ?>
+                                <tr class="hover:bg-gray-50/80 transition-colors">
+                                    <td class="px-6 py-4 font-semibold text-gray-900"><?= htmlspecialchars($a['firstname'] . ' ' . $a['lastname']) ?></td>
+                                    <td class="px-6 py-4 text-gray-600"><?= htmlspecialchars($a['gender']) ?></td>
+                                    <td class="px-6 py-4 text-gray-600"><?= htmlspecialchars($a['birthdate']) ?></td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"><?= htmlspecialchars($a['application_status']) ?></span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
-                                        <a data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" href="#" class="text-blue-600 hover:text-blue-800">
-                                            <i class="fas fa-money-bill-wave"></i> PAY
-                                        </a>
-                                        <!-- <span class="text-gray-400">|</span>
-                                        <button @click="open = true" class="text-green-600 hover:text-green-800">
-                                            <i class="fas fa-eye"></i> VIEW
-                                        </button> -->
+                                    <td class="px-6 py-4 font-mono text-gray-900">
+                                        ₱<?= number_format($result['fullDetails']['plans']['contribution_amount'] ?? 0, 2) ?>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="flex items-center text-blue-600 hover:text-blue-800 font-bold transition-colors">
+                                            <i class="fas fa-credit-card mr-2"></i> PAY
+                                        </button>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                    <div class="container mx-auto px-4 py-8 max-w-7xl" x-data="orders">
-                        <!-- Page Header -->
-                        <div class="mb-8">
-                            <h1 class="text-3xl font-bold text-gray-900">Payment Transaction History</h1>
-                            <p class="text-gray-600 mt-2">View recent transaction</p>
-                        </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100">
+                        <h2 class="text-2xl font-bold text-gray-900">Payment Transaction History</h2>
+                        <p class="text-sm text-gray-500">Detailed logs of all processed payments</p>
+                    </div>
 
-                        <?php if (!empty($transactions)): ?>
-                        <div class="space-y-6">
-                            <?php foreach ($transactions as $txn): ?>
-                            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                                <div class="p-6">
-                                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
-                                        <div class="mb-4 md:mb-0">
-                                            <div class="flex items-center space-x-4">
-                                                <span class="text-sm font-medium text-gray-900">Transaction
-                                                    #<?= $txn['transaction_id'] ?></span>
-                                                <span
-                                                    class="px-3 py-1 rounded-full text-xs font-medium 
-                                    <?= $txn['status'] === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>">
-                                                    <?= htmlspecialchars($txn['status']) ?>
-                                                </span>
-                                            </div>
-                                            <p class="text-sm text-gray-500 mt-1">Payment Date:
-                                                <?= date("F j, Y", strtotime($txn['payment_date'])) ?></p>
+                    <?php if (!empty($transactions)): ?>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th class="px-6 py-4">ID</th>
+                                    <th class="px-6 py-4">Date</th>
+                                    <th class="px-6 py-4">Amount</th>
+                                    <th class="px-6 py-4">Breakdown (Ins/Adm/Sav)</th>
+                                    <th class="px-6 py-4">Timing</th>
+                                    <th class="px-6 py-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <?php foreach ($transactions as $txn): ?>
+                                <tr class="hover:bg-gray-50/80 transition-colors">
+                                    <td class="px-6 py-4 font-medium text-gray-900">#<?= $txn['transaction_id'] ?></td>
+                                    <td class="px-6 py-4 text-gray-600">
+                                        <div class="text-sm"><?= date("M d, Y", strtotime($txn['payment_date'])) ?></div>
+                                        <div class="text-xs text-gray-400">Due: <?= $txn['next_due_date'] ? date("M d, Y", strtotime($txn['next_due_date'])) : 'N/A' ?></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-base font-bold text-gray-900">₱<?= number_format($txn['amount_paid'], 2) ?></span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded" title="Insurance">₱<?= number_format($txn['amount_paid'] * 0.10, 2) ?></span>
+                                            <span class="text-xs bg-green-50 text-green-700 px-2 py-1 rounded" title="Admin">₱<?= number_format($txn['amount_paid'] * 0.05, 2) ?></span>
+                                            <span class="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded" title="Savings">₱<?= number_format($txn['amount_paid'] * 0.85, 2) ?></span>
                                         </div>
-                                        <div class="text-right">
-                                            <p class="text-lg font-semibold text-gray-900">
-                                                ₱<?= number_format($txn['amount_paid'], 2) ?></p>
-                                            <p class="text-sm text-gray-500">Currency:
-                                                <?= htmlspecialchars($txn['currency']) ?></p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 rounded text-xs font-bold <?= $txn['payment_timing_status'] === 'On-Time' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700' ?>">
+                                            <?= strtoupper($txn['payment_timing_status']) ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="h-2.5 w-2.5 rounded-full <?= $txn['status'] === 'Paid' ? 'bg-green-500' : 'bg-red-500' ?> me-2"></div>
+                                            <span class="font-medium"><?= htmlspecialchars($txn['status']) ?></span>
                                         </div>
-                                    </div>
-                                    <!-- Add allocation details -->
-                                    <div class="mt-4 grid grid-cols-3 gap-4">
-                                        <div class="bg-blue-50 rounded-lg p-3">
-                                            <p class="text-xs text-blue-600 font-medium">Insurance Cost (10%)</p>
-                                            <p class="text-sm font-semibold text-blue-900">₱<?= number_format($txn['amount_paid'] * 0.10, 2) ?></p>
-                                        </div>
-                                        <div class="bg-green-50 rounded-lg p-3">
-                                            <p class="text-xs text-green-600 font-medium">Admin Fee (5%)</p>
-                                            <p class="text-sm font-semibold text-green-900">₱<?= number_format($txn['amount_paid'] * 0.05, 2) ?></p>
-                                        </div>
-                                        <div class="bg-purple-50 rounded-lg p-3">
-                                            <p class="text-xs text-purple-600 font-medium">Savings Fund (85%)</p>
-                                            <p class="text-sm font-semibold text-purple-900">₱<?= number_format($txn['amount_paid'] * 0.85, 2) ?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="border-t px-6 py-4 bg-gray-50 text-sm text-gray-700">
-                                    Next Due:
-                                    <?= $txn['next_due_date'] ? date("F j, Y", strtotime($txn['next_due_date'])) : 'N/A' ?>
-                                    |
-                                    Payment Status: <span
-                                        class="font-semibold <?= $txn['payment_timing_status'] === 'On-Time' ? 'text-green-100 text-green-800' : 'text-red-100 text-red-800' ?>"><?= $txn['payment_timing_status'] ?></span>
-                                </div>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <?php else: ?>
-                        <p class="text-gray-500 text-sm">No payment transactions found.</p>
-                        <?php endif; ?>
-
-                </section>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php else: ?>
+                    <div class="p-12 text-center">
+                        <i class="fas fa-receipt text-gray-200 text-5xl mb-4"></i>
+                        <p class="text-gray-500">No payment transactions found for this applicant.</p>
+                    </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </main>
+</div>
 
-
-    <?php
-include '../../includes/footer.php';
-?>
-
+<?php include '../../includes/footer.php'; ?>
