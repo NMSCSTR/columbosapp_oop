@@ -20,6 +20,55 @@ class TransactionModel
 
         return $transactions;
     }
+    
+    public function calculatePremium($applicant_id)
+    {
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+
+        // 1. Get birthdate and face value
+        $sql = "SELECT a.birthdate, f.face_value, p.fraternal_benefits_id 
+                FROM applicants a 
+                JOIN plans p ON a.user_id = p.user_id 
+                JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
+                WHERE a.applicant_id = '$applicant_id'";
+        
+        $res = mysqli_query($this->conn, $sql);
+        $data = mysqli_fetch_assoc($res);
+
+        if (!$data || empty($data['birthdate'])) return 0;
+
+        // Calculate Real Age
+        $birthDate = new DateTime($data['birthdate']);
+        $age = (new DateTime())->diff($birthDate)->y;
+
+        $faceValue = (float)$data['face_value'];
+        $benefitId = $data['fraternal_benefits_id'];
+
+        $catSql = "SELECT id FROM benefit_rate_categories 
+                WHERE ('$faceValue' >= min_face_value AND ('$faceValue' < max_face_value OR max_face_value IS NULL))
+                ORDER BY (plan_id = '$benefitId') DESC LIMIT 1";
+        
+        $catRes = mysqli_query($this->conn, $catSql);
+        $category = mysqli_fetch_assoc($catRes);
+
+        if (!$category) return 0;
+
+        $catId = $category['id'];
+
+        // 3. Get the rate for the age
+        $rateSql = "SELECT rate FROM benefit_rates 
+                    WHERE category_id = '$catId' 
+                    AND '$age' BETWEEN min_age AND max_age";
+        
+        $rateRes = mysqli_query($this->conn, $rateSql);
+        $rateData = mysqli_fetch_assoc($rateRes);
+
+        if ($rateData) {
+            return ($faceValue / 1000) * (float)$rateData['rate'];
+        }
+
+        return 0;
+    }
 
     public function getPlanDetailsByApplicantId($applicant_id)
     {

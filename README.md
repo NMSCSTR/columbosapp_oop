@@ -248,3 +248,7 @@ FV ≈ ₱75,492.24
 
 
 
+Applicant Age: Calculated from 1999 to 2026 = 27 years old.
+Category Match: Since the Face Value is 100,000, it matched the category "100k & up" (Category ID 4).
+Rate Found: In your benefit_rates table, the rate for Category 4 at age 27 is 3.65.
+Final Math: $(100,000 / 1,000) \times 3.65 = 365
