@@ -22,7 +22,7 @@
     $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
     $fraternals             = $fraternalBenefitsModel->getAllFraternalBenefits();
     $councils               = $councilModel->getAllCouncil();
-    $applicantData             = $applicationModel->fetchAllApplicantById($user_id);
+    $applicantData          = $applicationModel->fetchAllApplicantById($user_id);
 ?>
 
 <!-- Add CSS for animations and transitions -->
