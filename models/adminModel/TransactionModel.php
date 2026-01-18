@@ -70,6 +70,29 @@ class TransactionModel
         return 0;
     }
 
+
+
+    public function getApplicantStatus($next_due_date) {
+        if (!$next_due_date) return 'Unknown';
+        
+        $dueDate = new DateTime($next_due_date);
+        $today = new DateTime();
+        
+        if ($today <= $dueDate) {
+            return 'Active';
+        }
+        
+        $interval = $today->diff($dueDate);
+        $daysPast = $interval->days;
+
+        // Logic: 1-31 days past is Grace Period, 32+ is Late/Lapsed
+        if ($daysPast <= 31) {
+            return 'Grace Period';
+        } else {
+            return 'Late / Lapsed';
+        }
+    }
+
     public function getPlanDetailsByApplicantId($applicant_id)
     {
         $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
