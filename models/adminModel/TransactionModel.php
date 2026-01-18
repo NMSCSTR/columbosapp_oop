@@ -35,11 +35,26 @@ class TransactionModel
     }
 
 
-    public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_date, $amount_paid, $currency, $next_due_date, $payment_timing_status)
+    public function insertTransactions($applicant_id, $user_id, $plan_id, $payment_date, $amount_paid, $currency, $next_due_date, $payment_timing_status,$remarks)
     {
-        $sql = "INSERT INTO transactions (applicant_id, user_id, plan_id, payment_date, amount_paid, currency, next_due_date, payment_timing_status)
-            VALUES ('$applicant_id', '$user_id', '$plan_id', '$payment_date', '$amount_paid', '$currency', '$next_due_date', '$payment_timing_status')";
+        $sql = "INSERT INTO transactions (applicant_id, user_id, plan_id, payment_date, amount_paid, currency, next_due_date, payment_timing_status,remarks)
+            VALUES ('$applicant_id', '$user_id', '$plan_id', '$payment_date', '$amount_paid', '$currency', '$next_due_date', '$payment_timing_status','$remarks')";
         return mysqli_query($this->conn, $sql);
+    }
+
+    public function updateNotebookRemarks($transaction_id, $remarks)
+    {
+        $sql = "UPDATE transactions SET remarks = ? WHERE transaction_id = ?";
+        $stmt = mysqli_prepare($this->conn, $sql);
+        
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "si", $remarks, $transaction_id);
+            $result = mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+            return $result;
+        }
+        
+        return false;
     }
 
     public function nextDueDateNotificationReminder()

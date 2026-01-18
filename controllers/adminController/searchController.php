@@ -1,3 +1,4 @@
+<!-- searchController.php -->
 <?php
 session_start();
 unset($_SESSION['search_results']);

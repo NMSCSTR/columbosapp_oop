@@ -1,3 +1,4 @@
+<!-- transactionController.php -->
 <?php
 session_start();
 include '../../includes/db.php';
@@ -7,6 +8,22 @@ include '../../models/userModel.php';
 
 $transactionModel = new TransactionModel($conn);
 
+if (isset($_POST['update_notebook'])) {
+    $transaction_id = $_POST['transaction_id'];
+    $remarks = $_POST['remarks'];
+
+    $updated = $transactionModel->updateNotebookRemarks($transaction_id, $remarks);
+
+    if ($updated) {
+        $_SESSION['success'] = 'Notebook entry updated successfully.';
+    } else {
+        $_SESSION['error'] = 'Failed to update notebook entry.';
+    }
+
+    header('Location: ' . BASE_URL . 'views/admin/view_applicants.php');
+    exit();
+}
+
 if (isset($_POST['submit_transaction'])) {
     $applicant_id = $_POST['applicant_id'];
     $user_id = $_POST['user_id'];
@@ -15,6 +32,7 @@ if (isset($_POST['submit_transaction'])) {
     $amount_paid = $_POST['amount_paid'];
     $currency = $_POST['currency'];
     $payment_timing_status = $_POST['payment_timing_status'];
+    $remarks = $_POST['remarks'];
 
     // Get plan details
     $planDetails = $transactionModel->getPlanDetailsByApplicantId($applicant_id);
@@ -57,7 +75,8 @@ if (isset($_POST['submit_transaction'])) {
         $amount_paid,
         $currency,
         $next_due_date,
-        $payment_timing_status
+        $payment_timing_status,
+        $remarks
     );
 
     if ($inserted) {

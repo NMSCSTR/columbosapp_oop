@@ -707,7 +707,7 @@ class MemberApplicationModel
             return "Error fetching applicant: " . mysqli_error($this->conn);
         }
     }
-
+    // memberApplication model method
     public function fetchAllApplicantsByIdV2($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
@@ -841,16 +841,45 @@ class MemberApplicationModel
         return null;
     }
 
+    // private function fetchData($table, $user_id)
+    // {
+    //     $sql    = "SELECT * FROM $table WHERE user_id = '$user_id'";
+    //     $result = mysqli_query($this->conn, $sql);
+    //     if (mysqli_num_rows($result) > 0) {
+    //         return mysqli_fetch_assoc($result);
+    //     }
+    //     return null;
+    // }
+
+
+
     private function fetchData($table, $user_id)
     {
-        $sql    = "SELECT * FROM $table WHERE user_id = '$user_id'";
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+
+        if ($table === "plans") {
+            // We join 'plans' with 'fraternal_benefits' using the IDs found in your SQL
+            $sql = "SELECT 
+                        p.*, 
+                        f.name AS plan_name, 
+                        f.face_value, 
+                        f.years_to_maturity, 
+                        f.years_of_protection, 
+                        f.type 
+                    FROM plans p
+                    INNER JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
+                    WHERE p.user_id = '$user_id'";
+        } else {
+            $sql = "SELECT * FROM $table WHERE user_id = '$user_id'";
+        }
+
         $result = mysqli_query($this->conn, $sql);
-        if (mysqli_num_rows($result) > 0) {
+
+        if ($result && mysqli_num_rows($result) > 0) {
             return mysqli_fetch_assoc($result);
         }
         return null;
     }
-
     public function fetchAllApplicants()
     {
 

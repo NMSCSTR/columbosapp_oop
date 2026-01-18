@@ -13,780 +13,507 @@
 ?>
 
 <link rel="stylesheet" href="stylesheet/member.css">
+<style>
+    /* Smooth Transitions for Steps */
+    .step-content { display: none; transition: all 0.3s ease-in-out; }
+    .step-content.active { display: block; animation: slideIn 0.4s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* Custom Scrollbar for Main Content */
+    .main-container::-webkit-scrollbar { width: 6px; }
+    .main-container::-webkit-scrollbar-track { background: #f1f1f1; }
+    .main-container::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 10px; }
+
+    /* Input Focus Styles */
+    .form-input { @apply border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all duration-200 bg-white; }
+    .form-label { @apply text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1 block; }
+</style>
+
 <?php include '../../partials/memberSideBar.php'?>
 
-<!-- Main Content -->
-<main
-    class="flex-1 p-6 md:p-8 overflow-y-auto w-full min-w-0 main-container bg-gradient-to-br from-gray-50 to-gray-100">
-    <div class="content-wrapper w-full">
+<main class="flex-1 p-4 md:p-10 overflow-y-auto w-full min-w-0 bg-slate-50 main-container">
+    <div class="max-w-12xl mx-auto">
+        
+        <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h3 class="text-4xl font-extrabold text-slate-800 tracking-tight">Application Form</h3>
+                <p class="text-slate-500 mt-1">Fill out the details below to proceed with your membership application.</p>
+            </div>
+            <div class="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100">
+                <span class="text-xs font-bold text-slate-400 uppercase block">Applicant Name</span>
+                <span class="text-lg font-bold text-cyan-600"><?php echo $_SESSION['firstname'] . ' ' . $_SESSION['lastname'] ?></span>
+            </div>
+        </div>
 
-        <h3 class="text-3xl text-center font-extrabold dark:text-white mb-8">Application form for
-            <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['lastname'] ?></h3>
-
-        <div class="p-4 rounded-lg dark:border-gray-700">
-            <!-- Responsive grid layout -->
-            <div class="max-w-12xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
-                <!-- Stepper Header -->
-                <div class="grid grid-cols-11 border-b border-cyan-200 text-center text-xs font-semibold text-cyan-700">
+        <div class="bg-white rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+            <div class="bg-slate-50/50 border-b border-slate-100 px-4">
+                <div class="grid grid-cols-4 md:grid-cols-11 gap-2 py-8">
                     <template id="step-header-template">
-                        <div class="p-2 border-r last:border-r-0 relative">
-                            <div class="flex justify-center mb-2">
-                                <div
-                                    class="step-circle w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm text-white">
-                                </div>
+                        <div class="flex flex-col items-center relative group">
+                            <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 ring-4 ring-white shadow-sm z-10">
                             </div>
-                            <h3 class="step-label"></h3>
+                            <span class="step-label hidden md:block mt-2 text-[10px] font-bold uppercase tracking-tighter text-slate-400"></span>
                         </div>
                     </template>
                 </div>
+            </div>
 
-                <!-- Form -->
-                <form id="multiStepForm" method="POST"
-                    action="<?php echo BASE_URL ?>controllers/memberController/addMemberApplicant.php"
-                    enctype="multipart/form-data" class="p-6 space-y-6">
-                    <!-- Step Content Containers -->
-                    <div id="stepContents">
-                        <!-- Step 1 -->
-                        <div class="step-content active">
-                            <h2 class="text-lg font-bold mb-4">Step 1: Personal Info</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id'] ?>">
-                                <input type="text" placeholder="First Name"
-                                    value="<?php echo htmlspecialchars($user['firstname']); ?>" name="firstname"
-                                    class="border rounded p-2" readonly>
-                                <input type="text" placeholder="Last Name"
-                                    value="<?php echo htmlspecialchars($user['lastname']); ?>" name="lastname"
-                                    class="border rounded p-2" readonly>
-                                <input type="text" placeholder="Middle Name" name="middlename"
-                                    class="border rounded p-2" required>
-                                <input type="date" placeholder="Birthdate" placeholder="dd/mm/yyyy" id="birthdate"
-                                    name="birthdate" class="border rounded p-2" required>
-                                <input type="number" placeholder="Age" id="age" name="age" class="border rounded p-2"
-                                    readonly>
-                                <input type="text" placeholder="Birthplace" name="birthplace" class="border rounded p-2"
-                                    required>
-                                <select class="border rounded p-2" name="gender">
-                                    <option>Gender</option>
+            <form id="multiStepForm" method="POST" action="<?php echo BASE_URL ?>controllers/memberController/addMemberApplicant.php" enctype="multipart/form-data" class="p-6 md:p-10">
+                
+                <div id="stepContents">
+                    <div class="step-content active">
+                        <div class="flex items-center mb-8 space-x-3">
+                            <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-slate-800">Personal Information</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id'] ?>">
+                            <div>
+                                <label class="form-label">First Name</label>
+                                <input type="text" value="<?php echo htmlspecialchars($user['firstname']); ?>" name="firstname" class="w-full border-slate-200 rounded-xl p-3 bg-slate-50 text-slate-500 cursor-not-allowed" readonly>
+                            </div>
+                            <div>
+                                <label class="form-label">Last Name</label>
+                                <input type="text" value="<?php echo htmlspecialchars($user['lastname']); ?>" name="lastname" class="w-full border-slate-200 rounded-xl p-3 bg-slate-50 text-slate-500 cursor-not-allowed" readonly>
+                            </div>
+                            <div>
+                                <label class="form-label">Middle Name</label>
+                                <input type="text" placeholder="Enter Middle Name" name="middlename" class="w-full border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 outline-none border" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Birthdate</label>
+                                <input type="date" id="birthdate" name="birthdate" class="w-full border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 outline-none border" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Age</label>
+                                <input type="number" id="age" name="age" class="w-full border-slate-200 rounded-xl p-3 bg-slate-50 text-slate-500" readonly>
+                            </div>
+                            <div>
+                                <label class="form-label">Birthplace</label>
+                                <input type="text" placeholder="Place of Birth" name="birthplace" class="w-full border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 outline-none border" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Gender</label>
+                                <select class="w-full border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 outline-none border" name="gender">
+                                    <option>Select Gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
-                                <select class="border rounded p-2" name="fraternal_counselor_id" required>
-                                    <option selected disabled>Select Fraternal Counselor</option>
-                                    <?php
-                                            if ($fraternalCounselor) {
-                                            foreach ($fraternalCounselor as $fc) {?>
-                                    <option value="<?php echo htmlspecialchars($fc['id']); ?>">
-                                        <?php echo htmlspecialchars($fc['firstname'] . ' ' . $fc['lastname']); ?>
-                                    </option>
-                                    <?php }
-                                            }
-                                        ?>
+                            </div>
+                            <div>
+                                <label class="form-label">Fraternal Counselor</label>
+                                <select class="w-full border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 outline-none border" name="fraternal_counselor_id" required>
+                                    <option selected disabled>Select Counselor</option>
+                                    <?php if ($fraternalCounselor) { foreach ($fraternalCounselor as $fc) {?>
+                                        <option value="<?php echo htmlspecialchars($fc['id']); ?>"><?php echo htmlspecialchars($fc['firstname'] . ' ' . $fc['lastname']); ?></option>
+                                    <?php }} ?>
                                 </select>
-
-                                <select class="border rounded p-2" name="marital_status">
-                                    <option disabled>Marital Status</option>
+                            </div>
+                            <div>
+                                <label class="form-label">Marital Status</label>
+                                <select class="w-full border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 outline-none border" name="marital_status">
+                                    <option disabled>Select Status</option>
                                     <option value="Single">Single</option>
                                     <option value="Married">Married</option>
                                 </select>
-                                <input type="text" placeholder="TIN/SSS" name="tin_sss" class="border rounded p-2"
-                                    required>
-                                <input type="text" placeholder="Nationality" class="border rounded p-2"
-                                    name="nationality" required>
                             </div>
-                        </div>
-
-                        <!-- Step 2 -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 2: Contact Details</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input type="text" placeholder="Street" name="street" class="border rounded p-2">
-                                <input type="text" placeholder="Barangay" name="barangay" class="border rounded p-2"
-                                    required>
-                                <input type="text" placeholder="City/Province" name="city_province"
-                                    class="border rounded p-2" required>
-                                <input type="text" placeholder="Mobile Number" name="mobile_number"
-                                    class="border rounded p-2" required>
-                                <input type="email" placeholder="Email Address" name="email_address"
-                                    class="border rounded p-2" required>
+                            <div>
+                                <label class="form-label">TIN/SSS</label>
+                                <input type="text" placeholder="Number" name="tin_sss" class="w-full border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 outline-none border" required>
                             </div>
-                        </div>
-
-                        <!-- Step 3 -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 3: Employment Details</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input type="text" placeholder="Occupation" name="occupation"
-                                    class="border rounded p-2">
-                                <select class="border rounded p-2" name="employment_status">
-                                    <option selected>Employment Status</option>
-                                    <option value="employed">Employed</option>
-                                    <option value="self_employed">Self Employed</option>
-                                </select>
-                                <input type="text" placeholder="Specific duties (e.g.Develops software applications.)"
-                                    name="duties" class="border rounded p-2">
-                                <input type="text" placeholder="Employer (e.g. TechCorp Inc.)" name="employer"
-                                    class="border rounded p-2">
-                                <input type="text" placeholder="Work (e.g. IT Department.)" name="work"
-                                    class="border rounded p-2">
-                                <input type="text" placeholder="Nature of business (e.g.Information Technology)"
-                                    name="nature_business" class="border rounded p-2">
-                                <input type="text" placeholder="Employer Email Address" name="employer_email_address"
-                                    class="border rounded p-2">
-                                <input type="text" placeholder="Employer Mobile Number" name="employer_mobile_number"
-                                    class="border rounded p-2">
-                                <input type="number" placeholder="Monthly Income" name="monthly_income"
-                                    class="border rounded p-2">
+                            <div>
+                                <label class="form-label">Nationality</label>
+                                <input type="text" placeholder="Nationality" class="w-full border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 outline-none border" name="nationality" required>
                             </div>
-                        </div>
-
-                        <!-- Step 4 -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 4: Plan Information</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <select class="border rounded p-2" name="fraternal_benefits_id">
-                                    <option>Select Plan</option>
-                                    <?php
-                                            $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
-                                            $fraternalBenefits      = $fraternalBenefitsModel->getAllFraternalBenefits();
-
-                                            if ($fraternalBenefits) {
-                                            foreach ($fraternalBenefits as $benefit) {?>
-                                    <option value="<?php echo $benefit['id'] ?>"><?php echo $benefit['name'] ?>
-                                    </option>
-                                    <?php
-                                            }
-                                            }
-                                        ?>
-                                </select>
-                                <select class="border rounded p-2" name="payment_mode">
-                                    <option selected disabled>Mode of payment</option>
-                                    <option value="monthly">Monthly</option>
-                                    <option value="semi-annually">Semi-Annually</option>
-                                    <option value="quarterly">Quarterly</option>
-                                </select>
-                                <select class="border rounded p-2" name="currency">
-                                    <option selected disabled>Currency</option>
-                                    <option name="PHP">PHP</option>
-                                </select>
-                                <select class="border rounded p-2" name="council_id">
-                                    <option selected disabled>Select Council</option>
-                                    <?php $councilModel = new CouncilModel($conn);
-                                            $councils                                                   = $councilModel->getAllCouncil();
-                                            if ($councils) {
-                                            foreach ($councils as $council) {?>
-                                    <option value="<?php echo $council['council_id'] ?>">
-                                        <?php echo $council['council_name'] ?>
-                                    </option>
-                                    <?php
-                                            }
-                                            }
-                                        ?>
-                                </select>
-                                <input type="number" placeholder="Payment Amount" name="contribution_amount"
-                                    class="border rounded p-2" required>
-                            </div>
-                        </div>
-
-                        <!-- Step 5. -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 5: Beneficiaries</h2>
-
-                            <!-- Beneficiaries Container -->
-                            <div id="beneficiaries-container" class="space-y-6">
-                                <!-- First Beneficiary Group -->
-                                <div class="beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded">
-                                    <!-- <input type="text" name="benefit_type[]" placeholder="Type of Benefit"
-                                            class="border rounded p-2 w-full" required> -->
-                                    <select class="border rounded p-2" name="benefit_type[]">
-                                        <option selected disabled>Type of Benefit</option>
-                                        <option value="Revocable">Revocable</option>
-                                        <option value="Irrevocable">Irrevocable</option>
-                                    </select>
-                                    <input type="text" name="benefit_name[]" placeholder="Beneficiary Name"
-                                        class="border rounded p-2 w-full" required>
-                                    <input type="date" name="benefit_birthdate[]" placeholder="Birthdate"
-                                        class="border rounded p-2 w-full" required>
-                                    <input type="text" name="benefit_relationship[]" placeholder="Relationship"
-                                        class="border rounded p-2 w-full" required>
-                                    <!-- <input type="number" name="benefit_percentage[]" placeholder="Percentage (%)"
-                                            class="border rounded p-2 w-full" required> -->
-                                </div>
-                            </div>
-
-                            <!-- Add Beneficiary Button -->
-                            <button type="button" onclick="addBeneficiary()"
-                                class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
-                                + Add Another Beneficiary
-                            </button>
-                        </div>
-
-                        <!-- Step 6: Family Background -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 6: Family Background</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Father Information -->
-                                <input type="text" name="father_lastname" placeholder="Father's Last Name"
-                                    class="border rounded p-2" required>
-                                <input type="text" name="father_firstname" placeholder="Father's First Name"
-                                    class="border rounded p-2" required>
-                                <input type="text" name="father_mi" placeholder="Father's Middle Initial"
-                                    class="border rounded p-2" required>
-
-                                <!-- Mother Information -->
-                                <input type="text" name="mother_lastname" placeholder="Mother's Last Name"
-                                    class="border rounded p-2" required>
-                                <input type="text" name="mother_firstname" placeholder="Mother's First Name"
-                                    class="border rounded p-2" required>
-                                <input type="text" name="mother_mi" placeholder="Mother's Middle Initial"
-                                    class="border rounded p-2" required>
-
-                                <!-- Siblings Information -->
-                                <input type="number" name="siblings_living" placeholder="Number of Living Siblings"
-                                    class="border rounded p-2" required>
-                                <input type="number" name="siblings_deceased" placeholder="Number of Deceased Siblings"
-                                    class="border rounded p-2" required>
-
-                                <!-- Children Information -->
-                                <input type="number" name="children_living" placeholder="Number of Living Children"
-                                    class="border rounded p-2" required>
-                                <input type="number" name="children_deceased" placeholder="Number of Deceased Children"
-                                    class="border rounded p-2" required>
-                            </div>
-                        </div>
-
-
-                        <!-- Step 7 -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 7: A. Medical History</h2>
-                            <div class="grid grid-cols-2 gap-4">
-                                <textarea placeholder="Past Illnesses or Hospitalizations" name="past_illness"
-                                    class="border rounded p-2" required></textarea>
-                                <textarea placeholder="Current Medications" name="current_medication"
-                                    class="border rounded p-2" required></textarea>
-                            </div>
-                            <h2 class="text-lg font-bold mb-4 mt-4">B. Family Health History</h2>
-                            <div class="grid grid-cols-2 gap-4">
-
-                                <!-- Father Living -->
-                                <input type="number" name="father_living_age" placeholder="Father's Living Age"
-                                    class="border rounded p-2" required>
-                                <input type="text" name="father_health" placeholder="Father's Health Condition"
-                                    class="border rounded p-2" required>
-
-                                <!-- Mother Living -->
-                                <input type="number" name="mother_living_age" placeholder="Mother's Living Age"
-                                    class="border rounded p-2" required>
-                                <input type="text" name="mother_health" placeholder="Mother's Health Condition"
-                                    class="border rounded p-2" required>
-
-                                <!-- Siblings Living -->
-                                <input type="number" name="siblings_living_age"
-                                    placeholder="Average Age of Living Siblings" class="border rounded p-2">
-                                <textarea name="siblings_health" rows="2" placeholder="Siblings' Health Conditions"
-                                    class="border rounded p-2" required></textarea>
-
-                                <!-- Children Living -->
-                                <input type="number" name="children_living_age"
-                                    placeholder="Average Age of Living Children" class="border rounded p-2">
-                                <textarea name="children_health" rows="2" placeholder="Children's Health Conditions"
-                                    class="border rounded p-2" required></textarea>
-
-                                <!-- Father Death -->
-                                <input type="number" name="father_death_age" placeholder="Father's Age at Death"
-                                    class="border rounded p-2" required>
-                                <input type="text" name="father_cause" placeholder="Father's Cause of Death"
-                                    class="border rounded p-2" required>
-
-                                <!-- Mother Death -->
-                                <input type="number" name="mother_death_age" placeholder="Mother's Age at Death"
-                                    class="border rounded p-2" required>
-                                <input type="text" name="mother_cause" placeholder="Mother's Cause of Death"
-                                    class="border rounded p-2" required>
-
-                                <!-- Siblings Death -->
-                                <input type="number" name="siblings_death_age"
-                                    placeholder="Average Age of Deceased Siblings" class="border rounded p-2" required>
-                                <textarea name="siblings_cause" rows="2" placeholder="Cause(s) of Siblings' Death"
-                                    class="border rounded p-2" required></textarea>
-
-                                <!-- Children Death -->
-                                <input type="number" name="children_death_age"
-                                    placeholder="Average Age of Deceased Children" class="border rounded p-2" required>
-                                <textarea name="children_cause" rows="2" placeholder="Cause(s) of Children's Death"
-                                    class="border rounded p-2" required></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Step 8 -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 8: Physician Details</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input type="text" placeholder="Physician Name" name="physician_name"
-                                    class="border rounded p-2" required>
-                                <input type="text" placeholder="Contact Number" name="contact_number"
-                                    class="border rounded p-2" required>
-                                <input type="text" placeholder="Clinic Address" name="clinic_address"
-                                    class="border rounded p-2" required>
-                            </div>
-                        </div>
-
-                        <!-- Step 9 -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 9: Health Questions</h2>
-                            <p>If you answered YES to any of the following questions, please provide details to
-                                space provided below.</p>
-                            <div class="grid grid-cols-1 gap-4">
-                                <!-- Question 1 -->
-                                <label>1. Do you drive a motorcycle? If yes, please state how often and for what
-                                    purpose.
-                                    <select name="q1_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q1_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 2 -->
-                                <label>2. Are you engaged in auto/motorboat racing, sky/scuba diving, or other
-                                    hazardous activities?
-                                    <select name="q2_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q2_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 3 -->
-                                <label>3. Do you intend to ride an aircraft other than as a passenger in a
-                                    commercial passenger airline?
-                                    <select name="q3_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q3_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 4 -->
-                                <label>4. Are you now or do you intend to be enlisted with the military, naval, or
-                                    air force service other than as a reserve?
-                                    <select name="q4_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q4_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 5 -->
-                                <label>5. Do you have any pending application for life insurance or accident
-                                    insurance?
-                                    <select name="q5_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q5_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 6 -->
-                                <label>6. Have you made an application for life insurance or for reinstatement of a
-                                    policy with other insurance company/ies which was declined, postponed,
-                                    cancelled, or modified in terms of the plan, amount, or rate?
-                                    <select name="q6_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q6_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 7 -->
-                                <label>7. Have any of your parents/siblings died or suffered from heart disease,
-                                    stroke, high blood pressure, diabetes, or cancer?
-                                    <select name="q7_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q7_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 8 -->
-                                <label>8. Are you an incumbent elected official, local or national, or planning or
-                                    contemplating to hold any elective position?
-                                    <select name="q8_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q8_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 9 -->
-                                <label>9. Have you lost/gained weight during the past 12 months? How many
-                                    pounds/kilos? Why?
-                                    <select name="q9_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q9_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 10A -->
-                                <label>10A. Have you, for physical reason, ever been discharged from employment,
-                                    active military or naval service?
-                                    <select name="q10a_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q10a_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 10B -->
-                                <label>10B. Have you applied for or received disability benefits or pension from any
-                                    source?
-                                    <select name="q10b_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q10b_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 11 -->
-                                <label>11. Have you used alcoholic beverages in excess, taken habit-forming drugs,
-                                    or sought advice or treatment for alcoholism, drugs, or other forms of
-                                    addiction?
-                                    <select name="q11_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q11_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                                <!-- Question 12 -->
-                                <label>12. Are you engaged in any hazardous avocation like car/motorcycle racing or
-                                    scuba diving? How often?
-                                    <select name="q12_response" class="border rounded py-3 px-4">
-                                        <option>No</option>
-                                        <option>Yes</option>
-                                    </select>
-                                </label>
-                                <textarea name="q12_details" placeholder="Details (if Yes)"
-                                    class="border rounded p-2 w-full"></textarea>
-
-                            </div>
-                        </div>
-
-                        <!-- Step 10: Personal and Membership Details -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 10: Personal and Membership Information</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Height -->
-                                <input type="text" name="height" placeholder="Height (cm/in)" class="border rounded p-2"
-                                    required>
-
-                                <!-- Weight -->
-                                <input type="text" name="weight" placeholder="Weight (kg/lbs)"
-                                    class="border rounded p-2" required>
-
-                                <!-- Pregnancy Question -->
-                                <select name="pregnant_question" class="border rounded p-2">
-                                    <option value="" disabled selected>Are you currently pregnant?</option>
-                                    <option value="No">No</option>
-                                    <option value="Yes">Yes</option>
-                                </select>
-
-                                <!-- Upload Signature -->
-                                <label class="block col-span-2">
-                                    Upload Signature:
-                                    <input type="file" name="signature_file" accept="image/*"
-                                        class="mt-2 border p-2 w-full" required>
-                                    <img id="signaturePreview" class="mt-2 max-h-32" />
-                                    <script>
-                                    document.querySelector('input[name="signature_file"]').addEventListener(
-                                        'change',
-                                        function(e) {
-                                            const file = e.target.files[0];
-                                            if (file) {
-                                                const reader = new FileReader();
-                                                reader.onload = function(event) {
-                                                    document.getElementById('signaturePreview').src = event
-                                                        .target.result;
-                                                }
-                                                reader.readAsDataURL(file);
-                                            }
-                                        });
-                                    </script>
-                                </label>
-                            </div>
-
-                            <h3 class="text-md font-semibold mt-6 mb-2">Membership Details</h3>
-                            <div class="grid grid-cols-2 gap-4">
-                                <!-- Council ID -->
-                                <select class="border rounded" name="council_id">
-                                    <option selected disabled>Select Council</option>
-                                    <?php $councilModel = new CouncilModel($conn);
-                                            $councils                                                   = $councilModel->getAllCouncil();
-                                            if ($councils) {
-                                            foreach ($councils as $council) {?>
-                                    <option value="<?php echo $council['council_id'] ?>">
-                                        <?php echo $council['council_name'] ?>
-                                    </option>
-                                    <?php
-                                            }
-                                            }
-                                        ?>
-                                </select>
-
-                                <!-- First Degree Date -->
-                                <label>
-                                    First Degree Date:
-                                    <input type="date" name="first_degree_date" class="border rounded p-2 w-full">
-                                </label>
-
-                                <!-- Present Degree -->
-                                <input type="text" name="present_degree" placeholder="Present Degree"
-                                    class="border rounded p-2">
-
-                                <!-- Good Standing -->
-                                <select name="good_standing" class="border rounded p-2">
-                                    <option value="" disabled selected>Good Standing?</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <!-- Step 11 -->
-                        <div class="step-content">
-                            <h2 class="text-lg font-bold mb-4">Step 11: Confirmation</h2>
-                            <p class="mb-4 text-gray-700">Please review all your details before submitting.</p>
-                            <button type="submit" class="bg-cyan-600 text-white py-2 px-4 rounded hover:bg-cyan-700">
-                                Submit Application
-                            </button>
                         </div>
                     </div>
 
-                    <!-- Navigation Buttons -->
-                    <div class="flex justify-between pt-4 border-t">
-                        <button type="button" id="prevBtn" class="bg-gray-300 px-4 py-2 rounded text-sm"
-                            disabled>Previous</button>
-                        <button type="button" id="nextBtn"
-                            class="bg-cyan-500 text-white px-4 py-2 rounded text-sm">Next</button>
+                    <div class="step-content">
+                        <div class="flex items-center mb-8 space-x-3">
+                            <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-slate-800">Contact Details</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="form-label">Street</label><input type="text" placeholder="Street Address" name="street" class="w-full border-slate-200 rounded-xl p-3 border"></div>
+                            <div><label class="form-label">Barangay</label><input type="text" placeholder="Barangay" name="barangay" class="w-full border-slate-200 rounded-xl p-3 border" required></div>
+                            <div><label class="form-label">City/Province</label><input type="text" placeholder="City/Province" name="city_province" class="w-full border-slate-200 rounded-xl p-3 border" required></div>
+                            <div><label class="form-label">Mobile Number</label><input type="text" placeholder="09XX XXX XXXX" name="mobile_number" class="w-full border-slate-200 rounded-xl p-3 border" required></div>
+                            <div class="md:col-span-2"><label class="form-label">Email Address</label><input type="email" placeholder="email@example.com" name="email_address" class="w-full border-slate-200 rounded-xl p-3 border" required></div>
+                        </div>
                     </div>
-                </form>
-            </div>
 
-            <script>
-            const steps = [
-                "Personal Info", "Contact", "Employment", "Plan", "Beneficiaries",
-                "Family", "Medical", "Physician", "Health", "Signature", "Confirm"
-            ];
+                    <div class="step-content">
+                        <div class="flex items-center mb-8 space-x-3">
+                            <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-slate-800">Employment Details</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input type="text" placeholder="Occupation" name="occupation" class="border-slate-200 rounded-xl p-3 border">
+                            <select class="border-slate-200 rounded-xl p-3 border" name="employment_status">
+                                <option selected>Employment Status</option>
+                                <option value="employed">Employed</option>
+                                <option value="self_employed">Self Employed</option>
+                            </select>
+                            <input type="text" placeholder="Specific duties" name="duties" class="border-slate-200 rounded-xl p-3 border">
+                            <input type="text" placeholder="Employer Name" name="employer" class="border-slate-200 rounded-xl p-3 border">
+                            <input type="text" placeholder="Work Department" name="work" class="border-slate-200 rounded-xl p-3 border">
+                            <input type="text" placeholder="Nature of business" name="nature_business" class="border-slate-200 rounded-xl p-3 border">
+                            <input type="text" placeholder="Employer Email" name="employer_email_address" class="border-slate-200 rounded-xl p-3 border">
+                            <input type="text" placeholder="Employer Mobile" name="employer_mobile_number" class="border-slate-200 rounded-xl p-3 border">
+                            <input type="number" placeholder="Monthly Income" name="monthly_income" class="border-slate-200 rounded-xl p-3 border">
+                        </div>
+                    </div>
 
-            const stepContents = document.querySelectorAll('.step-content');
-            const stepHeaderContainer = document.querySelector('.grid');
-            const stepTemplate = document.querySelector('#step-header-template');
-            let currentStep = 0;
+                    <div class="step-content">
+                        <div class="flex items-center mb-8 space-x-3">
+                            <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-slate-800">Plan Selection</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <select class="border-slate-200 rounded-xl p-3 border" name="fraternal_benefits_id">
+                                <option>Select Plan</option>
+                                <?php
+                                    $fraternalBenefitsModel = new fraternalBenefitsModel($conn);
+                                    $fraternalBenefits      = $fraternalBenefitsModel->getAllFraternalBenefits();
+                                    if ($fraternalBenefits) {
+                                        foreach ($fraternalBenefits as $benefit) {?>
+                                            <option value="<?php echo $benefit['id'] ?>"><?php echo $benefit['name'] ?></option>
+                                <?php } } ?>
+                            </select>
+                            <select class="border-slate-200 rounded-xl p-3 border" name="payment_mode">
+                                <option selected disabled>Mode of payment</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="semi-annually">Semi-Annually</option>
+                                <option value="quarterly">Quarterly</option>
+                            </select>
+                            <select class="border-slate-200 rounded-xl p-3 border" name="currency">
+                                <option selected disabled>Currency</option>
+                                <option name="PHP">PHP</option>
+                            </select>
+                            <select class="border-slate-200 rounded-xl p-3 border" name="council_id">
+                                <option selected disabled>Select Council</option>
+                                <?php $councilModel = new CouncilModel($conn);
+                                    $councils = $councilModel->getAllCouncil();
+                                    if ($councils) {
+                                        foreach ($councils as $council) {?>
+                                            <option value="<?php echo $council['council_id'] ?>"><?php echo $council['council_name'] ?></option>
+                                <?php } } ?>
+                            </select>
+                            <input type="number" placeholder="Payment Amount" name="contribution_amount" class="border-slate-200 rounded-xl p-3 border md:col-span-2" required>
+                        </div>
+                    </div>
 
-            // Render step headers
-            steps.forEach((label, idx) => {
-                const clone = stepTemplate.content.cloneNode(true);
-                clone.querySelector('.step-circle').textContent = idx + 1;
-                clone.querySelector('.step-label').textContent = label;
-                clone.querySelector('.step-circle').classList.add(idx === 0 ? 'bg-cyan-500' :
-                    'bg-cyan-300');
-                stepHeaderContainer.appendChild(clone);
-            });
-
-            // Update the UI for the current step
-            const updateStep = () => {
-                stepContents.forEach((el, i) => el.classList.toggle('active', i === currentStep));
-                const circles = document.querySelectorAll('.step-circle');
-                circles.forEach((circle, i) => {
-                    circle.classList.remove('bg-cyan-500', 'bg-cyan-300');
-                    circle.classList.add(i === currentStep ? 'bg-cyan-500' : 'bg-cyan-300');
-                });
-                document.getElementById('prevBtn').disabled = currentStep === 0;
-                document.getElementById('nextBtn').textContent = currentStep === steps.length - 1 ? 'Finish' :
-                    'Next';
-            };
-
-            // Next button logic with validation
-            document.getElementById('nextBtn').addEventListener('click', () => {
-                // Validate required fields before going to next step
-                const currentInputs = stepContents[currentStep].querySelectorAll(
-                    'input[required], select[required], textarea[required]');
-                let allFilled = true;
-                currentInputs.forEach(input => {
-                    if (!input.value.trim()) {
-                        allFilled = false;
-                        input.classList.add('border-red-500');
-                    } else {
-                        input.classList.remove('border-red-500');
-                    }
-                });
-
-                if (!allFilled) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Incomplete Step',
-                        text: 'Please fill in all required fields before proceeding.',
-                        confirmButtonColor: '#06b6d4'
-                    });
-                    return;
-                }
-
-                // Proceed to next step or submit form
-                if (currentStep < steps.length - 1) {
-                    currentStep++;
-                    updateStep();
-                } else {
-                    document.getElementById('multiStepForm').submit();
-                }
-
-                document.querySelector('form').addEventListener('submit', function(e) {
-                    e.preventDefault(); // Prevent default form submission
-                    Swal.fire({
-                        title: 'Confirm Submission',
-                        text: 'Are you sure all your details are correct?',
-                        icon: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes, submit it!',
-                        cancelButtonText: 'Review Again',
-                        confirmButtonColor: '#06b6d4'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            e.target.submit(); // Submit the form after confirmation
-                        }
-                    });
-                });
-
-            });
-
-            // Previous button
-            document.getElementById('prevBtn').addEventListener('click', () => {
-                if (currentStep > 0) {
-                    currentStep--;
-                    updateStep();
-                }
-            });
-
-
-            updateStep();
-            </script>
-
-            <script>
-            document.querySelectorAll('select[name$="_response"]').forEach(select => {
-                select.addEventListener('change', function() {
-                    const detailsField = document.querySelector(
-                        `[name="${this.name.replace('_response', '_details')}"]`);
-                    if (this.value === "Yes") {
-                        detailsField.disabled = false;
-                    } else {
-                        detailsField.disabled = true;
-                        detailsField.value = ''; // Clear details when "No" is selected
-                    }
-                });
-            });
-            </script>
-
-            <!-- JavaScript for Dynamic Fields -->
-            <script>
-            function addBeneficiary() {
-                const container = document.getElementById('beneficiaries-container');
-                const groups = container.querySelectorAll('.beneficiary-group');
-
-                // Limit the number of beneficiaries to 5
-                if (groups.length >= 5) {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Limit Reached',
-                        text: 'You can only add up to 5 beneficiaries.',
-                        confirmButtonColor: '#06b6d4'
-                    });
-                    return;
-                }
-
-                const group = document.createElement('div');
-                group.className = "beneficiary-group grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded";
-
-                group.innerHTML = `
-                                <select class="border rounded p-2" name="benefit_type[]">
-                                    <option selected disabled>Type of Benefit</option>
+                    <div class="step-content">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                                <h2 class="text-2xl font-bold text-slate-800">Beneficiaries</h2>
+                            </div>
+                            <button type="button" onclick="addBeneficiary()" class="bg-cyan-50 text-cyan-600 px-5 py-2 rounded-xl font-bold text-sm hover:bg-cyan-600 hover:text-white transition-all shadow-sm border border-cyan-100">
+                                + Add Beneficiary
+                            </button>
+                        </div>
+                        <div id="beneficiaries-container" class="space-y-4">
+                            <div class="beneficiary-group grid grid-cols-1 md:grid-cols-4 gap-4 p-6 rounded-2xl border border-slate-100 bg-slate-50/50">
+                                <select class="border-slate-200 rounded-xl p-3 border bg-white" name="benefit_type[]">
+                                    <option selected disabled>Type</option>
                                     <option value="Revocable">Revocable</option>
                                     <option value="Irrevocable">Irrevocable</option>
                                 </select>
-                                <input type="text" name="benefit_name[]" placeholder="Beneficiary Name" class="border rounded p-2 w-full">
-                                <input type="date" name="benefit_birthdate[]" placeholder="Birthdate" class="border rounded p-2 w-full">
-                                <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border rounded p-2 w-full">
-                            `;
-                container.appendChild(group);
-            }
-            </script>
-            <script>
-            document.getElementById('birthdate').addEventListener('change', function() {
-                // --- Helper: Philippine current time ---
-                function getPhilippineToday() {
-                    const now = new Date();
-                    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-                    return new Date(utc + 8 * 60 * 60 * 1000);
-                }
+                                <input type="text" name="benefit_name[]" placeholder="Full Name" class="border-slate-200 rounded-xl p-3 border bg-white" required>
+                                <input type="date" name="benefit_birthdate[]" class="border-slate-200 rounded-xl p-3 border bg-white" required>
+                                <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border-slate-200 rounded-xl p-3 border bg-white" required>
+                            </div>
+                        </div>
+                    </div>
 
-                // --- Parse birthdate ---
-                const parts = this.value.split('-'); // "yyyy-mm-dd"
-                if (parts.length !== 3) return;
-                const birthdate = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+                    <div class="step-content">
+                        <div class="flex items-center mb-8 space-x-3">
+                            <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-slate-800">Family Background</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <input type="text" name="father_lastname" placeholder="Father's Last Name" class="border-slate-200 rounded-xl p-3 border" required>
+                            <input type="text" name="father_firstname" placeholder="Father's First Name" class="border-slate-200 rounded-xl p-3 border" required>
+                            <input type="text" name="father_mi" placeholder="Father's M.I." class="border-slate-200 rounded-xl p-3 border" required>
+                            <input type="text" name="mother_lastname" placeholder="Mother's Last Name" class="border-slate-200 rounded-xl p-3 border" required>
+                            <input type="text" name="mother_firstname" placeholder="Mother's First Name" class="border-slate-200 rounded-xl p-3 border" required>
+                            <input type="text" name="mother_mi" placeholder="Mother's M.I." class="border-slate-200 rounded-xl p-3 border" required>
+                            <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <input type="number" name="siblings_living" placeholder="Living Siblings" class="border-slate-200 rounded-xl p-3 border" required>
+                                <input type="number" name="siblings_deceased" placeholder="Deceased Siblings" class="border-slate-200 rounded-xl p-3 border" required>
+                                <input type="number" name="children_living" placeholder="Living Children" class="border-slate-200 rounded-xl p-3 border" required>
+                                <input type="number" name="children_deceased" placeholder="Deceased Children" class="border-slate-200 rounded-xl p-3 border" required>
+                            </div>
+                        </div>
+                    </div>
 
-                const today = getPhilippineToday();
+                    <div class="step-content">
+                        <div class="flex items-center mb-8 space-x-3">
+                            <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-slate-800">Medical & Family Health</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <textarea placeholder="Past Illnesses or Hospitalizations" name="past_illness" class="border-slate-200 rounded-xl p-3 border h-24" required></textarea>
+                            <textarea placeholder="Current Medications" name="current_medication" class="border-slate-200 rounded-xl p-3 border h-24" required></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="number" name="father_living_age" placeholder="Father's Age" class="border-slate-200 rounded-xl p-3 border">
+                            <input type="text" name="father_health" placeholder="Father's Condition" class="border-slate-200 rounded-xl p-3 border">
+                            <input type="number" name="mother_living_age" placeholder="Mother's Age" class="border-slate-200 rounded-xl p-3 border">
+                            <input type="text" name="mother_health" placeholder="Mother's Condition" class="border-slate-200 rounded-xl p-3 border">
+                        </div>
+                    </div>
 
-                // Last birthday
-                let lastBday = new Date(today.getFullYear(), birthdate.getMonth(), birthdate.getDate());
-                if (today < lastBday) {
-                    // Last birthday was last year
-                    lastBday.setFullYear(today.getFullYear() - 1);
-                }
-                // Next birthday is always the first birthday after today
-                let nextBday = new Date(birthdate.getFullYear(), birthdate.getMonth(), birthdate.getDate());
-                nextBday.setFullYear(today.getFullYear());
-                if (nextBday <= today) {
-                    nextBday.setFullYear(today.getFullYear() + 1); // push to next year if passed
-                }
-                // --- Days to next birthday ---
-                const oneDay = 1000 * 60 * 60 * 24;
-                const daysToNext = Math.round((nextBday - today) / oneDay);
+                    <div class="step-content">
+                        <div class="flex items-center mb-8 space-x-3">
+                            <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-slate-800">Physician Details</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input type="text" placeholder="Physician Name" name="physician_name" class="border-slate-200 rounded-xl p-3 border" required>
+                            <input type="text" placeholder="Contact Number" name="contact_number" class="border-slate-200 rounded-xl p-3 border" required>
+                            <input type="text" placeholder="Clinic Address" name="clinic_address" class="border-slate-200 rounded-xl p-3 border md:col-span-2" required>
+                        </div>
+                    </div>
 
-                // --- Apply 6-month rule ---
-                let finalAge;
-                if (daysToNext <= 183) { // within 6 months
-                    finalAge = lastBday.getFullYear() - birthdate.getFullYear() + 1;
-                } else {
-                    finalAge = lastBday.getFullYear() - birthdate.getFullYear();
-                }
+                    <div class="step-content">
+                        <div class="flex items-center mb-6 space-x-3">
+                            <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-slate-800">Health Questions</h2>
+                        </div>
+                        <p class="text-slate-500 mb-8 italic">If you answer YES to any of the following, please provide details.</p>
+                        
+                        <div class="space-y-6">
+                            <?php 
+                            $questions = [
+                                "q1" => "1. Do you drive a motorcycle? (State frequency/purpose)",
+                                "q2" => "2. Engaged in racing, skydiving, or hazardous activities?",
+                                "q3" => "3. Intend to ride aircraft other than commercial?",
+                                "q4" => "4. Enlisted or intend to enlist in military/naval service?",
+                                "q5" => "5. Pending application for life or accident insurance?",
+                                "q6" => "6. Have you been declined or cancelled by other insurers?",
+                                "q7" => "7. Family history of heart disease, stroke, or cancer?",
+                                "q8" => "8. Are you an incumbent or planning to be an elected official?",
+                                "q9" => "9. Weight gain/loss in last 12 months?",
+                                "q10a" => "10A. Ever discharged from employment/military for physical reasons?",
+                                "q10b" => "10B. Applied for or received disability benefits?",
+                                "q11" => "11. History of alcohol excess or habit-forming drugs?",
+                                "q12" => "12. Engaged in car racing or scuba diving?"
+                            ];
+                            foreach($questions as $key => $text): ?>
+                            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                <label class="block font-semibold text-slate-700 mb-3"><?php echo $text; ?></label>
+                                <div class="flex flex-col md:flex-row gap-4">
+                                    <select name="<?php echo $key; ?>_response" class="border-slate-200 rounded-xl p-3 border bg-white md:w-32">
+                                        <option>No</option>
+                                        <option>Yes</option>
+                                    </select>
+                                    <textarea name="<?php echo $key; ?>_details" placeholder="Please provide details here..." class="flex-1 border-slate-200 rounded-xl p-3 border bg-white h-20" disabled></textarea>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
 
-                document.getElementById('age').value = finalAge;
+                    <div class="step-content">
+                        <div class="flex items-center mb-8 space-x-3">
+                            <div class="w-2 h-8 bg-cyan-500 rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-slate-800">Final Details & Signature</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input type="text" name="height" placeholder="Height (cm/in)" class="border-slate-200 rounded-xl p-3 border" required>
+                            <input type="text" name="weight" placeholder="Weight (kg/lbs)" class="border-slate-200 rounded-xl p-3 border" required>
+                            <select name="pregnant_question" class="border-slate-200 rounded-xl p-3 border">
+                                <option value="" disabled selected>Are you currently pregnant?</option>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                            <select name="good_standing" class="border-slate-200 rounded-xl p-3 border">
+                                <option value="" disabled selected>Good Standing?</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            
+                            <div class="md:col-span-2 bg-cyan-50/50 p-8 rounded-3xl border-2 border-dashed border-cyan-200 text-center">
+                                <label class="block text-cyan-800 font-bold mb-4 text-lg">Upload Digital Signature</label>
+                                <input type="file" name="signature_file" accept="image/*" class="mx-auto block w-full max-w-xs text-sm text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-cyan-600 file:text-white hover:file:bg-cyan-700 cursor-pointer" required>
+                                <div class="mt-6 inline-block bg-white p-4 rounded-2xl shadow-inner border border-slate-100">
+                                    <img id="signaturePreview" class="max-h-32 min-w-[200px] object-contain" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Preview" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                console.log({
-                    birthdate: birthdate.toDateString(),
-                    today: today.toDateString(),
-                    lastBday: lastBday.toDateString(),
-                    nextBday: nextBday.toDateString(),
-                    daysToNext,
-                    finalAge
-                });
-            });
-            </script>
+                    <div class="step-content text-center py-12">
+                        <div class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <h2 class="text-3xl font-extrabold text-slate-800 mb-4">Verification Ready</h2>
+                        <p class="text-slate-500 max-w-md mx-auto mb-10 text-lg">Please ensure all information provided is accurate. You can go back to any step to make corrections.</p>
+                        <button type="submit" class="bg-cyan-600 text-white font-bold py-4 px-12 rounded-2xl hover:bg-cyan-700 hover:shadow-xl hover:shadow-cyan-200 transition-all transform hover:-translate-y-1">
+                            Confirm & Submit Application
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-100">
+                    <button type="button" id="prevBtn" class="flex items-center space-x-2 text-slate-400 font-bold px-6 py-3 rounded-xl hover:bg-slate-100 hover:text-slate-600 disabled:opacity-0 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <span>Back</span>
+                    </button>
+                    <button type="button" id="nextBtn" class="bg-slate-800 text-white font-bold px-10 py-3 rounded-xl hover:bg-cyan-600 shadow-lg shadow-slate-200 hover:shadow-cyan-100 transition-all active:scale-95">
+                        Continue
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </main>
 
-<?php
-include '../../includes/footer.php';
-?>
+<script>
+    const steps = ["Profile", "Contact", "Work", "Plan", "Beneficiaries", "Family", "Health", "Doctor", "Questions", "Signature", "Finish"];
+    const stepContents = document.querySelectorAll('.step-content');
+    const stepHeaderContainer = document.querySelector('.grid');
+    const stepTemplate = document.querySelector('#step-header-template');
+    let currentStep = 0;
+
+    // Initialize Stepper
+    steps.forEach((label, idx) => {
+        const clone = stepTemplate.content.cloneNode(true);
+        clone.querySelector('.step-circle').textContent = idx + 1;
+        clone.querySelector('.step-label').textContent = label;
+        stepHeaderContainer.appendChild(clone);
+    });
+
+    const updateStep = () => {
+        stepContents.forEach((el, i) => el.classList.toggle('active', i === currentStep));
+        const circles = document.querySelectorAll('.step-circle');
+        const labels = document.querySelectorAll('.step-label');
+        
+        circles.forEach((circle, i) => {
+            circle.className = "step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 ring-4 ring-white shadow-sm z-10";
+            if (i === currentStep) {
+                circle.classList.add('bg-cyan-600', 'text-white', 'scale-125');
+                labels[i]?.classList.add('text-cyan-600');
+                labels[i]?.classList.remove('text-slate-400');
+            } else if (i < currentStep) {
+                circle.classList.add('bg-cyan-100', 'text-cyan-600');
+            } else {
+                circle.classList.add('bg-slate-100', 'text-slate-400');
+            }
+        });
+
+        document.getElementById('prevBtn').disabled = currentStep === 0;
+        document.getElementById('nextBtn').textContent = currentStep === steps.length - 1 ? 'Go to Finish' : 'Continue';
+        document.getElementById('nextBtn').style.display = currentStep === steps.length - 1 ? 'none' : 'block';
+    };
+
+    // Navigation Logic
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        const currentInputs = stepContents[currentStep].querySelectorAll('input[required], select[required], textarea[required]');
+        let allFilled = true;
+        currentInputs.forEach(input => {
+            if (!input.value.trim()) {
+                allFilled = false;
+                input.classList.add('border-red-500', 'bg-red-50');
+            } else {
+                input.classList.remove('border-red-500', 'bg-red-50');
+            }
+        });
+
+        if (!allFilled) {
+            Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please complete the required fields.', confirmButtonColor: '#06b6d4' });
+            return;
+        }
+
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            updateStep();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateStep();
+        }
+    });
+
+    // Form Submit with Confirmation
+    document.getElementById('multiStepForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Ready to submit?',
+            text: "Please double check your information.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#06b6d4',
+            confirmButtonText: 'Yes, Submit!'
+        }).then((result) => {
+            if (result.isConfirmed) this.submit();
+        });
+    });
+
+    // Handle Question Logic
+    document.querySelectorAll('select[name$="_response"]').forEach(select => {
+        select.addEventListener('change', function() {
+            const detailsField = document.querySelector(`[name="${this.name.replace('_response', '_details')}"]`);
+            if (this.value === "Yes") {
+                detailsField.disabled = false;
+                detailsField.classList.remove('bg-slate-50');
+                detailsField.focus();
+            } else {
+                detailsField.disabled = true;
+                detailsField.classList.add('bg-slate-50');
+                detailsField.value = '';
+            }
+        });
+    });
+
+    // Signature Preview
+    document.querySelector('input[name="signature_file"]').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = e => document.getElementById('signaturePreview').src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Age Calculation Logic
+    document.getElementById('birthdate').addEventListener('change', function() {
+        const birthdate = new Date(this.value);
+        const today = new Date();
+        let age = today.getFullYear() - birthdate.getFullYear();
+        const m = today.getMonth() - birthdate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) age--;
+        document.getElementById('age').value = age;
+    });
+
+    // Dynamic Beneficiaries
+    function addBeneficiary() {
+        const container = document.getElementById('beneficiaries-container');
+        if (container.querySelectorAll('.beneficiary-group').length >= 5) {
+            Swal.fire({ icon: 'info', title: 'Limit Reached', text: 'Max 5 beneficiaries allowed.' });
+            return;
+        }
+        const group = document.createElement('div');
+        group.className = "beneficiary-group grid grid-cols-1 md:grid-cols-4 gap-4 p-6 rounded-2xl border border-slate-100 bg-slate-50/50 mt-4";
+        group.innerHTML = `
+            <select class="border-slate-200 rounded-xl p-3 border bg-white" name="benefit_type[]">
+                <option value="Revocable">Revocable</option>
+                <option value="Irrevocable">Irrevocable</option>
+            </select>
+            <input type="text" name="benefit_name[]" placeholder="Full Name" class="border-slate-200 rounded-xl p-3 border bg-white">
+            <input type="date" name="benefit_birthdate[]" class="border-slate-200 rounded-xl p-3 border bg-white">
+            <input type="text" name="benefit_relationship[]" placeholder="Relationship" class="border-slate-200 rounded-xl p-3 border bg-white">
+        `;
+        container.appendChild(group);
+    }
+
+    updateStep();
+</script>
+
+<?php include '../../includes/footer.php'; ?>
