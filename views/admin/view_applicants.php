@@ -1,3 +1,4 @@
+<!-- view_applicants.php -->
 <?php
     session_start();
     include '../../includes/config.php';
@@ -7,6 +8,8 @@
     include '../../includes/alert2.php';
     include '../../models/adminModel/FormsModel.php';
     include '../../models/adminModel/TransactionModel.php';
+
+
     
     // Updated fetching logic
     $user_id = $_SESSION['user_id'] ?? null;
@@ -21,6 +24,7 @@
         echo "Access Denied: User ID or Plan ID not set in session.";
         exit;
     }
+        $financials = $transactionModel->getPlanFinancialSummary($user_id, $plan_id);
 
     // Map variables from the new session structure
     // search_results[0] contains the hydrated data from fetchAllApplicantsByIdV2
@@ -40,20 +44,50 @@
 ?>
 
 <style>
+    /* Printing Fixes */
     @media print {
-        body * { visibility: hidden !important; }
-        #printable-receipt, #printable-receipt * { visibility: visible !important; }
-        #printable-receipt { 
-            position: absolute !important; 
-            left: 0 !important; 
-            top: 0 !important; 
-            width: 100% !important; 
-            margin: 0 !important; 
-            padding: 20px !important; 
-            box-shadow: none !important; 
-            border: none !important;
+        /* 1. Hide everything on the page */
+        body * { 
+            visibility: hidden !important; 
         }
-        .no-print { display: none !important; }
+        
+        /* 2. Make the modal and its content visible */
+        #receipt-modal, 
+        #receipt-modal *, 
+        #printable-receipt, 
+        #printable-receipt * { 
+            visibility: visible !important; 
+        }
+
+        /* 3. Position the receipt container to take up the whole page */
+        #receipt-modal {
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: white !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: flex-start !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* 4. Remove shadows and styling that looks bad on paper */
+        #printable-receipt { 
+            box-shadow: none !important; 
+            border: 1px solid #e2e8f0 !important; /* light border for structure */
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+            padding: 2cm !important; /* Standard print padding */
+        }
+
+        /* 5. Force specific elements to stay hidden (like buttons) */
+        .no-print { 
+            display: none !important; 
+        }
     }
 </style>
 
@@ -237,8 +271,22 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                             <div class="space-y-1">
                                 <p class="text-[10px] font-bold text-slate-500 uppercase">Premium Due</p>
-                                <p class="text-lg font-bold text-white"><?= $planInfo['currency'] ?? 'PHP' ?>
-                                    <?= number_format($planInfo['contribution_amount'] ?? 0, 2) ?></p>
+                                <p class="text-lg font-bold text-white">
+                                    <?= $planInfo['currency'] ?? 'PHP' ?> 
+                                    <?= number_format($suggestedPremium, 2) ?>
+                                </p>
+                            </div>
+                            <div class="space-y-1 border-r border-white/10 pr-4">
+                                <p class="text-[10px] font-bold text-orange-400 uppercase">Remaining Bal.</p>
+                                <p class="text-lg font-bold text-white">₱<?= number_format($financials['remaining_balance'], 2) ?></p>
+                            </div>
+                            <div class="space-y-1 border-r border-white/10 pr-4">
+                                <p class="text-[10px] font-bold text-emerald-400 uppercase">Months Left</p>
+                                <p class="text-lg font-bold text-white"><?= $financials['remaining_months'] ?> Mo.</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-bold text-slate-500 uppercase">Total Paid</p>
+                                <p class="text-lg font-bold text-white">₱<?= number_format($financials['total_paid'], 2) ?></p>
                             </div>
                             <div class="space-y-1">
                                 <p class="text-[10px] font-bold text-slate-500 uppercase">Payment Mode</p>
@@ -255,6 +303,7 @@
                                 <p class="text-lg font-bold text-white">
                                     <?= htmlspecialchars($planInfo['years_of_protection'] ?? '0') ?> Years</p>
                             </div>
+                            
                         </div>
 
                         <div class="mt-8 pt-6 border-t border-white/10 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -268,6 +317,16 @@
                                 <span class="text-xs font-medium">Type:
                                     <strong><?= htmlspecialchars($planInfo['type'] ?? 'N/A') ?></strong></span>
                             </div>
+                        </div>
+                        <?php 
+                            $percentPaid = ($financials['total_contract_price'] > 0) ? ($financials['total_paid'] / $financials['total_contract_price']) * 100 : 0;
+                        ?>
+                        <div class="mt-6 w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-blue-500 h-full transition-all duration-1000" style="width: <?= $percentPaid ?>%"></div>
+                        </div>
+                        <div class="flex justify-between mt-2">
+                            <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Payment Progress</span>
+                            <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest"><?= round($percentPaid, 1) ?>% Collected</span>
                         </div>
                     </div>
                 </div>
@@ -290,7 +349,7 @@
                                 <th class="px-8 py-4">Payment Date</th>
                                 <th class="px-8 py-4 text-right">Amount Paid</th>
                                 <th class="px-8 py-4">Next Due Date</th>
-                                <th class="px-8 py-4">Ledger Notes</th>
+                                <th class="px-8 py-4">Remarks/Notebook</th>
                                 <th class="px-8 py-4">Timing</th>
                                 <th class="px-8 py-4">Action</th>
                             </tr>
@@ -374,23 +433,47 @@
             </div>
         </div>
 
-        <div id="receipt-modal" class="hidden fixed inset-0 z-[100] justify-center items-center backdrop-blur-sm bg-gray-900/60 no-print">
+<div id="receipt-modal" class="hidden fixed inset-0 z-[100] justify-center items-center backdrop-blur-sm bg-gray-900/60 no-print">
             <div class="relative p-4 w-full max-w-lg">
                 <div id="printable-receipt" class="bg-white p-10 rounded-3xl shadow-2xl font-sans text-slate-800">
+                    
                     <div class="text-center border-b-2 border-slate-900 pb-6 mb-8">
                         <h2 class="text-3xl font-black uppercase tracking-tighter italic">KCFAPI</h2>
                         <p class="text-[10px] uppercase tracking-[0.4em] font-bold text-slate-400 mt-2">Official Payment Receipt</p>
                     </div>
+
                     <div class="space-y-6 mb-10">
-                        <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Transaction ID</span><span id="rcpt-id" class="text-slate-900"></span></div>
-                        <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Date Paid</span><span id="rcpt-date" class="text-slate-900"></span></div>
-                        <div class="flex justify-between border-t border-slate-100 pt-6"><span>Member</span><span class="font-black"><?= htmlspecialchars(($applicant['firstname'] ?? '') . ' ' . ($applicant['lastname'] ?? '')) ?></span></div>
-                        <div class="flex justify-between text-2xl border-y-4 border-double border-slate-100 py-6 my-6"><span class="font-black text-slate-300">TOTAL</span><span class="font-black text-blue-600" id="rcpt-amount"></span></div>
-                        <div class="text-center bg-slate-50 py-4 rounded-2xl"><p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Next Due Date</p><p id="rcpt-next" class="text-lg font-black text-slate-900"></p></div>
+                        <div class="flex justify-between text-xs font-bold text-slate-400 uppercase">
+                            <span>Transaction ID</span>
+                            <span id="rcpt-id" class="text-slate-900"></span>
+                        </div>
+                        <div class="flex justify-between text-xs font-bold text-slate-400 uppercase">
+                            <span>Date Paid</span>
+                            <span id="rcpt-date" class="text-slate-900"></span>
+                        </div>
+                        <div class="flex justify-between border-t border-slate-100 pt-6">
+                            <span>Member</span>
+                            <span class="font-black"><?= htmlspecialchars(($applicant['firstname'] ?? '') . ' ' . ($applicant['lastname'] ?? '')) ?></span>
+                        </div>
+                        <div class="flex justify-between text-2xl border-y-4 border-double border-slate-100 py-6 my-6">
+                            <span class="font-black text-slate-300">TOTAL</span>
+                            <span class="font-black text-blue-600" id="rcpt-amount"></span>
+                        </div>
+                        <div class="text-center bg-slate-50 py-4 rounded-2xl">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Next Due Date</p>
+                            <p id="rcpt-next" class="text-lg font-black text-slate-900"></p>
+                        </div>
                     </div>
-                    <div class="flex gap-3 no-print">
-                        <button onclick="window.print()" class="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-bold">PRINT NOW</button>
-                        <button onclick="closeReceiptModal()" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold">CLOSE</button>
+
+                    <div class="hidden print:block mt-12 border-t border-slate-200 pt-8 text-center">
+                        <p class="text-[9px] text-slate-400 uppercase font-bold tracking-[0.2em]">Authorized Signature</p>
+                        <div class="mt-8 border-b border-slate-300 w-48 mx-auto"></div>
+                        <p class="mt-4 text-[8px] text-slate-300 font-bold uppercase">This document serves as proof of payment</p>
+                    </div>
+
+                    <div class="flex gap-3 no-print mt-6">
+                        <button onclick="window.print()" class="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all">PRINT NOW</button>
+                        <button onclick="closeReceiptModal()" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all">CLOSE</button>
                     </div>
                 </div>
             </div>
@@ -399,31 +482,36 @@
 </div>
 
 <script>
-function openNotebookModal(txnId, currentRemarks) {
-    document.getElementById('edit_txn_id').value = txnId;
-    document.getElementById('edit_remarks').value = currentRemarks;
-    const modal = document.getElementById('edit-notebook-modal');
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-}
 
-function closeNotebookModal() {
-    const modal = document.getElementById('edit-notebook-modal');
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-}
+    function openNotebookModal(txnId, currentRemarks) {
+        document.getElementById('edit_txn_id').value = txnId;
+        document.getElementById('edit_remarks').value = currentRemarks;
+        const modal = document.getElementById('edit-notebook-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
 
-function openReceipt(id, date, amount, next) {
+    function closeNotebookModal() {
+        const modal = document.getElementById('edit-notebook-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+
+    function openReceipt(id, date, amount, next) {
         document.getElementById('rcpt-id').innerText = id;
         document.getElementById('rcpt-date').innerText = date;
         document.getElementById('rcpt-amount').innerText = amount;
         document.getElementById('rcpt-next').innerText = next;
-        document.getElementById('receipt-modal').classList.remove('hidden');
-        document.getElementById('receipt-modal').classList.add('flex');
+        const modal = document.getElementById('receipt-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
     }
+
     function closeReceiptModal() {
-        document.getElementById('receipt-modal').classList.add('hidden');
-        document.getElementById('receipt-modal').classList.remove('flex');
+        const modal = document.getElementById('receipt-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     }
 </script>
 
