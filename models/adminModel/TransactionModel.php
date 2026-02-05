@@ -47,11 +47,11 @@ class TransactionModel
 //     // Implementation of Insurance Age (Round up if next birthday is within 6 months)
 //     $nextBirthday = clone $birthDate;
 //     $nextBirthday->modify('+' . ($age + 1) . ' years');
-    
+
 //     $daysToBirthday = $today->diff($nextBirthday)->days;
-    
-//     if ($daysToBirthday <= 182) { 
-//         $age++; 
+
+//     if ($daysToBirthday <= 182) {
+//         $age++;
 //     }
 
 //     $faceValue = (float) $data['face_value'];
@@ -60,11 +60,11 @@ class TransactionModel
 //     /**
 //      * 3. Calculate the Total Rate (Summing Basic + ADB)
 //      */
-//     $rateSql = "SELECT SUM(r.rate) as combined_rate 
+//     $rateSql = "SELECT SUM(r.rate) as combined_rate
 //                 FROM benefit_rates r
 //                 JOIN benefit_rate_categories c ON r.category_id = c.id
 //                 WHERE c.plan_id = '$benefitId'
-//                   AND '$faceValue' >= c.min_face_value 
+//                   AND '$faceValue' >= c.min_face_value
 //                   AND ('$faceValue' < c.max_face_value OR c.max_face_value IS NULL)
 //                   AND '$age' BETWEEN r.min_age AND r.max_age";
 
@@ -73,7 +73,7 @@ class TransactionModel
 
 //     if ($rateData && $rateData['combined_rate'] > 0) {
 //         $totalRate = (float) $rateData['combined_rate'];
-        
+
 //         // Final Formula: (Face Value / 1000) * Combined Rate
 //         return ($faceValue / 1000) * $totalRate;
 //     }
@@ -81,56 +81,24 @@ class TransactionModel
 //     return 0;
 // }
 
-public function calculatePremium($applicant_id)
-{
-    $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+// --- UPDATED calculatePremium ---
+    public function calculatePremium($applicant_id)
+    {
+        
+        $annualPremium = $this->calculateAnnualBase($applicant_id);
+        if ($annualPremium <= 0) {
+            return 0;
+        }
 
-    // 1. Get birthdate, face value, benefit ID, AND payment mode
-    $sql = "SELECT a.birthdate, f.face_value, p.fraternal_benefits_id, p.payment_mode
-            FROM applicants a
-            JOIN plans p ON a.applicant_id = p.applicant_id
-            JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
-            WHERE a.applicant_id = '$applicant_id'";
 
-    $res  = mysqli_query($this->conn, $sql);
-    $data = mysqli_fetch_assoc($res);
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+        $sql          = "SELECT payment_mode FROM plans WHERE applicant_id = '$applicant_id'";
+        $res          = mysqli_query($this->conn, $sql);
+        $data         = mysqli_fetch_assoc($res);
 
-    if (!$data || empty($data['birthdate'])) {
-        return 0;
-    }
+        $paymentMode = strtolower($data['payment_mode'] ?? 'annual');
 
-    // 2. Insurance Age Calculation (6-month rule)
-    $birthDate = new DateTime($data['birthdate']);
-    $today = new DateTime();
-    $age = $today->diff($birthDate)->y;
-
-    $nextBirthday = clone $birthDate;
-    $nextBirthday->modify('+' . ($age + 1) . ' years');
-    if ($today->diff($nextBirthday)->days <= 182) { 
-        $age++; 
-    }
-
-    $faceValue = (float) $data['face_value'];
-    $benefitId = $data['fraternal_benefits_id'];
-    $paymentMode = strtolower($data['payment_mode']);
-
-    // 3. Calculate Combined Annual Rate (Basic + ADB)
-    $rateSql = "SELECT SUM(r.rate) as combined_rate 
-                FROM benefit_rates r
-                JOIN benefit_rate_categories c ON r.category_id = c.id
-                WHERE c.plan_id = '$benefitId'
-                  AND '$faceValue' >= c.min_face_value 
-                  AND ('$faceValue' < c.max_face_value OR c.max_face_value IS NULL)
-                  AND '$age' BETWEEN r.min_age AND r.max_age";
-
-    $rateRes = mysqli_query($this->conn, $rateSql);
-    $rateData = mysqli_fetch_assoc($rateRes);
-
-    if ($rateData && $rateData['combined_rate'] > 0) {
-        $annualPremium = ($faceValue / 1000) * (float)$rateData['combined_rate'];
-
-        // 4. Apply Modal Factors
-        $modalFactor = 1.00; // Default Annual
+        $modalFactor = 1.00;
         switch ($paymentMode) {
             case 'semi-annually':
             case 'semi-annual':
@@ -140,15 +108,74 @@ public function calculatePremium($applicant_id)
                 $modalFactor = 0.27;
                 break;
             case 'monthly':
-                $modalFactor = 0.09; // Or 0.10 depending on your specific table
+                $modalFactor = 0.09;
                 break;
         }
 
         return $annualPremium * $modalFactor;
     }
 
-    return 0;
-}
+    public function calculateNextDueDate($current_due_date, $payment_mode) 
+    {
+        $date = new DateTime($current_due_date);
+        switch (strtolower($payment_mode)) {
+            case 'monthly':      $date->modify('+1 month'); break;
+            case 'quarterly':    $date->modify('+3 months'); break;
+            case 'semi-annual':  
+            case 'semi-annually': $date->modify('+6 months'); break;
+            case 'annual':       $date->modify('+1 year'); break;
+        }
+        return $date->format('Y-m-d');
+    }
+
+    private function calculateAnnualBase($applicant_id)
+    {
+        $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
+
+        $sql = "SELECT a.birthdate, f.face_value, p.fraternal_benefits_id
+                FROM applicants a
+                JOIN plans p ON a.applicant_id = p.applicant_id
+                JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
+                WHERE a.applicant_id = '$applicant_id'";
+
+        $res  = mysqli_query($this->conn, $sql);
+        $data = mysqli_fetch_assoc($res);
+
+        if (! $data || empty($data['birthdate'])) {
+            return 0;
+        }
+
+        $birthDate = new DateTime($data['birthdate']);
+        $today     = new DateTime();
+        $age       = $today->diff($birthDate)->y;
+
+        $nextBirthday = clone $birthDate;
+        $nextBirthday->modify('+' . ($age + 1) . ' years');
+        if ($today->diff($nextBirthday)->days <= 182) {
+            $age++;
+        }
+
+        $faceValue = (float) $data['face_value'];
+        $benefitId = $data['fraternal_benefits_id'];
+
+     
+        $rateSql = "SELECT SUM(r.rate) as combined_rate
+                    FROM benefit_rates r
+                    JOIN benefit_rate_categories c ON r.category_id = c.id
+                    WHERE c.plan_id = '$benefitId'
+                      AND '$faceValue' >= c.min_face_value
+                      AND ('$faceValue' < c.max_face_value OR c.max_face_value IS NULL)
+                      AND '$age' BETWEEN r.min_age AND r.max_age";
+
+        $rateRes  = mysqli_query($this->conn, $rateSql);
+        $rateData = mysqli_fetch_assoc($rateRes);
+
+        if ($rateData && $rateData['combined_rate'] > 0) {
+            return ($faceValue / 1000) * (float) $rateData['combined_rate'];
+        }
+
+        return 0;
+    }
 
     public function getApplicantStatus($next_due_date)
     {
@@ -166,7 +193,6 @@ public function calculatePremium($applicant_id)
         $interval = $today->diff($dueDate);
         $daysPast = $interval->days;
 
-        // Logic: 1-31 days past is Grace Period, 32+ is Late/Lapsed
         if ($daysPast <= 31) {
             return 'Grace Period';
         } else {
@@ -349,7 +375,6 @@ public function calculatePremium($applicant_id)
 
     public function sendNotifIfInsuranceNearToEnd()
     {
-        // Get all active applicants with their contact info and transaction details
         $sql = "SELECT
                 a.applicant_id,
                 a.firstname,
@@ -382,7 +407,6 @@ public function calculatePremium($applicant_id)
                 $firstname      = $row['firstname'];
                 $due_date       = date('F j, Y', strtotime($row['next_due_date']));
 
-                // Customize message based on days remaining
                 if ($days_remaining <= 7) {
                     $urgency = "URGENT";
                 } elseif ($days_remaining <= 14) {
@@ -393,10 +417,9 @@ public function calculatePremium($applicant_id)
 
                 $message = "[$urgency] Hi $firstname! Your $plan_name insurance plan will expire in $days_remaining days (on $due_date). Please renew to avoid coverage lapse. - KCFAPI";
 
-                // Send SMS
+
                 $sms_response = $this->sendSMS($mobile_number, $message);
 
-                // Log the notification
                 $log_sql = "INSERT INTO notification_logs
                         (applicant_id, mobile_number, message, days_remaining, sent_at, response)
                         VALUES
@@ -414,35 +437,33 @@ public function calculatePremium($applicant_id)
         ];
     }
 
-   public function fetchAllApplicantsWithPlans() {
-    // Join strictly on applicant_id to ensure plans stay with the correct person
-    $sql = "SELECT 
-                a.firstname, 
-                a.lastname, 
-                a.user_id, 
+    public function fetchAllApplicantsWithPlans()
+    {
+    
+        $sql = "SELECT
+                a.firstname,
+                a.lastname,
+                a.user_id,
                 a.applicant_id,
-                p.plan_id, 
-                p.payment_mode, 
-                p.contribution_amount, 
-                f.name as plan_name 
+                p.plan_id,
+                p.payment_mode,
+                p.contribution_amount,
+                f.name as plan_name
             FROM plans p
             INNER JOIN applicants a ON p.applicant_id = a.applicant_id
             INNER JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
             ORDER BY a.lastname ASC";
-            
-    $result = mysqli_query($this->conn, $sql);
-    $data = [];
-    if ($result) {
-        while($row = mysqli_fetch_assoc($result)) {
-            $data[] = $row;
-        }
-    }
-    return $data;
-}
 
-/**
- * Fetches transactions filtered by BOTH user and specific plan
- */
+        $result = mysqli_query($this->conn, $sql);
+        $data   = [];
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $data[] = $row;
+            }
+        }
+        return $data;
+    }
+
     public function getPaymentTransactionsByApplicantAndPlan($user_id, $plan_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
@@ -464,7 +485,6 @@ public function calculatePremium($applicant_id)
         return $transactions;
     }
 
-// Additional method to get insurance status for a specific applicant
     public function getInsuranceStatus($applicant_id)
     {
         $applicant_id = mysqli_real_escape_string($this->conn, $applicant_id);
@@ -501,55 +521,64 @@ public function calculatePremium($applicant_id)
         return null;
     }
 
+    public function getPlanFinancialSummary($user_id, $plan_id)
+    {
+        $user_id = mysqli_real_escape_string($this->conn, $user_id);
+        $plan_id = mysqli_real_escape_string($this->conn, $plan_id);
 
-    public function getPlanFinancialSummary($user_id, $plan_id) {
-    $user_id = mysqli_real_escape_string($this->conn, $user_id);
-    $plan_id = mysqli_real_escape_string($this->conn, $plan_id);
-
-    // 1. Get Plan Details & Fraternal Benefit Period
-    $sql = "SELECT p.contribution_amount, p.payment_mode, f.contribution_period 
-            FROM plans p 
-            JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id 
+        $sql = "SELECT p.applicant_id, p.payment_mode, f.contribution_period
+            FROM plans p
+            JOIN fraternal_benefits f ON p.fraternal_benefits_id = f.id
             WHERE p.plan_id = '$plan_id' AND p.user_id = '$user_id'";
-    $res = mysqli_query($this->conn, $sql);
-    $plan = mysqli_fetch_assoc($res);
+        $res  = mysqli_query($this->conn, $sql);
+        $plan = mysqli_fetch_assoc($res);
 
-    if (!$plan) return null;
+        if (! $plan) {
+            return null;
+        }
 
-    // 2. Calculate Total Expected Payments
-    // modes: monthly (12), quarterly (4), semi-annual (2), annual (1)
-    $multiplier = 1;
-    switch (strtolower($plan['payment_mode'])) {
-        case 'monthly':    $multiplier = 12; break;
-        case 'quarterly':  $multiplier = 4; break;
-        case 'semi-annual': $multiplier = 2; break;
-        case 'annual':     $multiplier = 1; break;
+        $applicant_id = $plan['applicant_id'];
+
+        $dynamicPremium = $this->calculatePremium($applicant_id);
+
+        $multiplier = 1;
+        $mode       = strtolower($plan['payment_mode']);
+        switch ($mode) {
+            case 'monthly':$multiplier = 12;
+                break;
+            case 'quarterly':$multiplier = 4;
+                break;
+            case 'semi-annually':
+            case 'semi-annual':$multiplier = 2;
+                break;
+            case 'annual':$multiplier = 1;
+                break;
+        }
+
+        $totalInstallments = (int) $plan['contribution_period'] * $multiplier;
+
+        $totalContractPrice = $dynamicPremium * $totalInstallments;
+
+        $sqlSum = "SELECT SUM(amount_paid) as total_paid FROM transactions
+               WHERE plan_id = '$plan_id' AND applicant_id = '$applicant_id'";
+        $resSum    = mysqli_query($this->conn, $sqlSum);
+        $sumData   = mysqli_fetch_assoc($resSum);
+        $totalPaid = (float) ($sumData['total_paid'] ?? 0);
+
+        $remainingBalance = $totalContractPrice - $totalPaid;
+
+        $annualBase      = $this->calculateAnnualBase($applicant_id);
+        $monthlyRate     = $annualBase / 12;
+        $remainingMonths = ($remainingBalance > 0 && $monthlyRate > 0) ? ceil($remainingBalance / $monthlyRate) : 0;
+
+        return [
+            'total_contract_price' => $totalContractPrice,
+            'total_paid'           => $totalPaid,
+            'remaining_balance'    => max(0, $remainingBalance),
+            'remaining_months'     => $remainingMonths,
+            'total_installments'   => $totalInstallments,
+            'suggested_premium'    => $dynamicPremium, 
+        ];
     }
-
-    $totalInstallments = (int)$plan['contribution_period'] * $multiplier;
-    $totalContractPrice = (float)$plan['contribution_amount'] * $totalInstallments;
-
-    // 3. Get Total Amount Already Paid
-    $sqlSum = "SELECT SUM(amount_paid) as total_paid FROM transactions 
-               WHERE plan_id = '$plan_id' AND user_id = '$user_id'";
-    $resSum = mysqli_query($this->conn, $sqlSum);
-    $sumData = mysqli_fetch_assoc($resSum);
-    $totalPaid = (float)($sumData['total_paid'] ?? 0);
-
-    // 4. Calculate Remaining
-    $remainingBalance = $totalContractPrice - $totalPaid;
-    
-    // Remaining months is based on the 'monthly' equivalent of the balance
-    $monthlyRate = ($multiplier == 12) ? $plan['contribution_amount'] : ($plan['contribution_amount'] / (12 / $multiplier));
-    $remainingMonths = ($remainingBalance > 0) ? ceil($remainingBalance / $monthlyRate) : 0;
-
-    return [
-        'total_contract_price' => $totalContractPrice,
-        'total_paid' => $totalPaid,
-        'remaining_balance' => max(0, $remainingBalance),
-        'remaining_months' => $remainingMonths,
-        'total_installments' => $totalInstallments
-    ];
-}   
 
 }

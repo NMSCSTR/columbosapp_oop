@@ -355,73 +355,71 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50">
-                            <?php foreach ($transactions as $txn): ?>
-                            <tr class="hover:bg-slate-50/50 transition-colors group">
-                                <td class="px-8 py-5 font-mono text-[11px] text-slate-400">
-                                    #<?= $txn['transaction_id'] ?></td>
+    <?php foreach ($transactions as $txn): ?>
+    <tr class="hover:bg-slate-50/50 transition-colors group">
+        <td class="px-8 py-5 font-mono text-[11px] text-slate-400">#<?= $txn['transaction_id'] ?></td>
 
-                                <td class="px-8 py-5">
-                                    <div class="text-sm font-bold text-slate-700">
-                                        <?= date("M d, Y", strtotime($txn['payment_date'])) ?></div>
-                                    <div class="text-[9px] text-slate-400 font-medium">Logged:
-                                        <?= date("M d, h:i A", strtotime($txn['created_at'])) ?></div>
-                                </td>
+        <td class="px-8 py-5">
+            <div class="text-sm font-bold text-slate-700"><?= date("M d, Y", strtotime($txn['payment_date'])) ?></div>
+            <div class="text-[9px] text-slate-400 font-medium italic"><?= htmlspecialchars($txn['status']) ?></div>
+        </td>
 
-                                <td class="px-8 py-5 text-right font-black text-slate-900 text-sm">
-                                    ₱<?= number_format($txn['amount_paid'], 2) ?>
-                                </td>
+        <td class="px-8 py-5 text-right font-black text-slate-900 text-sm">
+            ₱<?= number_format($txn['amount_paid'], 2) ?>
+        </td>
 
-                                <td class="px-8 py-5">
-                                    <div class="text-sm font-bold text-blue-600">
-                                        <?= $txn['next_due_date'] ? date("M d, Y", strtotime($txn['next_due_date'])) : 'N/A' ?>
-                                    </div>
-                                </td>
+        <td class="px-8 py-5">
+            <div class="text-sm font-bold text-blue-600">
+                <?= $txn['next_due_date'] ? date("M d, Y", strtotime($txn['next_due_date'])) : '<span class="text-orange-400 italic">Pending Approval</span>' ?>
+            </div>
+        </td>
 
-                                <td class="px-8 py-5 max-w-xs">
-                                    <?php if (!empty($txn['remarks'])): ?>
-                                    <div class="text-xs text-slate-500 italic leading-snug">
-                                        "<?= htmlspecialchars($txn['remarks']) ?>"
-                                        <button
-                                            onclick="openNotebookModal('<?= $txn['transaction_id'] ?>', '<?= htmlspecialchars($txn['remarks'], ENT_QUOTES) ?>')"
-                                            class="block mt-1 text-[9px] font-bold text-blue-500 uppercase tracking-tighter hover:underline">
-                                            Edit
-                                        </button>
-                                    </div>
-                                    <?php else: ?>
-                                    <button onclick="openNotebookModal('<?= $txn['transaction_id'] ?>', '')"
-                                        class="text-[10px] font-bold text-slate-300 hover:text-blue-500 flex items-center transition-colors">
-                                        <i class="fas fa-pen mr-1"></i> Add remarks
-                                    </button>
-                                    <?php endif; ?>
-                                </td>
+        <td class="px-8 py-5">
+            <?php if(!empty($txn['receipt_file'])): ?>
+                <a href="../../uploads/receipts/<?= $txn['receipt_file'] ?>" target="_blank" class="text-indigo-600 hover:underline text-[10px] font-black uppercase tracking-tighter">
+                    <i class="fas fa-file-invoice mr-1"></i> View Receipt
+                </a>
+            <?php else: ?>
+                <span class="text-slate-300 text-[10px] uppercase">Walk-in</span>
+            <?php endif; ?>
+        </td>
 
-                                <td class="px-8 py-5">
-                                    <div class="flex flex-col gap-1">
-                                        <span
-                                            class="px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-tight text-center <?= $txn['payment_timing_status'] === 'On-Time' ? 'bg-emerald-50 text-emerald-600' : 'bg-orange-50 text-orange-600' ?>">
-                                            <?= $txn['payment_timing_status'] ?>
-                                        </span>
-                                        <?php 
-                                            $currentStatus = $transactionModel->getApplicantStatus($txn['next_due_date']);
-                                            $statusColor = ($currentStatus == 'Active') ? 'text-emerald-600 bg-emerald-50' : (($currentStatus == 'Grace Period') ? 'text-orange-600 bg-orange-50' : 'text-red-600 bg-red-50');
-                                        ?>
-                                        <span
-                                            class="px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-tight text-center <?= $statusColor ?>">
-                                            <?= $currentStatus ?>
-                                        </span>
-                                    </div>
-                                </td>
+        <td class="px-8 py-5">
+            <div class="flex flex-col gap-1">
+                <?php if($txn['status'] === 'Pending Verification'): ?>
+                    <span class="px-2 py-1 rounded-md text-[9px] font-black uppercase bg-amber-100 text-amber-700 border border-amber-200 text-center animate-pulse">
+                        Requires Action
+                    </span>
+                <?php else: ?>
+                    <span class="px-2 py-1 rounded-md text-[9px] font-black uppercase bg-emerald-50 text-emerald-600 text-center">
+                        Verified
+                    </span>
+                <?php endif; ?>
+            </div>
+        </td>
 
-                                <td class="px-8 py-5 text-right">
-                                    <button
-                                        onclick="openReceipt('<?= $txn['transaction_id'] ?>', '<?= date('M d, Y', strtotime($txn['payment_date'])) ?>', '₱<?= number_format($txn['amount_paid'], 2) ?>', '<?= date('M d, Y', strtotime($txn['next_due_date'])) ?>')"
-                                        class="text-blue-600 hover:text-blue-800 transition-colors">
-                                        <i class="fas fa-print text-lg"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
+        <td class="px-8 py-5 text-right">
+            <div class="flex justify-end space-x-2">
+                <?php if($txn['status'] === 'Pending Verification'): ?>
+                    <form action="../../controllers/adminController/verifyPaymentController.php" method="POST" onsubmit="return confirm('Confirm this payment and update next due date?');">
+                        <input type="hidden" name="transaction_id" value="<?= $txn['transaction_id'] ?>">
+                        <input type="hidden" name="plan_id" value="<?= $plan_id ?>">
+                        <input type="hidden" name="applicant_id" value="<?= $applicant['applicant_id'] ?>">
+                        <button type="submit" name="approve_payment" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg transition-all shadow-sm">
+                            <i class="fas fa-check text-xs"></i>
+                        </button>
+                    </form>
+                <?php endif; ?>
+
+                <button onclick="openReceipt('<?= $txn['transaction_id'] ?>', '<?= date('M d, Y', strtotime($txn['payment_date'])) ?>', '₱<?= number_format($txn['amount_paid'], 2) ?>', '<?= $txn['next_due_date'] ?>')"
+                    class="text-blue-600 hover:text-blue-800 p-2">
+                    <i class="fas fa-print text-sm"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</tbody>
                     </table>
                 </div>
                 <?php else: ?>
@@ -478,6 +476,31 @@
                 </div>
             </div>
         </div>
+
+        <div id="view-receipt-modal" tabindex="-1" aria-hidden="true" 
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-[60] justify-center items-center w-full md:inset-0 h-full backdrop-blur-sm bg-slate-900/60 transition-all duration-300">
+    <div class="relative p-4 w-full max-w-2xl">
+        <div class="relative bg-white rounded-3xl shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Document Verification</h3>
+                <button type="button" onclick="closeViewReceiptModal()" class="text-slate-400 hover:text-red-500 p-2 rounded-lg transition-all">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="p-6 bg-slate-200 min-h-[400px] flex items-center justify-center">
+                <img id="receipt-display" src="" alt="Proof of Payment" class="max-w-full rounded-lg shadow-md border border-white">
+                <div id="pdf-fallback" class="hidden text-center p-10">
+                    <i class="fas fa-file-pdf text-6xl text-red-500 mb-4"></i>
+                    <p class="text-slate-600 font-bold">This is a PDF document.</p>
+                    <a id="pdf-link" href="#" target="_blank" class="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-full text-xs font-bold">Open PDF in New Tab</a>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-100 flex justify-end">
+                <button onclick="closeViewReceiptModal()" class="px-6 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs hover:bg-slate-200">Close Preview</button>
+            </div>
+        </div>
+    </div>
+</div>
     </main>
 </div>
 

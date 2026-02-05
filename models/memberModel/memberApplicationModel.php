@@ -707,7 +707,7 @@ class MemberApplicationModel
             return "Error fetching applicant: " . mysqli_error($this->conn);
         }
     }
-    // memberApplication model method
+ 
        public function fetchAllApplicantsByIdV2($user_id)
     {
         $user_id = mysqli_real_escape_string($this->conn, $user_id);
@@ -751,8 +751,6 @@ class MemberApplicationModel
     $user_id = mysqli_real_escape_string($this->conn, $user_id);
 
     if ($table === "plans") {
-        // If a specific plan_id is provided, filter by it. 
-        // Otherwise, it will just grab the first one found.
         $planFilter = "";
         if ($plan_id) {
             $plan_id = mysqli_real_escape_string($this->conn, $plan_id);
@@ -776,7 +774,6 @@ class MemberApplicationModel
     $result = mysqli_query($this->conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
-        // If we are looking for the plan, we want the specific one.
         return mysqli_fetch_assoc($result);
     }
     return null;
@@ -896,11 +893,9 @@ class MemberApplicationModel
         if ($result && mysqli_num_rows($result) > 0) {
             $applicantData = mysqli_fetch_assoc($result);
 
-            // Calculate financial details
             $total_contribution = $this->calculateTotalContributions($applicantData);
             $allocations        = $this->calculateContributionAllocations($total_contribution);
 
-            // Add financial details to the applicant data
             $applicantData['total_contribution'] = $total_contribution;
             $applicantData['insurance_cost']     = $allocations['insurance_cost'];
             $applicantData['admin_fee']          = $allocations['admin_fee'];

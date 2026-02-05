@@ -1,6 +1,5 @@
 <?php
 session_start();
-// Important: Clear old data to prevent mixing up plans
 unset($_SESSION['search_results']);
 unset($_SESSION['selected_plan_id']);
 
@@ -11,15 +10,13 @@ include '../../models/memberModel/memberApplicationModel.php';
 if (isset($_GET['plan_id']) && isset($_GET['user_id'])) {
     $plan_id = $_GET['plan_id'];
     $user_id = $_GET['user_id'];
-    $applicant_id = $_GET['applicant_id'] ?? null; // Added this
+    $applicant_id = $_GET['applicant_id'] ?? null; 
     $memberApplicationModel = new MemberApplicationModel($conn);
     
-    // We update the model call to accept the specific plan_id
     $details = $memberApplicationModel->fetchAllApplicantsByIdV3($user_id, $plan_id);
 
     if ($details && is_array($details)) {
-        // Store the hydrated data in session
-        $_SESSION['search_results'] = [$details]; // Wrapped in array for backward compatibility with your view
+        $_SESSION['search_results'] = [$details];
         $_SESSION['user_id'] = $user_id;
         $_SESSION['selected_plan_id'] = $plan_id;
 

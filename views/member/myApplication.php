@@ -8,10 +8,17 @@ include '../../models/usersModel.php';
 include '../../models/adminModel/councilModel.php';
 include '../../models/adminModel/fraternalBenefitsModel.php';
 include '../../models/memberModel/memberApplicationModel.php';
+include '../../models/adminModel/TransactionModel.php';
+
 
 $userModel          = new UserModel($conn);
 $user               = $userModel->getUserById($_SESSION['user_id']);
 $fraternalCounselor = $userModel->getUserWhereRoleFraternalCounselor();
+
+$transactionModel = new TransactionModel($conn);
+
+$applicationModel = new MemberApplicationModel($conn);
+$applications     = $applicationModel->getApplicationsByUser($_SESSION['user_id']);
 
 $applicationModel = new MemberApplicationModel($conn);
 $applications     = $applicationModel->getApplicationsByUser($_SESSION['user_id']);
@@ -45,7 +52,7 @@ $applications     = $applicationModel->getApplicationsByUser($_SESSION['user_id'
                     <tbody class="divide-y divide-gray-100">
                         <?php if (!empty($applications)): ?>
                             <?php foreach ($applications as $app): 
-                                // Logic for status badge colors
+                                $financials = $transactionModel->getPlanFinancialSummary($_SESSION['user_id'], $app['plan_id']);
                                 $status = strtolower($app['application_status']);
                                 $statusClasses = match($status) {
                                     'approved' => 'bg-green-100 text-green-700 border-green-200',
@@ -72,6 +79,22 @@ $applications     = $applicationModel->getApplicationsByUser($_SESSION['user_id'
                                     <td class="px-6 py-4 text-sm text-gray-600">
                                         <div><?php echo htmlspecialchars($app['payment_mode']); ?></div>
                                         <div class="text-xs text-gray-400"><?php echo htmlspecialchars($app['contribution_period']); ?> Years</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-bold text-gray-900">
+                                            Paid: <span class="text-green-600">₱<?php echo number_format($financials['total_paid'], 2); ?></span>
+                                        </div>
+                                        <div class="text-xs font-semibold text-orange-600 mt-1">
+                                            Balance: ₱<?php echo number_format($financials['remaining_balance'], 2); ?>
+                                        </div>
+                                        <div class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">
+                                            Total Contract: ₱<?php echo number_format($financials['total_contract_price'], 2); ?>
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4 text-sm text-gray-600">
+                                        <div class="font-medium text-indigo-600"><?php echo $financials['remaining_months']; ?> Months Left</div>
+                                        <div class="text-xs text-gray-400"><?php echo htmlspecialchars($app['payment_mode']); ?></div>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="px-2.5 py-1 rounded-full text-xs font-medium border <?php echo $statusClasses; ?>">
